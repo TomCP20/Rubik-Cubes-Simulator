@@ -22,11 +22,11 @@ public class CubeController : MonoBehaviour
         Orange,
     }
 
-    enum PiceType
+    enum Axis
     {
-        Corner,
-        Edge,
-        Face
+        X = 0,
+        Y = 1,
+        Z = 2
     }
 
     class Face
@@ -43,46 +43,20 @@ public class CubeController : MonoBehaviour
         public Face(double[] d)
         {
             direction = d;
-            if (direction[0] != 0)
-            {
-                if (direction[0] > 0)
-                {
-                    colour = Colour.Green;
-                }
-                else
-                {
-                    colour = Colour.Yellow;
-                }
-            }
-            else if (direction[1] != 0)
-            {
-                if (direction[1] > 0)
-                {
-                    colour = Colour.White;
-                }
-                else
-                {
-                    colour = Colour.Blue;
-                }
-            }
-            else
-            {
-                if (direction[2] > 0)
-                {
-                    colour = Colour.Red;
-                }
-                else
-                {
-                    colour = Colour.Orange;
-                }
-            }
+            if (direction[0] > 0) { colour = Colour.Green; }
+            else if (direction[0] < 0) { colour = Colour.Yellow; }
+            else if (direction[1] > 0) { colour = Colour.White; }
+            else if (direction[1] < 0) { colour = Colour.Blue; }
+            else if (direction[2] > 0) { colour = Colour.Red; }
+            else if (direction[2] < 0) { colour = Colour.Orange; }
+            else { colour = Colour.Black; }
         }
     }
 
     class Pice
     {
         private double[] position; //x, y, z
-        private Face[] faces = new Face[3];
+        private Face[] faces;
 
         public Pice(double[] p, Face[] f)
         {
@@ -94,65 +68,22 @@ public class CubeController : MonoBehaviour
         {
             position = p;
             double magnitude = Magnitude(position);
-            switch (magnitude)
+            faces = new Face[(int)magnitude];
+            int count = 0;
+            for (int i = 0; i < 3; i++)
             {
-                case 3:
-                    faces[0] = new Face(PositionToDirection(position, "x"));
-                    faces[1] = new Face(PositionToDirection(position, "y"));
-                    faces[2] = new Face(PositionToDirection(position, "z"));
-                    break;
-                case 2:
-                    faces = new Face[2];
-                    if (position[0] == 0)
-                    {
-                        faces[0] = new Face(PositionToDirection(position, "y"));
-                        faces[1] = new Face(PositionToDirection(position, "z"));
-                    }
-                    else if (position[1] == 0)
-                    {
-                        faces[0] = new Face(PositionToDirection(position, "x"));
-                        faces[1] = new Face(PositionToDirection(position, "z"));
-                    }
-                    else
-                    {
-                        faces[0] = new Face(PositionToDirection(position, "x"));
-                        faces[1] = new Face(PositionToDirection(position, "y"));
-                    }
-                    break;
-                case 1:
-                    faces = new Face[1];
-                    if (position[0] != 0)
-                    {
-                        faces[0] = new Face(PositionToDirection(position, "x"));
-                    }
-                    else if (position[1] != 0)
-                    {
-                        faces[0] = new Face(PositionToDirection(position, "y"));
-                    }
-                    else
-                    {
-                        faces[0] = new Face(PositionToDirection(position, "z"));
-                    }
-                    break;
+                if (position[i] != 0)
+                {
+                    faces[count] = new Face(PositionToDirection(position, (Axis)i));
+                    count++;
+                }
             }
         }
 
-        private double[] PositionToDirection(double[] p, string axis)
+        private double[] PositionToDirection(double[] p, Axis axis)
         {
             double[] direction = {0, 0, 0};
-
-            switch(axis)
-            {
-                case "x":
-                    direction[0] = p[0]/2;
-                    break;
-                case "y":
-                    direction[0] = p[1] / 2;
-                    break;
-                case "z":
-                    direction[0] = p[2] / 2;
-                    break;
-            }
+            direction[(int)axis] = p[(int)axis] / 2;
             return direction;
         }
     }

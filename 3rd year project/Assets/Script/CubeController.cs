@@ -4,14 +4,10 @@ using System.Threading;
 using System;
 using UnityEngine;
 using System.Diagnostics;
+using System.Collections.Specialized;
 
 public class CubeController : MonoBehaviour
 {
-    static double Magnitude(Vector3 position)
-    {
-        return Math.Abs(position[0]) + Math.Abs(position[1]) + Math.Abs(position[2]);
-    }
-
     enum Colour
     {
         Black,
@@ -30,10 +26,10 @@ public class CubeController : MonoBehaviour
         Z = 2
     }
 
-    class Face
+    class Face : ICloneable
     {
         public Colour colour;
-        public Vector3 direction;
+        public Vector3 direction;//unit vector
 
         public Face(Colour c, Vector3 d)
         {
@@ -44,18 +40,35 @@ public class CubeController : MonoBehaviour
         public Face(Vector3 d)
         {
             direction = d;
-            if (direction[0] > 0) { colour = Colour.Green; }
-            else if (direction[0] < 0) { colour = Colour.Yellow; }
-            else if (direction[1] > 0) { colour = Colour.White; }
-            else if (direction[1] < 0) { colour = Colour.Blue; }
-            else if (direction[2] > 0) { colour = Colour.Red; }
-            else if (direction[2] < 0) { colour = Colour.Orange; }
-            else { colour = Colour.Black; }
+            colour = defaultColour(direction);
         }
 
+        public object Clone()
+        {
+            return new Face(colour, direction);
+        }
+
+        public void rotate(Quaternion rotQuaternion)
+        {
+            direction = Vector3Int.RoundToInt(rotQuaternion * direction);
+        }
+
+        private Colour defaultColour(Vector3 d)
+        {
+            switch (d)
+            {
+                case Vector3 vec when vec.Equals(Vector3.right):return Colour.Green;
+                case Vector3 vec when vec.Equals(Vector3.left):return Colour.Yellow;
+                case Vector3 vec when vec.Equals(Vector3.up):return Colour.White;
+                case Vector3 vec when vec.Equals(Vector3.down):return Colour.Blue;
+                case Vector3 vec when vec.Equals(Vector3.forward):return Colour.Red;
+                case Vector3 vec when vec.Equals(Vector3.back):return Colour.Orange;
+                default: return Colour.Black;
+            }
+        }
     }
 
-    class Pice
+    class Pice : ICloneable
     {
         public Vector3 position;
         public Face[] faces;
@@ -80,15 +93,28 @@ public class CubeController : MonoBehaviour
             faces = FaceList.ToArray();
         }
 
+        public object Clone()
+        {
+            Face[] f = new Face[faces.Length];
+            for (int i = 0; i < faces.Length; i++) { f[i] = faces[i]; }
+            return new Pice(position, f);
+        }
+
+        public void rotate(Quaternion rotQuaternion)
+        {
+            position = Vector3Int.RoundToInt(rotQuaternion * position);
+            foreach(Face face in faces) { face.rotate(rotQuaternion);}
+        }
+
         private Vector3 PositionToDirection(Vector3 p, Axis axis)
         {
             Vector3 direction = Vector3.zero;
-            direction[(int)axis] = p[(int)axis] / 2;
+            direction[(int)axis] = p[(int)axis];
             return direction;
         }
     }
 
-    class Cube
+    class Cube : ICloneable
     {
         public Pice[] pices;
 
@@ -100,7 +126,6 @@ public class CubeController : MonoBehaviour
         public Cube()
         {
             List<Pice> Picelist = new List<Pice>();
-            double magnitude;
             Vector3 position;
             for (int i = -1; i <= 1; i++)
             {
@@ -109,8 +134,7 @@ public class CubeController : MonoBehaviour
                     for (int k = -1; k <= 1; k++)
                     {
                         position = new Vector3(i, j, k);                        
-                        magnitude = Magnitude(position);
-                        if (magnitude == 3 || magnitude == 2)
+                        if (position.magnitude >= 1)
                         {
                             Picelist.Add(new Pice(position));
                         }
@@ -119,26 +143,60 @@ public class CubeController : MonoBehaviour
             }
             pices = Picelist.ToArray();
         }
+
+        public object Clone()
+        {
+            Pice[] p = new Pice[pices.Length];
+            for (int i = 0; i < pices.Length; i++) { p[i] = pices[i]; }
+            return new Cube(p);
+        }
+
+        public void rotate(Axis axis, double slice)
+        {
+            Quaternion rotQuaternion = rotateQuaternion(axis);
+            List<Pice> Picelist = new List<Pice>();
+            foreach (Pice p in pices)
+            {
+                UnityEngine.Debug.Log(p.position[(int)axis]);
+                if (p.position[(int)axis] == slice) { Picelist.Add(p); }
+            }
+            Pice[] rotatePices = Picelist.ToArray();
+            UnityEngine.Debug.Log("Rotating " + rotatePices.Length + " pices");
+            foreach (Pice rp in rotatePices)
+            {
+                rp.rotate(rotQuaternion);
+            }
+        }
+
+        private Quaternion rotateQuaternion(Axis axis)
+        {
+            Vector3 rotationVector = new Vector3(0, 0, 0);
+            rotationVector[(int)axis] = 90;
+            return Quaternion.Euler(rotationVector);
+        }
     }
 
     Cube c;
     bool cubeAltered;
-    public Material Black;
-    public Material White;
-    public Material Green;
-    public Material Blue;
-    public Material Red;
-    public Material Yellow;
-    public Material Orange;
+    public Material BlackMat;
+    public Material WhiteMat;
+    public Material GreenMat;
+    public Material BlueMat;
+    public Material RedMat;
+    public Material YellowMat;
+    public Material OrangeMat;
 
     // Start is called before the first frame update
     void Start()
-    {
-        
+    {       
         c = new Cube();
-
+        updateCube(c);
+        c.rotate(Axis.X, 1.0);
+        updateCube(c);
+        c.rotate(Axis.Y, 1.0);
+        updateCube(c);
         cubeAltered = true;
-        
+        //InvokeRepeating("RotCube", 1.0f, 1.0f);
     }
 
     // Update is called once per frame
@@ -150,20 +208,28 @@ public class CubeController : MonoBehaviour
         
     }
 
+    void RotCube()
+    {
+        c.rotate(Axis.X, 1);
+        cubeAltered = true;
+    }
+
     void updateCube(Cube c)
     {
-        UnityEngine.Debug.Log("updating cube");
         foreach (Pice p in c.pices)
         {
             foreach (Face f in p.faces)
             {
-                Vector3 coords = p.position + f.direction;
-                UnityEngine.Debug.Log(coords);
+                Vector3 coords = p.position + f.direction/2;
                 Collider[] hitColliders = Physics.OverlapSphere(coords, 0.1f);
-                foreach (var hitCollider in hitColliders)
+                if (hitColliders.Length.Equals(1))
                 {
-                    UnityEngine.Debug.Log(hitCollider);
-                    hitCollider.GetComponent<MeshRenderer>().material = GetMaterial(f.colour);
+                    //UnityEngine.Debug.Log(hitColliders[0]);
+                    hitColliders[0].GetComponent<MeshRenderer>().material = GetMaterial(f.colour);
+                }
+                else
+                {
+                    UnityEngine.Debug.Log("colliders != 1");
                 }
             }
         }
@@ -174,19 +240,19 @@ public class CubeController : MonoBehaviour
         switch(c)
         {
             case Colour.Blue:
-                return Blue;
+                return BlueMat;
             case Colour.Green:
-                return Green;
+                return GreenMat;
             case Colour.Red:
-                return Red;
+                return RedMat;
             case Colour.Yellow:
-                return Yellow;
+                return YellowMat;
             case Colour.Orange:
-                return Orange;
+                return OrangeMat;
             case Colour.White:
-                return White;
+                return WhiteMat;
             case Colour.Black:
-                return Black;
+                return BlackMat;
             default:
                 return null;
         }

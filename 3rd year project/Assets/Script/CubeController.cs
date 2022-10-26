@@ -24,9 +24,9 @@ public class CubeController : MonoBehaviour
     {       
         c = new Cube();
         updateCube(c);
-        c.rotate(Axis.X, 1.0);
+        c.rotate(Axis.X, 1, 1);
         updateCube(c);
-        c.rotate(Axis.Y, 1.0);
+        c.rotate(Axis.Y, 1, 2);
         updateCube(c);
         cubeAltered = true;
         //InvokeRepeating("RotCube", 1.0f, 1.0f);
@@ -43,7 +43,7 @@ public class CubeController : MonoBehaviour
 
     void RotCube()
     {
-        c.rotate(Axis.X, 1);
+        c.rotate(Axis.X, 1, 1);
         cubeAltered = true;
     }
 

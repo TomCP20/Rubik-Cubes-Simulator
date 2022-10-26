@@ -151,9 +151,9 @@ namespace CubeNamespace
             return new Cube(p);
         }
 
-        public void rotate(Axis axis, double slice)
+        public void rotate(Axis axis, int slice, int quarterTurns)
         {
-            Quaternion rotQuaternion = rotateQuaternion(axis);
+            Quaternion rotQuaternion = rotateQuaternion(axis, quarterTurns);
             List<Pice> Picelist = new List<Pice>();
             foreach (Pice p in pices)
             {
@@ -168,10 +168,10 @@ namespace CubeNamespace
             }
         }
 
-        private Quaternion rotateQuaternion(Axis axis)
+        private Quaternion rotateQuaternion(Axis axis, int quarterTurns)
         {
             Vector3 rotationVector = new Vector3(0, 0, 0);
-            rotationVector[(int)axis] = 90;
+            rotationVector[(int)axis] = 90 * quarterTurns;
             return Quaternion.Euler(rotationVector);
         }
     }

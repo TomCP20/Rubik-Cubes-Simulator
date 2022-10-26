@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using System;
 using UnityEngine;
-using System.Diagnostics;
-using System.Collections.Specialized;
 using CubeNamespace;
+using System.Collections.Specialized;
 
 public class CubeController : MonoBehaviour
 {
@@ -21,24 +17,58 @@ public class CubeController : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {       
+    {
+        
         c = new Cube();
         updateCube(c);
-        c.rotate(Axis.X, 1, 1);
-        updateCube(c);
-        c.rotate(Axis.Y, 1, 2);
-        updateCube(c);
-        cubeAltered = true;
+        //c.rotate(Axis.X, 1, 1);
+        //updateCube(c);
+        //c.rotate(Axis.Y, 1, 2);
+        //updateCube(c);
+        //cubeAltered = true;
         //InvokeRepeating("RotCube", 1.0f, 1.0f);
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
         if (cubeAltered) { updateCube(c); }
-        cubeAltered = false;
-        
+        if (Input.GetMouseButtonDown(0))
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                cubeAltered = true;
+                Vector3 pos = hit.transform.localPosition;
+                Debug.Log(hit.transform.name);
+                switch(hit.transform.name)
+                {
+                    case ("Quad 23"):
+                        c.rotate(Axis.Y, 1, 1);
+                        break;
+                    case ("Quad 32"):
+                        c.rotate(Axis.Y, -1, 1);
+                        break;
+                    case ("Quad 5"):
+                        c.rotate(Axis.X, 1, 1);
+                        break;
+                    case ("Quad 14"):
+                        c.rotate(Axis.X, -1, 1);
+                        break;
+                    case ("Quad 41"):
+                        c.rotate(Axis.Z, 1, 1);
+                        break;
+                    case ("Quad 50"):
+                        c.rotate(Axis.Z, -1, 1);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     void RotCube()
@@ -66,6 +96,7 @@ public class CubeController : MonoBehaviour
                 }
             }
         }
+        cubeAltered = false;
     }
 
     Material GetMaterial(Colour c)

@@ -157,11 +157,11 @@ namespace CubeNamespace
             List<Pice> Picelist = new List<Pice>();
             foreach (Pice p in pices)
             {
-                UnityEngine.Debug.Log(p.position[(int)axis]);
+                //UnityEngine.Debug.Log(p.position[(int)axis]);
                 if (p.position[(int)axis] == slice) { Picelist.Add(p); }
             }
             Pice[] rotatePices = Picelist.ToArray();
-            UnityEngine.Debug.Log("Rotating " + rotatePices.Length + " pices");
+            //UnityEngine.Debug.Log("Rotating " + rotatePices.Length + " pices");
             foreach (Pice rp in rotatePices)
             {
                 rp.rotate(rotQuaternion);

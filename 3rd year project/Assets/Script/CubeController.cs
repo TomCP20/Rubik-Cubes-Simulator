@@ -34,6 +34,11 @@ public class CubeController : MonoBehaviour
     void Update()
     {
         if (cubeAltered) { updateCube(c); }
+        if (Input.GetKeyDown("r"))
+        {
+            cubeAltered = true;
+            c.randomMoveSequence();
+        }
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
@@ -47,22 +52,22 @@ public class CubeController : MonoBehaviour
                 switch(hit.transform.name)
                 {
                     case ("Quad 23"):
-                        c.rotate(Axis.Y, 1, 1);
+                        c.rotate("U");
                         break;
                     case ("Quad 32"):
-                        c.rotate(Axis.Y, -1, 1);
+                        c.rotate("D");
                         break;
                     case ("Quad 5"):
-                        c.rotate(Axis.X, 1, 1);
+                        c.rotate("F");
                         break;
                     case ("Quad 14"):
-                        c.rotate(Axis.X, -1, 1);
+                        c.rotate("B");
                         break;
                     case ("Quad 41"):
-                        c.rotate(Axis.Z, 1, 1);
+                        c.rotate("R");
                         break;
                     case ("Quad 50"):
-                        c.rotate(Axis.Z, -1, 1);
+                        c.rotate("L");
                         break;
                     default:
                         break;

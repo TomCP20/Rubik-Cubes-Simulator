@@ -168,6 +168,72 @@ namespace CubeNamespace
             }
         }
 
+        public void rotate(string move)
+        {
+            string face = move.Substring(0, 1);
+            int angle = 0;
+            if (move.Length == 1)
+            {
+                angle = 1;
+            }
+            else if (move.Substring(1) == "'")
+            {
+                angle = -1;
+            }
+            else if (move.Substring(1) == "2")
+            {
+                angle = 2;
+            }
+            UnityEngine.Debug.Log(face);
+            UnityEngine.Debug.Log(angle);
+            rotate(face, angle);
+        }
+
+        public void rotate(string face, int angle)
+        {
+            Axis axis;
+            if (face == "F" || face == "B")
+            {
+                axis = Axis.X;
+            }
+            else if (face == "U" || face == "D")
+            {
+                axis = Axis.Y;
+            }
+            else
+            {
+                axis = Axis.Z;
+            }
+            int slice;
+            if (face == "F" || face == "U" || face == "R")
+            {
+                slice = 1;
+            }
+            else
+            {
+                slice = -1;
+                angle = -angle;
+            }
+            rotate(axis, slice, angle);
+        }
+
+        public void randomMove()
+        {
+            string[] faces = {"F", "U", "R", "B", "D", "L"};
+            System.Random rnd = new System.Random();
+            string face = faces[rnd.Next(6)];
+            int angle = rnd.Next(1, 4);
+            rotate(face, angle);
+        }
+
+        public void randomMoveSequence(int n = 20)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                randomMove();
+            }
+        }
+
         private Quaternion rotateQuaternion(Axis axis, int quarterTurns)
         {
             Vector3 rotationVector = new Vector3(0, 0, 0);

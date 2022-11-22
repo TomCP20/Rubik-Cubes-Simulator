@@ -5,6 +5,7 @@ using System;
 using UnityEngine;
 using System.Diagnostics;
 using System.Collections.Specialized;
+using ExtensionMethods;
 
 namespace CubeNamespace
 {
@@ -125,23 +126,34 @@ namespace CubeNamespace
 
         public Cube()
         {
-            List<Pice> Picelist = new List<Pice>();
-            Vector3 position;
+            pices = new Pice[26];
+            Vector3[] positions = genPositions();
+            for (int i = 0; i < 26; i++)
+            {
+                pices[i] = new Pice(positions[i]);
+            }    
+        }
+
+        private Vector3[] genPositions()
+        {
+            Vector3[] positions = new Vector3[26];
+            int index = 0;
             for (int i = -1; i <= 1; i++)
             {
                 for (int j = -1; j <= 1; j++)
                 {
                     for (int k = -1; k <= 1; k++)
                     {
-                        position = new Vector3(i, j, k);
-                        if (position.magnitude >= 1)
+                        Vector3 position = new Vector3(i, j, k);
+                        if (position != Vector3.zero)
                         {
-                            Picelist.Add(new Pice(position));
+                            positions[index] = position;
+                            index++;
                         }
                     }
                 }
             }
-            pices = Picelist.ToArray();
+            return positions;
         }
 
         public object Clone()
@@ -226,7 +238,7 @@ namespace CubeNamespace
             rotate(face, angle);
         }
 
-        public void randomMoveSequence(int n = 20)
+        public void randomMoveSequence(int n = 25)
         {
             for (int i = 0; i < n; i++)
             {
@@ -240,5 +252,45 @@ namespace CubeNamespace
             rotationVector[(int)axis] = 90 * quarterTurns;
             return Quaternion.Euler(rotationVector);
         }
-    }
+
+        public void solve()
+        {
+            whiteCross();
+        }
+
+        public void whiteCross()
+        {
+            List<Pice> whiteEdges = new List<Pice>();
+            foreach(Pice p in pices)
+            {
+                if (p.position.ManhattanDistance() == 2)
+                {
+                    foreach(Face f in p.faces)
+                    {
+                        if (f.colour == Colour.White)
+                        {
+                            whiteEdges.Add(p);
+                        }
+                    }
+                }
+            }
+            foreach(Pice whiteEdge in whiteEdges)
+            {
+                UnityEngine.Debug.Log(whiteEdge.position);
+                int yPos = (int)whiteEdge.position.y;
+                switch (yPos)
+                {
+                    case -1:
+                        break;
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    default:
+                        UnityEngine.Debug.LogError("invalid y position");
+                        break;
+                }
+            }
+        }
+    }  
 }

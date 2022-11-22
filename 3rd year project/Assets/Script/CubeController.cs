@@ -39,6 +39,11 @@ public class CubeController : MonoBehaviour
             cubeAltered = true;
             c.randomMoveSequence();
         }
+        if (Input.GetKeyDown("s"))
+        {
+            cubeAltered = true;
+            c.solve();
+        }
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;

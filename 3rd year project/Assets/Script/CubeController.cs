@@ -39,7 +39,7 @@ public class CubeController : MonoBehaviour
             cubeAltered = true;
             c.randomMoveSequence();
         }
-        if (Input.GetKeyDown("s"))
+        if (Input.GetKeyDown("l"))
         {
             cubeAltered = true;
             c.solve();

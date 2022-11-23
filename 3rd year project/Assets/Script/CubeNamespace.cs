@@ -26,6 +26,70 @@ namespace CubeNamespace
         Y = 1,
         Z = 2
     }
+    readonly struct Slice
+    {
+        public Axis axis { get; }
+        public int slicePos { get; }
+
+        public Slice(Axis a, int s)
+        {
+            this.axis = a;
+            this.slicePos = s;
+        }
+
+        public Slice(string notation)
+        {
+            switch (notation)
+            {
+                case "F":
+                    axis = Axis.X;
+                    slicePos = 1;
+                    break;
+                case "U":
+                    axis = Axis.Y;
+                    slicePos = 1;
+                    break;
+                case "R":
+                    axis = Axis.Z;
+                    slicePos = 1;
+                    break;
+                case "B":
+                    axis = Axis.X;
+                    slicePos = -1;
+                    break;
+                case "D":
+                    axis = Axis.Y;
+                    slicePos = -1;
+                    break;
+                case "L":
+                    axis = Axis.Z;
+                    slicePos = -1;
+                    break;
+                default:
+                    axis = Axis.X;
+                    slicePos = 0;
+                    break;
+            }
+        }
+
+        public string getNotation()
+        {
+            switch (axis)
+            {
+                case Axis.X:
+                    if (slicePos == 1) { return "F"; }
+                    else { return "B"; }
+                case Axis.Y:
+                    if (slicePos == 1) { return "U"; }
+                    else { return "D"; }
+                case Axis.Z:
+                    if (slicePos == 1) { return "R"; }
+                    else { return "L"; }
+                default:
+                    return "";
+            }
+        }
+    }
 
     class Face : ICloneable
     {
@@ -88,7 +152,7 @@ namespace CubeNamespace
             {
                 if (position[i] != 0)
                 {
-                    FaceList.Add(new Face(PositionToDirection(position, (Axis)i)));
+                    FaceList.Add(new Face(PositionToDirection((Axis)i)));
                 }
             }
             faces = FaceList.ToArray();
@@ -107,11 +171,41 @@ namespace CubeNamespace
             foreach (Face face in faces) { face.rotate(rotQuaternion); }
         }
 
-        private Vector3 PositionToDirection(Vector3 p, Axis axis)
+        private Vector3 PositionToDirection(Axis axis)
         {
             Vector3 direction = Vector3.zero;
-            direction[(int)axis] = p[(int)axis];
+            direction[(int)axis] = this.position[(int)axis];
             return direction;
+        }
+
+        public Vector3 SolvedPosition()
+        {
+            Vector3 solved = Vector3.zero;
+            foreach (Face face in faces)
+            {
+                switch (face.colour)
+                {
+                    case Colour.White:
+                        solved[1] = 1;
+                        break;
+                    case Colour.Green:
+                        solved[0] = 1; 
+                        break;                           
+                    case Colour.Blue:
+                        solved[1] = -1;
+                        break;
+                    case Colour.Red:
+                        solved[2] = 1;
+                        break;
+                    case Colour.Yellow:
+                        solved[0] = -1;
+                        break;
+                    case Colour.Orange:
+                        solved[2] = -1;
+                        break;
+                }
+            }
+            return solved;
         }
     }
 
@@ -184,58 +278,24 @@ namespace CubeNamespace
         {
             string face = move.Substring(0, 1);
             int angle = 0;
-            if (move.Length == 1)
-            {
-                angle = 1;
-            }
-            else if (move.Substring(1) == "'")
-            {
-                angle = -1;
-            }
-            else if (move.Substring(1) == "2")
-            {
-                angle = 2;
-            }
+            if (move.Length == 1) { angle = 1; }
+            else if (move.Substring(1) == "'") { angle = -1; }
+            else if (move.Substring(1) == "2") { angle = 2; }
             UnityEngine.Debug.Log(face);
             UnityEngine.Debug.Log(angle);
-            rotate(face, angle);
+            rotate(new Slice(face), angle);
         }
 
-        public void rotate(string face, int angle)
+        public void rotate(Slice s, int angle)
         {
-            Axis axis;
-            if (face == "F" || face == "B")
-            {
-                axis = Axis.X;
-            }
-            else if (face == "U" || face == "D")
-            {
-                axis = Axis.Y;
-            }
-            else
-            {
-                axis = Axis.Z;
-            }
-            int slice;
-            if (face == "F" || face == "U" || face == "R")
-            {
-                slice = 1;
-            }
-            else
-            {
-                slice = -1;
-                angle = -angle;
-            }
-            rotate(axis, slice, angle);
+            rotate(s.axis, s.slicePos, angle);
         }
 
         public void randomMove()
         {
-            string[] faces = {"F", "U", "R", "B", "D", "L"};
+            string[] facesArray = {"F", "U", "R", "B", "D", "L"};
             System.Random rnd = new System.Random();
-            string face = faces[rnd.Next(6)];
-            int angle = rnd.Next(1, 4);
-            rotate(face, angle);
+            rotate(new Slice(facesArray[rnd.Next(6)]), rnd.Next(1, 4));
         }
 
         public void randomMoveSequence(int n = 25)
@@ -276,11 +336,17 @@ namespace CubeNamespace
             }
             foreach(Pice whiteEdge in whiteEdges)
             {
-                UnityEngine.Debug.Log(whiteEdge.position);
-                int yPos = (int)whiteEdge.position.y;
+                Vector3 startPos = whiteEdge.position;
+                Vector3 targetPos = whiteEdge.SolvedPosition();
+                UnityEngine.Debug.Log(startPos);
+                int yPos = (int)startPos.y;
                 switch (yPos)
                 {
                     case -1:
+                        if (startPos != targetPos)
+                        {
+                            
+                        }
                         break;
                     case 0:
                         break;

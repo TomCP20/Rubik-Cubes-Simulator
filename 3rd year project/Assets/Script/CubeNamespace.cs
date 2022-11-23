@@ -207,6 +207,18 @@ namespace CubeNamespace
             }
             return solved;
         }
+
+        public bool containsColour(Colour c)
+        {
+            foreach(Face f in faces)
+            {
+                if (f.colour == c)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     class Cube : ICloneable
@@ -320,43 +332,66 @@ namespace CubeNamespace
 
         public void whiteCross()
         {
+            List<Pice> whiteEdges = getWhiteEdges();
+            foreach(Pice whiteEdge in whiteEdges)
+            {
+                whiteEdgePosition(whiteEdge);
+            }   
+        }
+
+        private void whiteEdgePosition(Pice whiteEdge)
+        {
+            Vector3 startPos = whiteEdge.position;
+            Vector3 targetPos = whiteEdge.SolvedPosition();
+            UnityEngine.Debug.Log(startPos);
+            int yPos = (int)startPos.y;
+            switch (yPos)
+            {
+                case 1:
+                    if (startPos.x + targetPos.x == 0 && startPos.z + targetPos.z == 0) // if the target position is oposite the current position
+                    {
+                        Axis a;
+                        int s;
+                        if (targetPos.x != 0)
+                        {
+                            a = Axis.X;
+                            s = (int)startPos.x;
+                        }
+                        else
+                        {
+                            a = Axis.Z;
+                            s = (int)startPos.z;
+                        }
+                        rotate(new Slice(a, s), 2);
+                        rotate(new Slice(Axis.Y, -1), 2);
+                        rotate(new Slice(a, -s), 2);                                                   
+                    }
+                    else if (startPos != targetPos) //if its not oposite and its not solved then the pice must be diagonal from its goal position
+                    {
+                        
+                    }
+                    break;
+                case 0:
+                    break;
+                case -1:
+                    break;
+                default:
+                    UnityEngine.Debug.LogError("invalid y position");
+                    break;
+                }
+            } 
+
+        private List<Pice> getWhiteEdges()
+        {
             List<Pice> whiteEdges = new List<Pice>();
             foreach(Pice p in pices)
             {
-                if (p.position.ManhattanDistance() == 2)
+                if (p.position.ManhattanDistance() == 2 && p.containsColour(Colour.White))
                 {
-                    foreach(Face f in p.faces)
-                    {
-                        if (f.colour == Colour.White)
-                        {
-                            whiteEdges.Add(p);
-                        }
-                    }
+                    whiteEdges.Add(p);
                 }
             }
-            foreach(Pice whiteEdge in whiteEdges)
-            {
-                Vector3 startPos = whiteEdge.position;
-                Vector3 targetPos = whiteEdge.SolvedPosition();
-                UnityEngine.Debug.Log(startPos);
-                int yPos = (int)startPos.y;
-                switch (yPos)
-                {
-                    case -1:
-                        if (startPos != targetPos)
-                        {
-                            
-                        }
-                        break;
-                    case 0:
-                        break;
-                    case 1:
-                        break;
-                    default:
-                        UnityEngine.Debug.LogError("invalid y position");
-                        break;
-                }
-            }
+            return whiteEdges;
         }
     }  
 }

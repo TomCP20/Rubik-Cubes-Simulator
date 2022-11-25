@@ -369,7 +369,8 @@ namespace CubeNamespace
             List<Pice> blueEdges = getblueEdges();
             foreach(Pice blueEdge in blueEdges)
             {
-                blueEdgePosition(blueEdge);              
+                blueEdgePosition(blueEdge);    
+                blueOrientation(blueEdge);          
             }        
         }
 
@@ -408,29 +409,36 @@ namespace CubeNamespace
 
         private void blueEdgePositionTop(Pice blueEdge, Vector3 targetPos, Vector3 startPos)
         {
+            UnityEngine.Debug.Log("solving edge at top layer");
             Vector3 midPos;
+            UnityEngine.Debug.Log(startPos.x*targetPos.x + startPos.z * targetPos.z);
             switch (startPos.x*targetPos.x + startPos.z * targetPos.z)
             {
                 case 1: //solved
+                    UnityEngine.Debug.Log("solved");
                     break;
-                case 0: //oposite
+                case -1: //oposite
+                    UnityEngine.Debug.Log("oposite");
                     rotate(Axis.Y, 1, 2);
                     break;
-                case -1: //diagonal
+                case 0: //diagonal
+                    UnityEngine.Debug.Log("diagonal");
                     if (startPos.x == 0)
                     {
-                        rotate(Axis.Y, 1, (int)startPos.z);
+                        rotate(Axis.Y, 1, (int)targetPos.x*(int)startPos.z);
                     }
                     else
                     {
-                        rotate(Axis.Y, 1, (int)startPos.x);
+                        rotate(Axis.Y, 1, -(int)targetPos.z*(int)startPos.x);
                     }
                     break;
                 default:
                     UnityEngine.Debug.Log("error 1q2");
                     break;
             }
+
             midPos = blueEdge.position;
+            UnityEngine.Debug.Log("midPos: " + midPos);
             if (midPos.x == 0)
             {
                 rotate(Axis.Z, (int)midPos.z, 2);
@@ -441,63 +449,106 @@ namespace CubeNamespace
             }
         }
 
-        private void blueEdgePositionMiddle(Pice blueEdge, Vector3 targetPos, Vector3 startPos) // fix this thing
+        private void blueEdgePositionMiddle(Pice blueEdge, Vector3 targetPos, Vector3 startPos)
         {
-            UnityEngine.Debug.Log("solving edge at middle layer");
-            if (startPos.x == targetPos.x)
+            if (startPos.x == 1)
             {
-                rotate(Axis.X, (int)startPos.x, (int)startPos.z);
-            }
-            else if (startPos.z == targetPos.z)
-            {
-                rotate(Axis.Z, (int)startPos.z, (int)startPos.x);
-            }
-            else if (targetPos.x == 0)
-            {
-                UnityEngine.Debug.Log("solving weird diagonal");
-                rotate(Axis.Y, -1, -(int)startPos.x*(int)startPos.z);
-                rotate(Axis.X, (int)startPos.x, (int)startPos.z);
-                rotate(Axis.Y, -1, (int)startPos.x*(int)startPos.z);
+                if (startPos.z == 1)
+                {
+                    if (targetPos.x == 1)
+                    {
+                        rotate(Axis.X, 1, 1);
+                    }
+                    else if (targetPos.x == -1) 
+                    {
+                        rotate(Axis.Y, -1, 1);
+                        rotate(Axis.Z, 1, -1);
+                        rotate(Axis.Y, -1, -1);
+                    }
+                    else if (targetPos.z == 1)
+                    {
+                        rotate(Axis.Z, 1, -1);
+                    }
+                    else if (targetPos.z == -1)
+                    {
+                        rotate(Axis.Y, -1, -1);
+                        rotate(Axis.X, 1, 1);
+                        rotate(Axis.Y, -1, 1);
+                    }
+                }
+                else
+                {
+                    if (targetPos.x == 1)
+                    {
+                        rotate(Axis.X, 1, -1);
+                    }
+                    else if (targetPos.x == -1)
+                    {
+                        rotate(Axis.Y, -1, -1);
+                        rotate(Axis.Z, -1, -1);
+                        rotate(Axis.Y, -1, 1);
+                    }
+                    else if (targetPos.z == 1)
+                    {
+                        rotate(Axis.Y, -1, 1);
+                        rotate(Axis.X, 1, -1);
+                        rotate(Axis.Y, -1, -1);
+                    }
+                    else if (targetPos.z == -1)
+                    {
+                        rotate(Axis.Z, -1, -1);
+                    }
+                }
             }
             else
             {
-                UnityEngine.Debug.Log("solving weird diagonal");
-                rotate(Axis.Y, -1, -(int)startPos.z*(int)startPos.x);
-                rotate(Axis.Z, (int)startPos.z, (int)startPos.x);
-                rotate(Axis.Y, -1, (int)startPos.z*(int)startPos.x);
-            }
-            /*
-            Vector3 midPos;
-            midPos = new Vector3(startPos.x, -1, 0);
-            switch (midPos.x*targetPos.x + midPos.z * targetPos.z)
-            {
-                case 1:
-                    rotate(Axis.X, (int)startPos.x, (int)startPos.z);
-                    break;
-                case 0:
-                    rotate(Axis.Y, -1, 2);
-                    rotate(Axis.X, (int)startPos.x, (int)startPos.z);
-                    rotate(Axis.Y, -1, 2);
-                    break;
-                case -1:
-                    if (startPos.x == 0)
+                if (startPos.z == 1)
+                {
+                    if (targetPos.x == 1)
                     {
-                        rotate(Axis.Y, -1, (int)targetPos.x);
-                        rotate(Axis.X, (int)startPos.x, (int)startPos.z);
-                        rotate(Axis.Y, -1, -(int)targetPos.x);
+                        rotate(Axis.Y, -1, -1);
+                        rotate(Axis.Z, 1, 1);
+                        rotate(Axis.Y, -1, 1);
                     }
-                    else
+                    else if (targetPos.x == -1) 
                     {
-                        rotate(Axis.Y, -1, (int)targetPos.z);
-                        rotate(Axis.X, (int)startPos.x, (int)startPos.z);
-                        rotate(Axis.Y, -1, -(int)targetPos.z);
+                        rotate(Axis.X, -1, 1);
                     }
-                    break;
-                default:
-                    break;
+                    else if (targetPos.z == 1) 
+                    {
+                        rotate(Axis.Z, 1, 1);
+                    }
+                    else if (targetPos.z == -1)
+                    {
+                        rotate(Axis.Y, -1, 1);
+                        rotate(Axis.X, -1, 1);
+                        rotate(Axis.Y, -1, -1);
+                    }
+                }
+                else //(-1, 1)
+                {
+                    if (targetPos.x == 1) 
+                    {
+                        rotate(Axis.Y, -1, 1);
+                        rotate(Axis.Z, -1, 1);
+                        rotate(Axis.Y, -1, -1);
+                    }
+                    else if (targetPos.x == -1) 
+                    {
+                        rotate(Axis.X, -1, -1);
+                    }
+                    else if (targetPos.z == 1) 
+                    {
+                        rotate(Axis.Y, -1, -1);
+                        rotate(Axis.X, -1, -1);
+                        rotate(Axis.Y, -1, 1);
+                    }
+                    else if (targetPos.z == -1) 
+                    {
+                        rotate(Axis.Z, -1, 1);
+                    }
+                }
             }
-            */
-
         }
         private void blueEdgePositionBottom(Pice blueEdge, Vector3 targetPos, Vector3 startPos)
         {

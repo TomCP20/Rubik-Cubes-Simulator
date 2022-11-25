@@ -48,7 +48,7 @@ public class CubeController : MonoBehaviour
             {
                 cubeAltered = true;
                 Vector3 pos = hit.transform.localPosition;
-                Debug.Log(hit.transform.name);
+                //Debug.Log(hit.transform.name);
                 switch(hit.transform.name)
                 {
                     case ("Quad 23"):

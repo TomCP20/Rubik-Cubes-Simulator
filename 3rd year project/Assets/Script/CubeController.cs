@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using CubeNamespace;
 using System.Collections.Specialized;
+using System.Collections;
 
 public class CubeController : MonoBehaviour
 {
@@ -21,11 +22,6 @@ public class CubeController : MonoBehaviour
         
         c = new Cube();
         updateCube(c);
-        //c.rotate(Axis.X, 1, 1);
-        //updateCube(c);
-        //c.rotate(Axis.Y, 1, 2);
-        //updateCube(c);
-        //cubeAltered = true;
         //InvokeRepeating("RotCube", 1.0f, 1.0f);
         
     }
@@ -41,8 +37,7 @@ public class CubeController : MonoBehaviour
         }
         if (Input.GetKeyDown("l"))
         {
-            cubeAltered = true;
-            c.solve();
+            StartCoroutine(solve(c));
         }
         if (Input.GetMouseButtonDown(0))
         {
@@ -81,6 +76,12 @@ public class CubeController : MonoBehaviour
         }
     }
 
+    IEnumerator solve(Cube c)
+    {
+        c.solve();
+        cubeAltered = true;
+        yield return null;
+    }
     void RotCube()
     {
         c.rotate(Axis.X, 1, 1);

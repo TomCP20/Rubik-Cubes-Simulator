@@ -30,15 +30,22 @@ namespace CubeNamespace
     {
         public Axis axis { get; }
         public int slicePos { get; }
+        public int angle { get; }
 
-        public Slice(Axis a, int s)
+        public Slice(Axis a, int s, int an)
         {
             this.axis = a;
             this.slicePos = s;
+            this.angle = an;
         }
 
         public Slice(string notation)
         {
+            string face = notation.Substring(0, 1);
+            if (notation.Length == 1) { angle = 1; }
+            else if (notation.Substring(1) == "'") { angle = -1; }
+            else if (notation.Substring(1) == "2") { angle = 2; }
+            else { angle = 0; }
             switch (notation)
             {
                 case "F":
@@ -56,38 +63,70 @@ namespace CubeNamespace
                 case "B":
                     axis = Axis.X;
                     slicePos = -1;
+                    angle = -angle;
                     break;
                 case "D":
                     axis = Axis.Y;
                     slicePos = -1;
+                    angle = -angle;
                     break;
                 case "L":
                     axis = Axis.Z;
                     slicePos = -1;
+                    angle = -angle;
                     break;
                 default:
                     axis = Axis.X;
                     slicePos = 0;
+                    angle = 0;
                     break;
             }
         }
 
         public string getNotation()
         {
+            string output = "";
             switch (axis)
             {
                 case Axis.X:
-                    if (slicePos == 1) { return "F"; }
-                    else { return "B"; }
+                    if (slicePos == 1) { output = "F"; }
+                    else { output =  "B"; }
+                    break;
                 case Axis.Y:
-                    if (slicePos == 1) { return "U"; }
-                    else { return "D"; }
+                    if (slicePos == 1) { output = "U"; }
+                    else { output =  "D"; }
+                    break;
                 case Axis.Z:
-                    if (slicePos == 1) { return "R"; }
-                    else { return "L"; }
+                    if (slicePos == 1) { output = "R"; }
+                    else { output = "L"; }
+                    break;
                 default:
-                    return "";
+                    output =  "";
+                    break;
             }
+            if (slicePos == 1)
+            {
+                if (angle == 2)
+                {
+                    output += "2";
+                }
+                else if (angle == -1)
+                {
+                    output += "'";
+                }
+            }
+            else
+            {
+                if (angle == 2)
+                {
+                    output += "2";
+                }
+                else if (angle == 1)
+                {
+                    output += "'";
+                }
+            }
+            return output;
         }
     }
 
@@ -271,6 +310,8 @@ namespace CubeNamespace
 
         public void rotate(Axis axis, int slice, int quarterTurns)
         {
+            //UnityEngine.Debug.Log("Rotating: " + axis + " axis, " + slice + " slice, " + quarterTurns + " quarter Turns");
+            //UnityEngine.Debug.Log(new Slice(axis, slice, quarterTurns).getNotation());
             Quaternion rotQuaternion = rotateQuaternion(axis, quarterTurns);
             List<Pice> Picelist = new List<Pice>();
             foreach (Pice p in pices)
@@ -288,29 +329,22 @@ namespace CubeNamespace
 
         public void rotate(string move)
         {
-            string face = move.Substring(0, 1);
-            int angle = 0;
-            if (move.Length == 1) { angle = 1; }
-            else if (move.Substring(1) == "'") { angle = -1; }
-            else if (move.Substring(1) == "2") { angle = 2; }
-            UnityEngine.Debug.Log(face);
-            UnityEngine.Debug.Log(angle);
-            rotate(new Slice(face), angle);
+            rotate(new Slice(move));
         }
 
-        public void rotate(Slice s, int angle)
+        public void rotate(Slice s)
         {
-            rotate(s.axis, s.slicePos, angle);
+            rotate(s.axis, s.slicePos, s.angle);
         }
 
         public void randomMove()
         {
-            string[] facesArray = {"F", "U", "R", "B", "D", "L"};
+            string[] movesArray = {"F", "U", "R", "B", "D", "L", "F'", "U'", "R'", "B'", "D'", "L'", "F2", "U2", "R2", "B2", "D2", "L2"};
             System.Random rnd = new System.Random();
-            rotate(new Slice(facesArray[rnd.Next(6)]), rnd.Next(1, 4));
+            rotate(new Slice(movesArray[rnd.Next(18)]));
         }
 
-        public void randomMoveSequence(int n = 25)
+        public void randomMoveSequence(int n = 100)
         {
             for (int i = 0; i < n; i++)
             {
@@ -327,28 +361,147 @@ namespace CubeNamespace
 
         public void solve()
         {
-            whiteCross();
+            blueCross();
         }
 
-        public void whiteCross()
+        public void blueCross()
         {
-            List<Pice> whiteEdges = getWhiteEdges();
-            foreach(Pice whiteEdge in whiteEdges)
+            List<Pice> blueEdges = getblueEdges();
+            foreach(Pice blueEdge in blueEdges)
             {
-                whiteEdgePosition(whiteEdge);
-            }   
+                blueEdgePosition(blueEdge);              
+            }        
         }
 
-        private void whiteEdgePosition(Pice whiteEdge)
+        private void blueEdgePosition(Pice blueEdge)
         {
-            Vector3 startPos = whiteEdge.position;
-            Vector3 targetPos = whiteEdge.SolvedPosition();
-            UnityEngine.Debug.Log(startPos);
+            Vector3 startPos = blueEdge.position;
+            Vector3 targetPos = blueEdge.SolvedPosition();
+            //UnityEngine.Debug.Log(startPos);
             int yPos = (int)startPos.y;
+            UnityEngine.Debug.Log("solving edge at y " + yPos);
             switch (yPos)
             {
+                case -1:
+                    blueEdgePositionBottom(blueEdge, targetPos, startPos);
+                    break;          
+                case 0:
+                    blueEdgePositionMiddle(blueEdge, targetPos, startPos);
+                    break;
                 case 1:
-                    if (startPos.x + targetPos.x == 0 && startPos.z + targetPos.z == 0) // if the target position is oposite the current position
+                    blueEdgePositionTop(blueEdge, targetPos, startPos);
+                    break;
+                default:
+                    UnityEngine.Debug.LogError("invalid y position");
+                    break;
+                }
+            if (targetPos == blueEdge.position)
+            {
+                UnityEngine.Debug.Log("edge solved");
+            }
+            else
+            {
+                UnityEngine.Debug.LogError("edge not solved: start: " + startPos + " target: " + targetPos + " current: " + blueEdge.position);
+            }
+
+        } 
+
+        private void blueEdgePositionTop(Pice blueEdge, Vector3 targetPos, Vector3 startPos)
+        {
+            Vector3 midPos;
+            switch (startPos.x*targetPos.x + startPos.z * targetPos.z)
+            {
+                case 1: //solved
+                    break;
+                case 0: //oposite
+                    rotate(Axis.Y, 1, 2);
+                    break;
+                case -1: //diagonal
+                    if (startPos.x == 0)
+                    {
+                        rotate(Axis.Y, 1, (int)startPos.z);
+                    }
+                    else
+                    {
+                        rotate(Axis.Y, 1, (int)startPos.x);
+                    }
+                    break;
+                default:
+                    UnityEngine.Debug.Log("error 1q2");
+                    break;
+            }
+            midPos = blueEdge.position;
+            if (midPos.x == 0)
+            {
+                rotate(Axis.Z, (int)midPos.z, 2);
+            }
+            else
+            {
+                rotate(Axis.X, (int)midPos.x, 2);
+            }
+        }
+
+        private void blueEdgePositionMiddle(Pice blueEdge, Vector3 targetPos, Vector3 startPos) // fix this thing
+        {
+            UnityEngine.Debug.Log("solving edge at middle layer");
+            if (startPos.x == targetPos.x)
+            {
+                rotate(Axis.X, (int)startPos.x, (int)startPos.z);
+            }
+            else if (startPos.z == targetPos.z)
+            {
+                rotate(Axis.Z, (int)startPos.z, (int)startPos.x);
+            }
+            else if (targetPos.x == 0)
+            {
+                UnityEngine.Debug.Log("solving weird diagonal");
+                rotate(Axis.Y, -1, -(int)startPos.x*(int)startPos.z);
+                rotate(Axis.X, (int)startPos.x, (int)startPos.z);
+                rotate(Axis.Y, -1, (int)startPos.x*(int)startPos.z);
+            }
+            else
+            {
+                UnityEngine.Debug.Log("solving weird diagonal");
+                rotate(Axis.Y, -1, -(int)startPos.z*(int)startPos.x);
+                rotate(Axis.Z, (int)startPos.z, (int)startPos.x);
+                rotate(Axis.Y, -1, (int)startPos.z*(int)startPos.x);
+            }
+            /*
+            Vector3 midPos;
+            midPos = new Vector3(startPos.x, -1, 0);
+            switch (midPos.x*targetPos.x + midPos.z * targetPos.z)
+            {
+                case 1:
+                    rotate(Axis.X, (int)startPos.x, (int)startPos.z);
+                    break;
+                case 0:
+                    rotate(Axis.Y, -1, 2);
+                    rotate(Axis.X, (int)startPos.x, (int)startPos.z);
+                    rotate(Axis.Y, -1, 2);
+                    break;
+                case -1:
+                    if (startPos.x == 0)
+                    {
+                        rotate(Axis.Y, -1, (int)targetPos.x);
+                        rotate(Axis.X, (int)startPos.x, (int)startPos.z);
+                        rotate(Axis.Y, -1, -(int)targetPos.x);
+                    }
+                    else
+                    {
+                        rotate(Axis.Y, -1, (int)targetPos.z);
+                        rotate(Axis.X, (int)startPos.x, (int)startPos.z);
+                        rotate(Axis.Y, -1, -(int)targetPos.z);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            */
+
+        }
+        private void blueEdgePositionBottom(Pice blueEdge, Vector3 targetPos, Vector3 startPos)
+        {
+            if (startPos.x + targetPos.x == 0 && startPos.z + targetPos.z == 0) // if the target position is oposite the current position
                     {
                         Axis a;
                         int s;
@@ -362,36 +515,111 @@ namespace CubeNamespace
                             a = Axis.Z;
                             s = (int)startPos.z;
                         }
-                        rotate(new Slice(a, s), 2);
-                        rotate(new Slice(Axis.Y, -1), 2);
-                        rotate(new Slice(a, -s), 2);                                                   
-                    }
+                        rotate(a, s, 2);
+                        rotate(Axis.Y, 1, 2);
+                        rotate(a, -s, 2);                                                   
+                    }                    
                     else if (startPos != targetPos) //if its not oposite and its not solved then the pice must be diagonal from its goal position
                     {
-                        
+                        if (startPos.x + targetPos.x == 1)
+                        {
+                            if (startPos.z + targetPos.z == 1)
+                            {
+                                rotate(Axis.Z, 1, 1);
+                                rotate(Axis.Y, -1, -1);
+                                rotate(Axis.Z, 1, -1);
+                                rotate(Axis.Y, -1, 1);
+                                rotate(Axis.Z, 1, 1);                                
+                            }
+                            else
+                            {
+                                rotate(Axis.X, 1, 1);
+                                rotate(Axis.Y, -1, -1);
+                                rotate(Axis.X, 1, -1);
+                                rotate(Axis.Y, -1, 1);
+                                rotate(Axis.X, 1, 1);
+                            }
+                        }
+                        else
+                        {
+                            if (startPos.z + targetPos.z == 1)
+                            {
+                                rotate(Axis.X, -1, -1);
+                                rotate(Axis.Y, -1, -1);
+                                rotate(Axis.X, -1, 1);
+                                rotate(Axis.Y, -1, 1);
+                                rotate(Axis.X, -1, -1);
+                            }
+                            else
+                            {
+                                rotate(Axis.Z, -1, -1);
+                                rotate(Axis.Y, -1, -1);
+                                rotate(Axis.Z, -1, 1);
+                                rotate(Axis.Y, -1, 1);
+                                rotate(Axis.Z, -1, -1);
+                            }
+                        }
                     }
-                    break;
-                case 0:
-                    break;
-                case -1:
-                    break;
-                default:
-                    UnityEngine.Debug.LogError("invalid y position");
-                    break;
-                }
-            } 
-
-        private List<Pice> getWhiteEdges()
+        }
+        private void blueOrientation(Pice blueEdge)
         {
-            List<Pice> whiteEdges = new List<Pice>();
-            foreach(Pice p in pices)
+            bool good = false;
+            foreach(Face f in blueEdge.faces)
             {
-                if (p.position.ManhattanDistance() == 2 && p.containsColour(Colour.White))
+                if (f.colour == Colour.Blue && f.direction == Vector3.down)
                 {
-                    whiteEdges.Add(p);
+                    good = true;
                 }
             }
-            return whiteEdges;
+            if (!good)
+            {
+                if (blueEdge.position.x != 0)
+                {
+                    if (blueEdge.position.x == 1)
+                    {
+                        rotate(Axis.X, 1, 1);
+                        rotate(Axis.Y, -1, 1);
+                        rotate(Axis.Z, -1, -1);
+                        rotate(Axis.Y, -1, -1);
+                    }
+                    else
+                    {
+                        rotate(Axis.X, -1, -1);
+                        rotate(Axis.Y, -1, 1);
+                        rotate(Axis.Z, 1, 1);
+                        rotate(Axis.Y, -1, -1);
+                    }
+                }
+                else
+                {
+                    if (blueEdge.position.z == 1)
+                    {
+                        rotate(Axis.Z, 1, 1);
+                        rotate(Axis.Y, -1, 1);
+                        rotate(Axis.X, 1, 1);
+                        rotate(Axis.Y, -1, -1);
+                    }
+                    else
+                    {
+                        rotate(Axis.Z, -1, -1);
+                        rotate(Axis.Y, -1, 1);
+                        rotate(Axis.X, -1, -1);
+                        rotate(Axis.Y, -1, -1);
+                    }
+                }
+            }
+        }
+        private List<Pice> getblueEdges()
+        {
+            List<Pice> blueEdges = new List<Pice>();
+            foreach(Pice p in pices)
+            {
+                if (p.position.ManhattanDistance() == 2 && p.containsColour(Colour.Blue))
+                {
+                    blueEdges.Add(p);
+                }
+            }
+            return blueEdges;
         }
     }  
 }

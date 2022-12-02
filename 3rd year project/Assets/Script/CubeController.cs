@@ -1,8 +1,11 @@
 using System;
 using UnityEngine;
-using CubeNamespace;
+using CubeSolvers;
+using Faces;
+using Pieces;
 using System.Collections.Specialized;
 using System.Collections;
+using Cubes;
 
 public class CubeController : MonoBehaviour
 {
@@ -73,12 +76,50 @@ public class CubeController : MonoBehaviour
                         break;
                 }
             }
+            
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                cubeAltered = true;
+                Vector3 pos = hit.transform.localPosition;
+                //Debug.Log(hit.transform.name);
+                switch(hit.transform.name)
+                {
+                    case ("Quad 23"):
+                        c.rotate("U'");
+                        break;
+                    case ("Quad 32"):
+                        c.rotate("D'");
+                        break;
+                    case ("Quad 5"):
+                        c.rotate("F'");
+                        break;
+                    case ("Quad 14"):
+                        c.rotate("B'");
+                        break;
+                    case ("Quad 41"):
+                        c.rotate("R'");
+                        break;
+                    case ("Quad 50"):
+                        c.rotate("L'");
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
         }
     }
 
     IEnumerator solve(Cube c)
     {
-        c.solve();
+        CubeSolver solver = new CubeSolver(c);
+        solver.solve();
         cubeAltered = true;
         yield return null;
     }
@@ -90,7 +131,7 @@ public class CubeController : MonoBehaviour
 
     void updateCube(Cube c)
     {
-        foreach (Pice p in c.pices)
+        foreach (Piece p in c.pieces)
         {
             foreach (Face f in p.faces)
             {

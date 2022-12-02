@@ -1,364 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using System;
 using UnityEngine;
-using System.Diagnostics;
-using System.Collections.Specialized;
+using Cubes;
+using Pieces;
+using Faces;
 using ExtensionMethods;
 
-namespace CubeNamespace
+namespace CubeSolvers
 {
-    enum Colour
+    class CubeSolver
     {
-        Black,
-        White,
-        Green,
-        Blue,
-        Red,
-        Yellow,
-        Orange,
-    }
-
-    enum Axis
-    {
-        X = 0,
-        Y = 1,
-        Z = 2
-    }
-    readonly struct Slice
-    {
-        public Axis axis { get; }
-        public int slicePos { get; }
-        public int angle { get; }
-
-        public Slice(Axis a, int s, int an)
+        Cube cube;
+        public CubeSolver(Cube cube)
         {
-            this.axis = a;
-            this.slicePos = s;
-            this.angle = an;
-        }
-
-        public Slice(string notation)
-        {
-            string face = notation.Substring(0, 1);
-            if (notation.Length == 1) { angle = 1; }
-            else if (notation.Substring(1) == "'") { angle = -1; }
-            else if (notation.Substring(1) == "2") { angle = 2; }
-            else { angle = 0; }
-            switch (notation)
-            {
-                case "F":
-                    axis = Axis.X;
-                    slicePos = 1;
-                    break;
-                case "U":
-                    axis = Axis.Y;
-                    slicePos = 1;
-                    break;
-                case "R":
-                    axis = Axis.Z;
-                    slicePos = 1;
-                    break;
-                case "B":
-                    axis = Axis.X;
-                    slicePos = -1;
-                    angle = -angle;
-                    break;
-                case "D":
-                    axis = Axis.Y;
-                    slicePos = -1;
-                    angle = -angle;
-                    break;
-                case "L":
-                    axis = Axis.Z;
-                    slicePos = -1;
-                    angle = -angle;
-                    break;
-                default:
-                    axis = Axis.X;
-                    slicePos = 0;
-                    angle = 0;
-                    break;
-            }
-        }
-
-        public string getNotation()
-        {
-            string output = "";
-            switch (axis)
-            {
-                case Axis.X:
-                    if (slicePos == 1) { output = "F"; }
-                    else { output =  "B"; }
-                    break;
-                case Axis.Y:
-                    if (slicePos == 1) { output = "U"; }
-                    else { output =  "D"; }
-                    break;
-                case Axis.Z:
-                    if (slicePos == 1) { output = "R"; }
-                    else { output = "L"; }
-                    break;
-                default:
-                    output =  "";
-                    break;
-            }
-            if (slicePos == 1)
-            {
-                if (angle == 2)
-                {
-                    output += "2";
-                }
-                else if (angle == -1)
-                {
-                    output += "'";
-                }
-            }
-            else
-            {
-                if (angle == 2)
-                {
-                    output += "2";
-                }
-                else if (angle == 1)
-                {
-                    output += "'";
-                }
-            }
-            return output;
-        }
-    }
-
-    class Face : ICloneable
-    {
-        public Colour colour;
-        public Vector3 direction;//unit vector
-
-        public Face(Colour c, Vector3 d)
-        {
-            colour = c;
-            direction = d;
-        }
-
-        public Face(Vector3 d)
-        {
-            direction = d;
-            colour = defaultColour(direction);
-        }
-
-        public object Clone()
-        {
-            return new Face(colour, direction);
-        }
-
-        public void rotate(Quaternion rotQuaternion)
-        {
-            direction = Vector3Int.RoundToInt(rotQuaternion * direction);
-        }
-
-        private Colour defaultColour(Vector3 d)
-        {
-            switch (d)
-            {
-                case Vector3 vec when vec.Equals(Vector3.right): return Colour.Green;
-                case Vector3 vec when vec.Equals(Vector3.left): return Colour.Yellow;
-                case Vector3 vec when vec.Equals(Vector3.up): return Colour.White;
-                case Vector3 vec when vec.Equals(Vector3.down): return Colour.Blue;
-                case Vector3 vec when vec.Equals(Vector3.forward): return Colour.Red;
-                case Vector3 vec when vec.Equals(Vector3.back): return Colour.Orange;
-                default: return Colour.Black;
-            }
-        }
-    }
-
-    class Pice : ICloneable
-    {
-        public Vector3 position;
-        public Face[] faces;
-
-        public Pice(Vector3 p, Face[] f)
-        {
-            position = p;
-            faces = f;
-        }
-
-        public Pice(Vector3 pos)
-        {
-            position = pos;
-            List<Face> FaceList = new List<Face>();
-            for (int i = 0; i < 3; i++)
-            {
-                if (position[i] != 0)
-                {
-                    FaceList.Add(new Face(PositionToDirection((Axis)i)));
-                }
-            }
-            faces = FaceList.ToArray();
-        }
-
-        public object Clone()
-        {
-            Face[] f = new Face[faces.Length];
-            for (int i = 0; i < faces.Length; i++) { f[i] = faces[i]; }
-            return new Pice(position, f);
-        }
-
-        public void rotate(Quaternion rotQuaternion)
-        {
-            position = Vector3Int.RoundToInt(rotQuaternion * position);
-            foreach (Face face in faces) { face.rotate(rotQuaternion); }
-        }
-
-        private Vector3 PositionToDirection(Axis axis)
-        {
-            Vector3 direction = Vector3.zero;
-            direction[(int)axis] = this.position[(int)axis];
-            return direction;
-        }
-
-        public Vector3 SolvedPosition()
-        {
-            Vector3 solved = Vector3.zero;
-            foreach (Face face in faces)
-            {
-                switch (face.colour)
-                {
-                    case Colour.White:
-                        solved[1] = 1;
-                        break;
-                    case Colour.Green:
-                        solved[0] = 1; 
-                        break;                           
-                    case Colour.Blue:
-                        solved[1] = -1;
-                        break;
-                    case Colour.Red:
-                        solved[2] = 1;
-                        break;
-                    case Colour.Yellow:
-                        solved[0] = -1;
-                        break;
-                    case Colour.Orange:
-                        solved[2] = -1;
-                        break;
-                }
-            }
-            return solved;
-        }
-
-        public bool containsColour(Colour c)
-        {
-            foreach(Face f in faces)
-            {
-                if (f.colour == c)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
-    class Cube : ICloneable
-    {
-        public Pice[] pices;
-
-        public Cube(Pice[] p)
-        {
-            pices = p;
-        }
-
-        public Cube()
-        {
-            pices = new Pice[26];
-            Vector3[] positions = genPositions();
-            for (int i = 0; i < 26; i++)
-            {
-                pices[i] = new Pice(positions[i]);
-            }    
-        }
-
-        private Vector3[] genPositions()
-        {
-            Vector3[] positions = new Vector3[26];
-            int index = 0;
-            for (int i = -1; i <= 1; i++)
-            {
-                for (int j = -1; j <= 1; j++)
-                {
-                    for (int k = -1; k <= 1; k++)
-                    {
-                        Vector3 position = new Vector3(i, j, k);
-                        if (position != Vector3.zero)
-                        {
-                            positions[index] = position;
-                            index++;
-                        }
-                    }
-                }
-            }
-            return positions;
-        }
-
-        public object Clone()
-        {
-            Pice[] p = new Pice[pices.Length];
-            for (int i = 0; i < pices.Length; i++) { p[i] = pices[i]; }
-            return new Cube(p);
+            this.cube = cube;
         }
 
         public void rotate(Axis axis, int slice, int quarterTurns)
         {
-            //UnityEngine.Debug.Log("Rotating: " + axis + " axis, " + slice + " slice, " + quarterTurns + " quarter Turns");
-            //UnityEngine.Debug.Log(new Slice(axis, slice, quarterTurns).getNotation());
-            Quaternion rotQuaternion = rotateQuaternion(axis, quarterTurns);
-            List<Pice> Picelist = new List<Pice>();
-            foreach (Pice p in pices)
-            {
-                //UnityEngine.Debug.Log(p.position[(int)axis]);
-                if (p.position[(int)axis] == slice) { Picelist.Add(p); }
-            }
-            Pice[] rotatePices = Picelist.ToArray();
-            //UnityEngine.Debug.Log("Rotating " + rotatePices.Length + " pices");
-            foreach (Pice rp in rotatePices)
-            {
-                rp.rotate(rotQuaternion);
-            }
+            cube.rotate(axis, slice, quarterTurns);
         }
-
-        public void rotate(string move)
-        {
-            rotate(new Slice(move));
-        }
-
-        public void rotate(Slice s)
-        {
-            rotate(s.axis, s.slicePos, s.angle);
-        }
-
-        public void randomMove()
-        {
-            string[] movesArray = {"F", "U", "R", "B", "D", "L", "F'", "U'", "R'", "B'", "D'", "L'", "F2", "U2", "R2", "B2", "D2", "L2"};
-            System.Random rnd = new System.Random();
-            rotate(new Slice(movesArray[rnd.Next(18)]));
-        }
-
-        public void randomMoveSequence(int n = 100)
-        {
-            for (int i = 0; i < n; i++)
-            {
-                randomMove();
-            }
-        }
-
-        private Quaternion rotateQuaternion(Axis axis, int quarterTurns)
-        {
-            Vector3 rotationVector = new Vector3(0, 0, 0);
-            rotationVector[(int)axis] = 90 * quarterTurns;
-            return Quaternion.Euler(rotationVector);
-        }
-
         public void solve()
         {
             blueCross();
@@ -366,15 +27,15 @@ namespace CubeNamespace
 
         public void blueCross()
         {
-            List<Pice> blueEdges = getblueEdges();
-            foreach(Pice blueEdge in blueEdges)
+            List<Piece> blueEdges = getblueEdges();
+            foreach(Piece blueEdge in blueEdges)
             {
                 blueEdgePosition(blueEdge);    
                 blueOrientation(blueEdge);          
             }        
         }
 
-        private void blueEdgePosition(Pice blueEdge)
+        private void blueEdgePosition(Piece blueEdge)
         {
             Vector3 startPos = blueEdge.position;
             Vector3 targetPos = blueEdge.SolvedPosition();
@@ -407,7 +68,7 @@ namespace CubeNamespace
 
         } 
 
-        private void blueEdgePositionTop(Pice blueEdge, Vector3 targetPos, Vector3 startPos)
+        private void blueEdgePositionTop(Piece blueEdge, Vector3 targetPos, Vector3 startPos)
         {
             UnityEngine.Debug.Log("solving edge at top layer");
             Vector3 midPos;
@@ -449,7 +110,7 @@ namespace CubeNamespace
             }
         }
 
-        private void blueEdgePositionMiddle(Pice blueEdge, Vector3 targetPos, Vector3 startPos)
+        private void blueEdgePositionMiddle(Piece blueEdge, Vector3 targetPos, Vector3 startPos)
         {
             if (startPos.x == 1)
             {
@@ -550,7 +211,7 @@ namespace CubeNamespace
                 }
             }
         }
-        private void blueEdgePositionBottom(Pice blueEdge, Vector3 targetPos, Vector3 startPos)
+        private void blueEdgePositionBottom(Piece blueEdge, Vector3 targetPos, Vector3 startPos)
         {
             if (startPos.x + targetPos.x == 0 && startPos.z + targetPos.z == 0) // if the target position is oposite the current position
                     {
@@ -612,7 +273,7 @@ namespace CubeNamespace
                         }
                     }
         }
-        private void blueOrientation(Pice blueEdge)
+        private void blueOrientation(Piece blueEdge)
         {
             bool good = false;
             foreach(Face f in blueEdge.faces)
@@ -660,10 +321,10 @@ namespace CubeNamespace
                 }
             }
         }
-        private List<Pice> getblueEdges()
+        private List<Piece> getblueEdges()
         {
-            List<Pice> blueEdges = new List<Pice>();
-            foreach(Pice p in pices)
+            List<Piece> blueEdges = new List<Piece>();
+            foreach(Piece p in cube.pieces)
             {
                 if (p.position.ManhattanDistance() == 2 && p.containsColour(Colour.Blue))
                 {

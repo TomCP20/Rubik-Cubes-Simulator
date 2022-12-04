@@ -4,71 +4,88 @@ using UnityEngine;
 using Cubes;
 using Pieces;
 using Faces;
+using Moves;
 using ExtensionMethods;
 
 namespace CubeSolvers
 {
     class CubeSolver
     {
-        Cube cube;
+        private Cube cube;
+        Queue<Move> moves;
+
         public CubeSolver(Cube cube)
         {
+            //this.cube = cube.Clone();
             this.cube = cube;
         }
 
-        public void rotate(Axis axis, int slice, int quarterTurns)
+        private void rotate(Axis axis, int slice, int quarterTurns)
         {
             cube.rotate(axis, slice, quarterTurns);
-        }
-        public void solve()
-        {
-            blueCross();
+            moves.Enqueue(new Move(axis, slice, quarterTurns));
         }
 
-        public void blueCross()
+        public Queue<Move> getSolution()
         {
-            List<Piece> blueEdges = getblueEdges();
-            foreach(Piece blueEdge in blueEdges)
+            solve();
+            return moves;
+        }
+        public Cube getSlovedCube()
+        {
+            solve();
+            return cube;
+        }
+        private void solve()
+        {
+            moves = new Queue<Move>();
+            whiteCross();
+        }
+
+        private void whiteCross()
+        {
+            List<Piece> whiteEdges = getWhiteEdges();
+            foreach(Piece whiteEdge in whiteEdges)
             {
-                blueEdgePosition(blueEdge);    
-                blueOrientation(blueEdge);          
+                whiteEdgePosition(whiteEdge);    
+                whiteOrientation(whiteEdge);          
             }        
         }
 
-        private void blueEdgePosition(Piece blueEdge)
+        private void whiteEdgePosition(Piece whiteEdge)
         {
-            Vector3 startPos = blueEdge.position;
-            Vector3 targetPos = blueEdge.SolvedPosition();
+            Vector3 startPos = whiteEdge.position;
+            Vector3 targetPos = whiteEdge.SolvedPosition();
             //UnityEngine.Debug.Log(startPos);
             int yPos = (int)startPos.y;
             UnityEngine.Debug.Log("solving edge at y " + yPos);
             switch (yPos)
             {
                 case -1:
-                    blueEdgePositionBottom(blueEdge, targetPos, startPos);
+                    whiteEdgePositionBottom(whiteEdge, targetPos, startPos);
                     break;          
                 case 0:
-                    blueEdgePositionMiddle(blueEdge, targetPos, startPos);
+                    whiteEdgePositionMiddle(whiteEdge, targetPos, startPos);
                     break;
                 case 1:
-                    blueEdgePositionTop(blueEdge, targetPos, startPos);
+                    whiteEdgePositionTop(whiteEdge, targetPos, startPos);
                     break;
                 default:
                     UnityEngine.Debug.LogError("invalid y position");
                     break;
                 }
-            if (targetPos == blueEdge.position)
+            if (targetPos == whiteEdge.position)
             {
                 UnityEngine.Debug.Log("edge solved");
             }
             else
             {
-                UnityEngine.Debug.LogError("edge not solved: start: " + startPos + " target: " + targetPos + " current: " + blueEdge.position);
+                UnityEngine.Debug.LogError("edge not solved: start: " + startPos + " target: " + targetPos + " current: " + whiteEdge.position);
             }
 
         } 
 
-        private void blueEdgePositionTop(Piece blueEdge, Vector3 targetPos, Vector3 startPos)
+        private void whiteEdgePositionTop(Piece whiteEdge, Vector3 targetPos, Vector3 startPos)
         {
             UnityEngine.Debug.Log("solving edge at top layer");
             Vector3 midPos;
@@ -98,7 +115,7 @@ namespace CubeSolvers
                     break;
             }
 
-            midPos = blueEdge.position;
+            midPos = whiteEdge.position;
             UnityEngine.Debug.Log("midPos: " + midPos);
             if (midPos.x == 0)
             {
@@ -110,7 +127,7 @@ namespace CubeSolvers
             }
         }
 
-        private void blueEdgePositionMiddle(Piece blueEdge, Vector3 targetPos, Vector3 startPos)
+        private void whiteEdgePositionMiddle(Piece whiteEdge, Vector3 targetPos, Vector3 startPos)
         {
             if (startPos.x == 1)
             {
@@ -211,7 +228,7 @@ namespace CubeSolvers
                 }
             }
         }
-        private void blueEdgePositionBottom(Piece blueEdge, Vector3 targetPos, Vector3 startPos)
+        private void whiteEdgePositionBottom(Piece whiteEdge, Vector3 targetPos, Vector3 startPos)
         {
             if (startPos.x + targetPos.x == 0 && startPos.z + targetPos.z == 0) // if the target position is oposite the current position
                     {
@@ -273,21 +290,21 @@ namespace CubeSolvers
                         }
                     }
         }
-        private void blueOrientation(Piece blueEdge)
+        private void whiteOrientation(Piece whiteEdge)
         {
             bool good = false;
-            foreach(Face f in blueEdge.faces)
+            foreach(Face f in whiteEdge.faces)
             {
-                if (f.colour == Colour.Blue && f.direction == Vector3.down)
+                if (f.colour == Colour.White && f.direction == Vector3.down)
                 {
                     good = true;
                 }
             }
             if (!good)
             {
-                if (blueEdge.position.x != 0)
+                if (whiteEdge.position.x != 0)
                 {
-                    if (blueEdge.position.x == 1)
+                    if (whiteEdge.position.x == 1)
                     {
                         rotate(Axis.X, 1, 1);
                         rotate(Axis.Y, -1, 1);
@@ -304,7 +321,7 @@ namespace CubeSolvers
                 }
                 else
                 {
-                    if (blueEdge.position.z == 1)
+                    if (whiteEdge.position.z == 1)
                     {
                         rotate(Axis.Z, 1, 1);
                         rotate(Axis.Y, -1, 1);
@@ -321,17 +338,17 @@ namespace CubeSolvers
                 }
             }
         }
-        private List<Piece> getblueEdges()
+        private List<Piece> getWhiteEdges()
         {
-            List<Piece> blueEdges = new List<Piece>();
+            List<Piece> whiteEdges = new List<Piece>();
             foreach(Piece p in cube.pieces)
             {
-                if (p.position.ManhattanDistance() == 2 && p.containsColour(Colour.Blue))
+                if (p.position.ManhattanDistance() == 2 && p.containsColour(Colour.White))
                 {
-                    blueEdges.Add(p);
+                    whiteEdges.Add(p);
                 }
             }
-            return blueEdges;
+            return whiteEdges;
         }
     }  
 }

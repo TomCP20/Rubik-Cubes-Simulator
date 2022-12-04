@@ -6,7 +6,7 @@ using System;
 
 namespace Pieces
 {
-    class Piece : ICloneable
+    class Piece
     {
         public Vector3 position;
         public Face[] faces;
@@ -31,7 +31,7 @@ namespace Pieces
             faces = FaceList.ToArray();
         }
 
-        public object Clone()
+        public Piece Clone()
         {
             Face[] f = new Face[faces.Length];
             for (int i = 0; i < faces.Length; i++) { f[i] = faces[i]; }
@@ -59,22 +59,22 @@ namespace Pieces
                 switch (face.colour)
                 {
                     case Colour.White:
-                        solved[1] = 1;
-                        break;
-                    case Colour.Green:
-                        solved[0] = 1; 
-                        break;                           
-                    case Colour.Blue:
                         solved[1] = -1;
                         break;
+                    case Colour.Green:
+                        solved[2] = 1; 
+                        break;                           
+                    case Colour.Blue:
+                        solved[2] = -1;
+                        break;
                     case Colour.Red:
-                        solved[2] = 1;
+                        solved[0] = 1;
                         break;
                     case Colour.Yellow:
-                        solved[0] = -1;
+                        solved[1] = -2;
                         break;
                     case Colour.Orange:
-                        solved[2] = -1;
+                        solved[0] = -1;
                         break;
                 }
             }

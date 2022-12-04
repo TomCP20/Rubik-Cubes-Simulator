@@ -46,80 +46,53 @@ public class CubeController : MonoBehaviour
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                cubeAltered = true;
-                Vector3 pos = hit.transform.localPosition;
-                //Debug.Log(hit.transform.name);
-                switch(hit.transform.name)
-                {
-                    case ("Quad 23"):
-                        c.rotate("U");
-                        break;
-                    case ("Quad 32"):
-                        c.rotate("D");
-                        break;
-                    case ("Quad 5"):
-                        c.rotate("F");
-                        break;
-                    case ("Quad 14"):
-                        c.rotate("B");
-                        break;
-                    case ("Quad 41"):
-                        c.rotate("R");
-                        break;
-                    case ("Quad 50"):
-                        c.rotate("L");
-                        break;
-                    default:
-                        break;
-                }
-            }
+            if (Physics.Raycast(ray, out hit)) { rotateFace(hit.transform.name, 1); }
             
         }
         if (Input.GetMouseButtonDown(1))
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                cubeAltered = true;
-                Vector3 pos = hit.transform.localPosition;
-                //Debug.Log(hit.transform.name);
-                switch(hit.transform.name)
-                {
-                    case ("Quad 23"):
-                        c.rotate("U'");
-                        break;
-                    case ("Quad 32"):
-                        c.rotate("D'");
-                        break;
-                    case ("Quad 5"):
-                        c.rotate("F'");
-                        break;
-                    case ("Quad 14"):
-                        c.rotate("B'");
-                        break;
-                    case ("Quad 41"):
-                        c.rotate("R'");
-                        break;
-                    case ("Quad 50"):
-                        c.rotate("L'");
-                        break;
-                    default:
-                        break;
-                }
-            }
+            if (Physics.Raycast(ray, out hit)) { rotateFace(hit.transform.name, -1); }
             
         }
+    }
+
+    void rotateFace(String name, int direction)
+    {
+        String move;
+        switch(name)
+        {
+            case ("Quad 23"):
+                move = "U";
+                break;
+            case ("Quad 32"):
+                move = "D";
+                break;
+            case ("Quad 5"):
+                move = "F";
+                break;
+            case ("Quad 14"):
+                move = "B";
+                break;
+            case ("Quad 41"):
+                move = "R";
+                break;
+            case ("Quad 50"):
+                move = "L";
+                break;
+            default:
+                return;
+        }
+        if (direction == -1) { move += "'"; }
+        c.rotate(move);
+        cubeAltered = true;
     }
 
     IEnumerator solve(Cube c)
     {
         CubeSolver solver = new CubeSolver(c);
-        solver.solve();
+        c = solver.getSlovedCube();
         cubeAltered = true;
         yield return null;
     }

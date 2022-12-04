@@ -11,7 +11,7 @@ using Faces;
 using Pieces;
 namespace Cubes
 {
-    class Cube : ICloneable
+    class Cube
     {
         public Piece[] pieces;
 
@@ -52,7 +52,7 @@ namespace Cubes
             return positions;
         }
 
-        public object Clone()
+        public Cube Clone()
         {
             Piece[] p = new Piece[pieces.Length];
             for (int i = 0; i < pieces.Length; i++) { p[i] = pieces[i]; }

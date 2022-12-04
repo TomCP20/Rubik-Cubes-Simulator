@@ -16,8 +16,7 @@ namespace CubeSolvers
 
         public CubeSolver(Cube cube)
         {
-            //this.cube = cube.Clone();
-            this.cube = cube;
+            this.cube = cube.Clone();
         }
 
         private void rotate(Axis axis, int slice, int quarterTurns)

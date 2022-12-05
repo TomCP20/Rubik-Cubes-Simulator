@@ -12,7 +12,7 @@ namespace CubeSolvers
     class CubeSolver
     {
         private Cube cube;
-        Queue<Move> moves;
+        private Queue<Move> moves;
 
         public CubeSolver(Cube cube)
         {
@@ -30,7 +30,7 @@ namespace CubeSolvers
             solve();
             return moves;
         }
-        public Cube getSlovedCube()
+        public Cube getSlovedCube() // for testing
         {
             solve();
             return cube;

@@ -83,9 +83,9 @@ namespace Cubes
             rotate(new Move(move));
         }
 
-        public void rotate(Move s)
+        public void rotate(Move move)
         {
-            rotate(s.axis, s.movePos, s.angle);
+            rotate(move.axis, move.movePos, move.angle);
         }
 
         public void randomMove()

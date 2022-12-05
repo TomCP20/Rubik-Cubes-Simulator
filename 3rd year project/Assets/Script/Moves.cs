@@ -7,14 +7,14 @@ namespace Moves
     readonly struct Move
     {
         public Axis axis { get; }
-        public int movePos { get; }
+        public int slice { get; }
         public int angle { get; }
 
-        public Move(Axis a, int s, int an)
+        public Move(Axis axis, int slice, int angle)
         {
-            this.axis = a;
-            this.movePos = s;
-            this.angle = an;
+            this.axis = axis;
+            this.slice = slice;
+            this.angle = angle;
         }
 
         public Move(string notation)
@@ -28,34 +28,34 @@ namespace Moves
             {
                 case "F":
                     axis = Axis.X;
-                    movePos = 1;
+                    slice = 1;
                     break;
                 case "U":
                     axis = Axis.Y;
-                    movePos = 1;
+                    slice = 1;
                     break;
                 case "R":
                     axis = Axis.Z;
-                    movePos = 1;
+                    slice = 1;
                     break;
                 case "B":
                     axis = Axis.X;
-                    movePos = -1;
+                    slice = -1;
                     angle = -angle;
                     break;
                 case "D":
                     axis = Axis.Y;
-                    movePos = -1;
+                    slice = -1;
                     angle = -angle;
                     break;
                 case "L":
                     axis = Axis.Z;
-                    movePos = -1;
+                    slice = -1;
                     angle = -angle;
                     break;
                 default:
                     axis = Axis.X;
-                    movePos = 0;
+                    slice = 0;
                     angle = 0;
                     break;
             }
@@ -67,22 +67,22 @@ namespace Moves
             switch (axis)
             {
                 case Axis.X:
-                    if (movePos == 1) { output = "F"; }
+                    if (slice == 1) { output = "F"; }
                     else { output =  "B"; }
                     break;
                 case Axis.Y:
-                    if (movePos == 1) { output = "U"; }
+                    if (slice == 1) { output = "U"; }
                     else { output =  "D"; }
                     break;
                 case Axis.Z:
-                    if (movePos == 1) { output = "R"; }
+                    if (slice == 1) { output = "R"; }
                     else { output = "L"; }
                     break;
                 default:
                     output =  "";
                     break;
             }
-            if (movePos == 1)
+            if (slice == 1)
             {
                 if (angle == 2)
                 {

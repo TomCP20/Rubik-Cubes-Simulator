@@ -10,15 +10,15 @@ namespace Faces
         public Colour colour;
         public Vector3 direction;//unit vector
 
-        public Face(Colour c, Vector3 d)
+        public Face(Colour colour, Vector3 direction)
         {
-            colour = c;
-            direction = d;
+            this.colour = colour;
+            this.direction = direction;
         }
 
-        public Face(Vector3 d)
+        public Face(Vector3 direction)
         {
-            direction = d;
+            this.direction = direction;
             colour = defaultColour(direction);
         }
 
@@ -32,9 +32,9 @@ namespace Faces
             direction = Vector3Int.RoundToInt(rotQuaternion * direction);
         }
 
-        private Colour defaultColour(Vector3 d) //somthing to remember is that the perspective of the user and the perspective of the cube is mirrored so left and right get flipped
+        private Colour defaultColour(Vector3 direction) //somthing to remember is that the perspective of the user and the perspective of the cube is mirrored so left and right get flipped
         {
-            switch (d)
+            switch (direction)
             {
                 case Vector3 vec when vec.Equals(Vector3.right): return Colour.Red; //flipped
                 case Vector3 vec when vec.Equals(Vector3.left): return Colour.Orange; //flipped

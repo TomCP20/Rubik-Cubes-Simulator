@@ -60,13 +60,13 @@ namespace CubeSolvers
             UnityEngine.Debug.Log("solving edge at y " + yPos);
             switch (yPos)
             {
-                case -1:
+                case -1: // piece on bottom layer
                     whiteEdgePositionBottom(whiteEdge, targetPos, startPos);
                     break;          
-                case 0:
+                case 0: // piece on middle layer
                     whiteEdgePositionMiddle(whiteEdge, targetPos, startPos);
                     break;
-                case 1:
+                case 1: // piece on top layer
                     whiteEdgePositionTop(whiteEdge, targetPos, startPos);
                     break;
                 default:
@@ -91,14 +91,14 @@ namespace CubeSolvers
             UnityEngine.Debug.Log(startPos.x*targetPos.x + startPos.z * targetPos.z);
             switch (startPos.x*targetPos.x + startPos.z * targetPos.z)
             {
-                case 1: //solved
+                case 1: //piece is above the solved position
                     UnityEngine.Debug.Log("solved");
                     break;
-                case -1: //oposite
+                case -1: //piece is above the oposite position
                     UnityEngine.Debug.Log("oposite");
                     rotate(Axis.Y, 1, 2);
                     break;
-                case 0: //diagonal
+                case 0: //piece is above a diagonal position
                     UnityEngine.Debug.Log("diagonal");
                     if (startPos.x == 0)
                     {
@@ -116,7 +116,7 @@ namespace CubeSolvers
 
             midPos = whiteEdge.position;
             UnityEngine.Debug.Log("midPos: " + midPos);
-            if (midPos.x == 0)
+            if (midPos.x == 0) // rotate face to go frok top layer to bottom layer
             {
                 rotate(Axis.Z, (int)midPos.z, 2);
             }
@@ -130,7 +130,7 @@ namespace CubeSolvers
         {
             if (startPos.x == 1)
             {
-                if (startPos.z == 1)
+                if (startPos.z == 1) // (1, 1)
                 {
                     if (targetPos.x == 1)
                     {
@@ -153,7 +153,7 @@ namespace CubeSolvers
                         rotate(Axis.Y, -1, 1);
                     }
                 }
-                else
+                else  // (1, -1)
                 {
                     if (targetPos.x == 1)
                     {
@@ -179,7 +179,7 @@ namespace CubeSolvers
             }
             else
             {
-                if (startPos.z == 1)
+                if (startPos.z == 1)  // (-1, 1)
                 {
                     if (targetPos.x == 1)
                     {
@@ -202,7 +202,7 @@ namespace CubeSolvers
                         rotate(Axis.Y, -1, -1);
                     }
                 }
-                else //(-1, 1)
+                else //(-1, -1)
                 {
                     if (targetPos.x == 1) 
                     {
@@ -230,64 +230,41 @@ namespace CubeSolvers
         private void whiteEdgePositionBottom(Piece whiteEdge, Vector3 targetPos, Vector3 startPos)
         {
             if (startPos.x + targetPos.x == 0 && startPos.z + targetPos.z == 0) // if the target position is oposite the current position
-                    {
-                        Axis a;
-                        int s;
-                        if (targetPos.x != 0)
-                        {
-                            a = Axis.X;
-                            s = (int)startPos.x;
-                        }
-                        else
-                        {
-                            a = Axis.Z;
-                            s = (int)startPos.z;
-                        }
-                        rotate(a, s, 2);
-                        rotate(Axis.Y, 1, 2);
-                        rotate(a, -s, 2);                                                   
-                    }                    
-                    else if (startPos != targetPos) //if its not oposite and its not solved then the pice must be diagonal from its goal position
-                    {
-                        if (startPos.x + targetPos.x == 1)
-                        {
-                            if (startPos.z + targetPos.z == 1)
-                            {
-                                rotate(Axis.Z, 1, 1);
-                                rotate(Axis.Y, -1, -1);
-                                rotate(Axis.Z, 1, -1);
-                                rotate(Axis.Y, -1, 1);
-                                rotate(Axis.Z, 1, 1);                                
-                            }
-                            else
-                            {
-                                rotate(Axis.X, 1, 1);
-                                rotate(Axis.Y, -1, -1);
-                                rotate(Axis.X, 1, -1);
-                                rotate(Axis.Y, -1, 1);
-                                rotate(Axis.X, 1, 1);
-                            }
-                        }
-                        else
-                        {
-                            if (startPos.z + targetPos.z == 1)
-                            {
-                                rotate(Axis.X, -1, -1);
-                                rotate(Axis.Y, -1, -1);
-                                rotate(Axis.X, -1, 1);
-                                rotate(Axis.Y, -1, 1);
-                                rotate(Axis.X, -1, -1);
-                            }
-                            else
-                            {
-                                rotate(Axis.Z, -1, -1);
-                                rotate(Axis.Y, -1, -1);
-                                rotate(Axis.Z, -1, 1);
-                                rotate(Axis.Y, -1, 1);
-                                rotate(Axis.Z, -1, -1);
-                            }
-                        }
-                    }
+            {
+                Axis a;
+                int s;
+                if (targetPos.x != 0)
+                {
+                    a = Axis.X;
+                    s = (int)startPos.x;
+                }
+                else
+                {
+                    a = Axis.Z;
+                    s = (int)startPos.z;
+                }
+                rotate(a, s, 2);
+                rotate(Axis.Y, 1, 2);
+                rotate(a, -s, 2);                                                   
+            }                    
+            else if (startPos != targetPos) //if its not oposite and its not solved then the pice must be diagonal from its goal position, therefore swap the piece
+            {
+                swapBottomEdges(startPos, targetPos);
+            }
+        }
+
+        private void swapBottomEdges(Vector3 edge1, Vector3 edge2)
+        {
+            Axis axis;
+            int sumx = (int) (edge1.x + edge2.x);
+            int sumz = (int) (edge1.z + edge2.z);
+            if (sumx*sumz == 1) { axis = Axis.Z; }
+            else { axis = Axis.X; }
+            rotate(axis, sumx, sumx);
+            rotate(Axis.Y, -1, -1);
+            rotate(axis, sumx, -sumx);
+            rotate(Axis.Y, -1, 1);
+            rotate(axis, sumx, sumx);
         }
         private void whiteOrientation(Piece whiteEdge)
         {

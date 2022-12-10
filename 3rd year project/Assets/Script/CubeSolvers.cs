@@ -72,7 +72,7 @@ namespace CubeSolvers
                 default:
                     UnityEngine.Debug.LogError("invalid y position");
                     break;
-                }
+            }
             if (targetPos == whiteEdge.position)
             {
                 UnityEngine.Debug.Log("edge solved");
@@ -266,53 +266,44 @@ namespace CubeSolvers
             rotate(Axis.Y, -1, 1);
             rotate(axis, sumx, sumx);
         }
+
         private void whiteOrientation(Piece whiteEdge)
         {
-            bool good = false;
+            if (checkWhiteOrientation(whiteEdge)) { return; }
+            Axis axis1;
+            Axis axis2 ;
+            int pos1;
+            int pos2;
+            if (whiteEdge.position.x != 0)
+            {
+                axis1 = Axis.X;
+                axis2 = Axis.Z;
+                pos1 = (int)whiteEdge.position.x;
+                pos2 = -pos1;
+            }
+            else
+            {
+                axis1 = Axis.Z;
+                axis2 = Axis.X;
+                pos1 = (int)whiteEdge.position.z;
+                pos2 = pos1;
+            }
+            rotate(axis1, pos1, pos1);
+            rotate(Axis.Y, -1, 1);
+            rotate(axis2, pos2, pos2);
+            rotate(Axis.Y, -1, -1);            
+        }
+
+        private bool checkWhiteOrientation(Piece whiteEdge)
+        {
             foreach(Face f in whiteEdge.faces)
             {
                 if (f.colour == Colour.White && f.direction == Vector3.down)
                 {
-                    good = true;
+                    return true;
                 }
             }
-            if (!good)
-            {
-                if (whiteEdge.position.x != 0)
-                {
-                    if (whiteEdge.position.x == 1)
-                    {
-                        rotate(Axis.X, 1, 1);
-                        rotate(Axis.Y, -1, 1);
-                        rotate(Axis.Z, -1, -1);
-                        rotate(Axis.Y, -1, -1);
-                    }
-                    else
-                    {
-                        rotate(Axis.X, -1, -1);
-                        rotate(Axis.Y, -1, 1);
-                        rotate(Axis.Z, 1, 1);
-                        rotate(Axis.Y, -1, -1);
-                    }
-                }
-                else
-                {
-                    if (whiteEdge.position.z == 1)
-                    {
-                        rotate(Axis.Z, 1, 1);
-                        rotate(Axis.Y, -1, 1);
-                        rotate(Axis.X, 1, 1);
-                        rotate(Axis.Y, -1, -1);
-                    }
-                    else
-                    {
-                        rotate(Axis.Z, -1, -1);
-                        rotate(Axis.Y, -1, 1);
-                        rotate(Axis.X, -1, -1);
-                        rotate(Axis.Y, -1, -1);
-                    }
-                }
-            }
+            return false;
         }
         private List<Piece> getWhiteEdges()
         {

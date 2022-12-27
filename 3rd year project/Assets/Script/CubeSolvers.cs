@@ -21,8 +21,13 @@ namespace CubeSolvers
 
         private void rotate(Axis axis, int slice, int quarterTurns)
         {
-            cube.rotate(axis, slice, quarterTurns);
-            moves.Enqueue(new Move(axis, slice, quarterTurns));
+            rotate(new Move(axis, slice, quarterTurns));
+        }
+
+        private void rotate(Move move)
+        {
+            cube.rotate(move);
+            moves.Enqueue(move);
         }
 
         public Queue<Move> getSolution()
@@ -39,6 +44,20 @@ namespace CubeSolvers
         {
             moves = new Queue<Move>();
             whiteCross();
+        }
+
+        private string shiftFace(int shiftVal, string face)
+        {
+            string sideFaces = {"F", "R", "B", "L"};
+            int pos = IndexOf(sideFaces, face);
+            return sideFaces[(pos - shiftVal) % 4];
+        }
+
+        private shiftRotate(int shiftVal, string notation)
+        {
+            string face = shiftFace(shiftVal, notation.Substring(0, 1));
+            string angle = notation.Substring(1);
+            rotate(new Move(face + angle));
         }
 
         private void whiteCross()
@@ -116,7 +135,7 @@ namespace CubeSolvers
 
             midPos = whiteEdge.position;
             UnityEngine.Debug.Log("midPos: " + midPos);
-            if (midPos.x == 0) // rotate face to go frok top layer to bottom layer
+            if (midPos.x == 0) // rotate face to go from top layer to bottom layer
             {
                 rotate(Axis.Z, (int)midPos.z, 2);
             }
@@ -227,6 +246,7 @@ namespace CubeSolvers
                 }
             }
         }
+
         private void whiteEdgePositionBottom(Piece whiteEdge, Vector3 targetPos, Vector3 startPos)
         {
             if (startPos.x + targetPos.x == 0 && startPos.z + targetPos.z == 0) // if the target position is oposite the current position

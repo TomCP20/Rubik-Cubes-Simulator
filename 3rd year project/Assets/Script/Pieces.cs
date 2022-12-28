@@ -92,5 +92,14 @@ namespace Pieces
             }
             return false;
         }
+    
+        public bool correctOrientation()
+        {
+            foreach (Face face in faces)
+            {
+                if (!face.correctOrientation()) { return false; }
+            }
+            return true;
+        }
     }
 }

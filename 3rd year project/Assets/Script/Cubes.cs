@@ -109,5 +109,18 @@ namespace Cubes
             rotationVector[(int)axis] = 90 * quarterTurns;
             return Quaternion.Euler(rotationVector);
         }
+
+        public List<Piece> filter(Colour C, int MD)
+        {
+            List<Piece> output = new List<Piece>();
+            foreach(Piece p in pieces)
+            {
+                if (p.position.ManhattanDistance() == MD && p.containsColour(C))
+                {
+                    output.Add(p);
+                }
+            }
+            return output;
+        }
     }
 }

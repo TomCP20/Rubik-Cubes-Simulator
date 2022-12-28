@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using LayerByLayers;
 using CubeSolvers;
 using Faces;
 using Pieces;
@@ -91,7 +92,7 @@ public class CubeController : MonoBehaviour
 
     IEnumerator solve(Cube c)
     {
-        CubeSolver solver = new CubeSolver(c);
+        CubeSolver solver = new LayerByLayer(c);
         c = solver.getSlovedCube();
         cubeAltered = true;
         yield return null;

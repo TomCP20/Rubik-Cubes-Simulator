@@ -45,5 +45,24 @@ namespace Faces
                 default: return Colour.Black;
             }
         }
+
+        public Vector3 defaultDirection()
+        {
+            switch (colour)
+            {
+                case Colour.Red: return Vector3.right;
+                case Colour.Orange: return Vector3.left;
+                case Colour.Yellow: return Vector3.up;
+                case Colour.White: return Vector3.down;
+                case Colour.Green: return Vector3.forward;
+                case Colour.Blue: return Vector3.back;
+                default: return Vector3.zero;
+            }
+        }
+
+        public bool correctOrientation()
+        {
+            return defaultDirection() == direction;
+        }
     }
 }

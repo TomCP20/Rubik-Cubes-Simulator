@@ -93,13 +93,18 @@ namespace Pieces
             return false;
         }
     
-        public bool correctOrientation()
+        public bool correctOrientation() // returns true if the Piece has the correct orientation and correct position
         {
             foreach (Face face in faces)
             {
                 if (!face.correctOrientation()) { return false; }
             }
             return true;
+        }
+
+        public bool correctPosition()
+        {
+            return SolvedPosition() == position;
         }
     }
 }

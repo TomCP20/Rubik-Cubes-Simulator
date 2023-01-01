@@ -40,7 +40,6 @@ namespace WhiteCrossSolvers
             Vector3 targetPos = whiteEdge.SolvedPosition();
             //UnityEngine.Debug.Log(startPos);
             int yPos = (int)startPos.y;
-            UnityEngine.Debug.Log("solving edge at y " + yPos);
             switch (yPos)
             {
                 case -1: // piece on bottom layer
@@ -56,33 +55,19 @@ namespace WhiteCrossSolvers
                     UnityEngine.Debug.LogError("invalid y position");
                     break;
             }
-            if (targetPos == whiteEdge.position)
-            {
-                UnityEngine.Debug.Log("edge solved");
-            }
-            else
-            {
-                UnityEngine.Debug.LogError("edge not solved: start: " + startPos + " target: " + targetPos + " current: " + whiteEdge.position);
-            }
-
         } 
 
         private void whiteEdgePositionTop(Piece whiteEdge, Vector3 targetPos, Vector3 startPos)
         {
-            UnityEngine.Debug.Log("solving edge at top layer");
             Vector3 midPos;
-            UnityEngine.Debug.Log(startPos.x*targetPos.x + startPos.z * targetPos.z);
             switch (startPos.x*targetPos.x + startPos.z * targetPos.z)
             {
                 case 1: //piece is above the solved position
-                    UnityEngine.Debug.Log("solved");
                     break;
                 case -1: //piece is above the oposite position
-                    UnityEngine.Debug.Log("oposite");
                     rotate(Axis.Y, 1, 2);
                     break;
                 case 0: //piece is above a diagonal position
-                    UnityEngine.Debug.Log("diagonal");
                     if (startPos.x == 0)
                     {
                         rotate(Axis.Y, 1, (int)targetPos.x*(int)startPos.z);
@@ -93,12 +78,10 @@ namespace WhiteCrossSolvers
                     }
                     break;
                 default:
-                    UnityEngine.Debug.Log("error 1q2");
                     break;
             }
 
             midPos = whiteEdge.position;
-            UnityEngine.Debug.Log("midPos: " + midPos);
             if (midPos.x == 0) // rotate face to go from top layer to bottom layer
             {
                 rotate(Axis.Z, (int)midPos.z, 2);

@@ -80,33 +80,6 @@ namespace LayerByLayers
             }
         }
 
-        private void rotateToCorrectPosition(Piece whiteCorner)
-        {
-
-            Vector3 currentPos = whiteCorner.position;
-            Vector3 targetPos = whiteCorner.SolvedPosition();
-            Vector3 rot1 = Vector3Int.RoundToInt(Quaternion.Euler(0, 90, 0) * currentPos);
-            Vector3 rot2 = Vector3Int.RoundToInt(Quaternion.Euler(0, 180, 0) * currentPos);
-            Vector3 rot3 = Vector3Int.RoundToInt(Quaternion.Euler(0, 270, 0) * currentPos);
-            if (correctXZ(rot1, targetPos))
-            {
-                rotate("U");
-            }
-            else if (correctXZ(rot2, targetPos))
-            {
-                rotate("U2");
-            }
-            else if (correctXZ(rot3, targetPos))
-            {
-                rotate("U'");
-            }
-        }
-
-        private bool correctXZ(Vector3 current, Vector3 target)
-        {
-            return ((int)current.x == (int)target.x && (int)current.z == (int)target.z);
-        }
-
         private void middleLayer()
         {
 

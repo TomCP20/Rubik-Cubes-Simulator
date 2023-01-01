@@ -61,28 +61,10 @@ namespace CubeSolvers
 
         protected int getShiftVal(Vector3 pos)
         {
-            if (pos.x == 1)
-            {
-                if (pos.z == 1)
-                {
-                    return 3;
-                }
-                else
-                {
-                    return 2;
-                }
-            }
-            else
-            {
-                if (pos.z == 1)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return 1;
-                }
-            }
+            if (pos.z == 1 && pos.x != 1) { return 0; }
+            else if (pos.x == -1) { return 1; }
+            else if (pos.z == -1) { return 2; }
+            else { return 3; }
         }
 
         protected void subCubeSolver(CubeSolver solver)
@@ -93,6 +75,33 @@ namespace CubeSolvers
             {
                 moves.Enqueue(solver.moves.Dequeue());
             }
+        }
+
+        protected void rotateToCorrectPosition(Piece whiteCorner)
+        {
+
+            Vector3 currentPos = whiteCorner.position;
+            Vector3 targetPos = whiteCorner.SolvedPosition();
+            Vector3 rot1 = Vector3Int.RoundToInt(Quaternion.Euler(0, 90, 0) * currentPos);
+            Vector3 rot2 = Vector3Int.RoundToInt(Quaternion.Euler(0, 180, 0) * currentPos);
+            Vector3 rot3 = Vector3Int.RoundToInt(Quaternion.Euler(0, 270, 0) * currentPos);
+            if (correctXZ(rot1, targetPos))
+            {
+                rotate("U");
+            }
+            else if (correctXZ(rot2, targetPos))
+            {
+                rotate("U2");
+            }
+            else if (correctXZ(rot3, targetPos))
+            {
+                rotate("U'");
+            }
+        }
+
+        protected bool correctXZ(Vector3 current, Vector3 target)
+        {
+            return ((int)current.x == (int)target.x && (int)current.z == (int)target.z);
         }
     }  
 }

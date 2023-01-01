@@ -25,8 +25,6 @@ namespace LayerByLayers
 
             subCubeSolver(new WhiteCrossSolver(cube));
 
-            UnityEngine.Debug.Log("working on White Corners");
-
             whiteCorners();
         }
 
@@ -41,15 +39,27 @@ namespace LayerByLayers
 
         private void whiteCornerFun(Piece whiteCorner)
         {
-            if (whiteCorner.position.y == -1 && !whiteCorner.correctPosition())
+            if (!whiteCorner.correctPosition())
             {
-                GoodLayerWrongPosition(whiteCorner);
-            }
-            else
-            {
-                rotateToCorrectPosition(whiteCorner);
+                if (whiteCorner.position.y == -1)
+                {
+                    int shiftVal = getShiftVal(whiteCorner.position);
+                    shiftRotate(shiftVal, "R");
+                    rotateToCorrectPosition(whiteCorner);
+                    shiftRotate(shiftVal, "R'");
+                    rotateToCorrectPosition(whiteCorner);
+                }
+                else
+                {
+                    rotateToCorrectPosition(whiteCorner);
+                }
             }
 
+            repeatPattern(whiteCorner);      
+        }
+
+        private void repeatPattern(Piece whiteCorner)
+        {
             Boolean solved = whiteCorner.correctOrientation();
             int count = 0;
             while (!solved)
@@ -68,19 +78,16 @@ namespace LayerByLayers
                     break;
                 }
             }
-            if (count < 10)
-            {
-                UnityEngine.Debug.Log("loop succsess");
-            }
         }
 
         private void rotateToCorrectPosition(Piece whiteCorner)
         {
+
             Vector3 currentPos = whiteCorner.position;
             Vector3 targetPos = whiteCorner.SolvedPosition();
             Vector3 rot1 = Vector3Int.RoundToInt(Quaternion.Euler(0, 90, 0) * currentPos);
             Vector3 rot2 = Vector3Int.RoundToInt(Quaternion.Euler(0, 180, 0) * currentPos);
-            Vector3 rot3 = Vector3Int.RoundToInt(Quaternion.Euler(0, -90, 0) * currentPos);
+            Vector3 rot3 = Vector3Int.RoundToInt(Quaternion.Euler(0, 270, 0) * currentPos);
             if (correctXZ(rot1, targetPos))
             {
                 rotate("U");
@@ -93,22 +100,11 @@ namespace LayerByLayers
             {
                 rotate("U'");
             }
-            else if (!correctXZ(currentPos, targetPos))
-            {
-                UnityEngine.Debug.LogError("rotation error");
-            }
         }
 
         private bool correctXZ(Vector3 current, Vector3 target)
         {
-            return (current.x == target.x && current.z == target.z);
-        }
-        private void GoodLayerWrongPosition(Piece whiteCorner)
-        {
-            int shiftVal = getShiftVal(whiteCorner.position);
-            shiftRotate(shiftVal, "R'");
-            rotateToCorrectPosition(whiteCorner);
-            shiftRotate(shiftVal, "R"); 
+            return ((int)current.x == (int)target.x && (int)current.z == (int)target.z);
         }
 
         private void middleLayer()

@@ -71,22 +71,23 @@ public class CubeController : MonoBehaviour
                 move = "D";
                 break;
             case ("Quad 5"):
-                move = "F";
+                move = "L";
                 break;
             case ("Quad 14"):
-                move = "B";
-                break;
-            case ("Quad 41"):
                 move = "R";
                 break;
+            case ("Quad 41"):
+                move = "F";
+                break;
             case ("Quad 50"):
-                move = "L";
+                move = "B";
                 break;
             default:
                 return;
         }
         if (direction == -1) { move += "'"; }
         c.rotate(move);
+        UnityEngine.Debug.Log(move);
         cubeAltered = true;
     }
 

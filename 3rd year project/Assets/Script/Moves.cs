@@ -24,10 +24,10 @@ namespace Moves
             else if (notation.Substring(1) == "'") { angle = -1; }
             else if (notation.Substring(1) == "2") { angle = 2; }
             else { angle = 0; }
-            switch (face)
+            switch (face) // left right orientation is relavent here
             {
                 case "F":
-                    axis = Axis.X;
+                    axis = Axis.Z;
                     slice = 1;
                     break;
                 case "U":
@@ -35,11 +35,12 @@ namespace Moves
                     slice = 1;
                     break;
                 case "R":
-                    axis = Axis.Z;
-                    slice = 1;
+                    axis = Axis.X;
+                    slice = -1;
+                    angle = -angle;
                     break;
                 case "B":
-                    axis = Axis.X;
+                    axis = Axis.Z;
                     slice = -1;
                     angle = -angle;
                     break;
@@ -49,12 +50,11 @@ namespace Moves
                     angle = -angle;
                     break;
                 case "L":
-                    axis = Axis.Z;
-                    slice = -1;
-                    angle = -angle;
+                    axis = Axis.X;
+                    slice = 1;
                     break;
                 default:
-                    axis = Axis.X;
+                    axis = Axis.Z;
                     slice = 0;
                     angle = 0;
                     break;

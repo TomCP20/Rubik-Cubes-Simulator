@@ -76,28 +76,12 @@ namespace MiddleLayerSolvers
 
         private void rightAlgorithm(Piece middleEdge)
         {
-            int shiftVal = getShiftVal(middleEdge.position);
-            rotate("U");
-            shiftRotate(shiftVal, "R");
-            rotate("U'");
-            shiftRotate(shiftVal, "R'");
-            rotate("U'");
-            shiftRotate(shiftVal, "F'");
-            rotate("U");
-            shiftRotate(shiftVal, "F");
+            rotateSequence(getShiftVal(middleEdge.position), new string[] {"U", "R", "U'", "R'", "U'", "F'", "U", "F"});
         }
 
         private void leftAlgorithm(Piece middleEdge)
         {
-            int shiftVal = getShiftVal(middleEdge.position);
-            rotate("U'");
-            shiftRotate(shiftVal, "L'");
-            rotate("U");
-            shiftRotate(shiftVal, "L");
-            rotate("U");
-            shiftRotate(shiftVal, "F");
-            rotate("U'");
-            shiftRotate(shiftVal, "F'");
+            rotateSequence(getShiftVal(middleEdge.position), new string[] {"U'", "L'", "U", "L", "U", "F", "U'", "F'"});
         }
 
         private List<Piece> getMiddleEdges()

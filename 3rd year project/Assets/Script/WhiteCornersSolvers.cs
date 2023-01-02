@@ -56,17 +56,11 @@ namespace WhiteCornersSolvers
 
         private void repeatPattern(Piece whiteCorner)
         {
-            Boolean solved = whiteCorner.correctOrientation();
             int count = 0;
-            while (!solved)
+            while (!whiteCorner.correctOrientation())
             {
                 int shiftVal = getShiftVal(whiteCorner.position);
-                shiftRotate(shiftVal, "R");
-                rotate("U");
-                shiftRotate(shiftVal, "R'");
-                rotate("U'");
-
-                solved = whiteCorner.correctOrientation();
+                rotateSequence(shiftVal, new string[ ] {"R", "U", "R'", "U'"});
                 count++;
                 if (count >= 10)
                 {

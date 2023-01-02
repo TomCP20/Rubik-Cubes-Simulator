@@ -32,17 +32,17 @@ namespace OrientYellowCornersSolvers
                 if (!yellowIsUp(yellowCorner))
                 {
                     rotateToCorrectPosition(yellowCorner, new Vector3(-1, 1, 1));
+                    int count = 0;
                     while(!yellowIsUp(yellowCorner))
                     {
-                        rotate("R'");
-                        rotate("D'");
-                        rotate("R");
-                        rotate("D");
-
-                        rotate("R'");
-                        rotate("D'");
-                        rotate("R");
-                        rotate("D");
+                        rotateSequence(0, new string[] {"R'", "D'", "R", "D"}); //{"R'", "D'", "R", "D"}
+                        rotateSequence(0, new string[] {"R'", "D'", "R", "D"});
+                        count++;
+                        if (count > 10)
+                        {
+                            UnityEngine.Debug.LogError("orient error");
+                            break;
+                        }
                     }
                 }
             }

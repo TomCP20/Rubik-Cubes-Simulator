@@ -43,14 +43,7 @@ namespace PermuteYellowCornersSolvers
 
         private void cornersAlgorithm(int shiftVal)
         {
-            rotate("U");
-            shiftRotate(shiftVal, "R");
-            rotate("U'");
-            shiftRotate(shiftVal, "L'");
-            rotate("U");
-            shiftRotate(shiftVal, "R'");
-            rotate("U'");
-            shiftRotate(shiftVal, "L");
+            rotateSequence(shiftVal, new string[] {"U", "R", "U'", "L'", "U", "R'", "U'", "L"});
         }
 
         private Piece getSolvedCorner(List<Piece> yellowCorners)
@@ -76,5 +69,3 @@ namespace PermuteYellowCornersSolvers
         }
     }
 }
-
-

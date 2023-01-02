@@ -113,12 +113,7 @@ namespace YellowCrossSolvers
 
         private void yellowAlgorithim(int shiftVal)
         {
-            shiftRotate(shiftVal, "F");
-            shiftRotate(shiftVal, "R");
-            rotate("U");
-            shiftRotate(shiftVal, "R'");
-            rotate("U'");
-            shiftRotate(shiftVal, "F'");
+            rotateSequence(shiftVal, new string[] {"F", "R", "U", "R'", "U'", "F'"});
         }
     }
 }

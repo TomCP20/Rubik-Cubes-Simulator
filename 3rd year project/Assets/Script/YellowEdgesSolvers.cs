@@ -87,14 +87,7 @@ namespace YellowEdgesSolvers
 
         private void switchEdges(int shiftVal)
         {
-            shiftRotate(shiftVal, "R");
-            rotate("U");
-            shiftRotate(shiftVal, "R'");
-            rotate("U");
-            shiftRotate(shiftVal, "R");
-            rotate("U2");
-            shiftRotate(shiftVal, "R'");
-            rotate("U");
+            rotateSequence(shiftVal, new string[] {"R", "U", "R'", "U", "R", "U2", "R'", "U"});
         }
     }
 }

@@ -43,13 +43,17 @@ namespace CubeSolvers
         }
         public abstract void solve();
 
-        protected string shiftFace(int shiftVal, string face)
+        private string shiftFace(int shiftVal, string face)
         {
+            if (face == "U" || face == "D")
+            {
+                return face;
+            }
             string[] sideFaces = {"F", "R", "B", "L"};
             int pos = Array.IndexOf(sideFaces, face);
             int newPos = (pos + shiftVal) % 4;
-            string newMove = sideFaces[newPos].ToString();
-            return newMove;
+            string newFace = sideFaces[newPos].ToString();
+            return newFace;
         }
 
         protected void shiftRotate(int shiftVal, string notation)
@@ -57,6 +61,22 @@ namespace CubeSolvers
             string face = shiftFace(shiftVal, notation.Substring(0, 1));
             string angle = notation.Substring(1);
             rotate(face + angle);
+        }
+
+        protected void rotateSequence(int shiftVal, string[] sequence)
+        {
+            foreach (string move in sequence)
+            {
+                shiftRotate(shiftVal, move);
+            }
+        }
+
+        protected void rotateSequence(string[] sequence)
+        {
+            foreach (string move in sequence)
+            {
+                rotate(move);
+            }
         }
 
         protected int getShiftVal(Vector3 pos)

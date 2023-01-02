@@ -13,6 +13,8 @@ using MiddleLayerSolvers;
 using YellowCrossSolvers;
 using YellowEdgesSolvers;
 using ExtensionMethods;
+using PermuteYellowCornersSolvers;
+using OrientYellowCornersSolvers;
 
 namespace LayerByLayers
 {
@@ -25,8 +27,6 @@ namespace LayerByLayers
         }
         public override void solve()
         {
-            moves = new Queue<Move>();
-
             subCubeSolver(new WhiteCrossSolver(cube));
 
             subCubeSolver(new WhiteCornersSolver(cube));
@@ -36,18 +36,13 @@ namespace LayerByLayers
             subCubeSolver(new YellowCrossSolver(cube));
 
             subCubeSolver(new YellowEdgesSolver(cube));
-        }
 
+            subCubeSolver(new PermuteYellowCornersSolver(cube));
+
+            subCubeSolver(new OrientYellowCornersSolver(cube));
+        }
         
 
-        private void permuteYellowCorners()
-        {
-
-        }
-
-        private void orientYellowCorners()
-        {
-
-        }
+        
     }  
 }

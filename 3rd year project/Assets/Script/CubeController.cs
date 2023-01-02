@@ -43,11 +43,11 @@ public class CubeController : MonoBehaviour
         }
         if (Input.GetKeyDown("l"))
         {
-            StartCoroutine(solve(c));
+            StartCoroutine(showSolution());
         }
         if (Input.GetKeyDown("p"))
         {
-            StartCoroutine(animate(c));
+            StartCoroutine(animate());
         }
         if (Input.GetMouseButtonDown(0))
         {
@@ -97,15 +97,15 @@ public class CubeController : MonoBehaviour
         cubeAltered = true;
     }
 
-    IEnumerator solve(Cube c)
+    IEnumerator showSolution()
     {
         CubeSolver solver = new LayerByLayer(c);
         c = solver.getSlovedCube();
-        cubeAltered = true;
+        updateCube(c);
         yield return null;
     }
 
-    IEnumerator animate(Cube c)
+    IEnumerator animate()
     {
         CubeSolver solver = new LayerByLayer(c);
         Queue<Move> moves = solver.getSolution();

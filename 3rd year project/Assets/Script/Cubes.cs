@@ -55,7 +55,7 @@ namespace Cubes
         public Cube Clone()
         {
             Piece[] p = new Piece[pieces.Length];
-            for (int i = 0; i < pieces.Length; i++) { p[i] = pieces[i]; }
+            for (int i = 0; i < pieces.Length; i++) { p[i] = pieces[i].Clone(); }
             return new Cube(p);
         }
 

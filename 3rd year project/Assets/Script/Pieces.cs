@@ -34,7 +34,7 @@ namespace Pieces
         public Piece Clone()
         {
             Face[] f = new Face[faces.Length];
-            for (int i = 0; i < faces.Length; i++) { f[i] = faces[i]; }
+            for (int i = 0; i < faces.Length; i++) { f[i] = faces[i].Clone(); }
             return new Piece(position, f);
         }
 

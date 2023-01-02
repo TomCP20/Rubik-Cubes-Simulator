@@ -79,9 +79,13 @@ namespace CubeSolvers
 
         protected void rotateToCorrectPosition(Piece whiteCorner)
         {
-
-            Vector3 currentPos = whiteCorner.position;
             Vector3 targetPos = whiteCorner.SolvedPosition();
+            rotateToCorrectPosition(whiteCorner, targetPos);
+        }
+
+        protected void rotateToCorrectPosition(Piece whiteCorner, Vector3 targetPos)
+        {
+            Vector3 currentPos = whiteCorner.position;
             Vector3 rot1 = Vector3Int.RoundToInt(Quaternion.Euler(0, 90, 0) * currentPos);
             Vector3 rot2 = Vector3Int.RoundToInt(Quaternion.Euler(0, 180, 0) * currentPos);
             Vector3 rot3 = Vector3Int.RoundToInt(Quaternion.Euler(0, 270, 0) * currentPos);

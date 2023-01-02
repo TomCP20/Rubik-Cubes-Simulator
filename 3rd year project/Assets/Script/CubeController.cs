@@ -7,6 +7,8 @@ using Pieces;
 using System.Collections.Specialized;
 using System.Collections;
 using Cubes;
+using Moves;
+using System.Collections.Generic;
 
 public class CubeController : MonoBehaviour
 {
@@ -42,6 +44,10 @@ public class CubeController : MonoBehaviour
         if (Input.GetKeyDown("l"))
         {
             StartCoroutine(solve(c));
+        }
+        if (Input.GetKeyDown("p"))
+        {
+            StartCoroutine(animate(c));
         }
         if (Input.GetMouseButtonDown(0))
         {
@@ -97,6 +103,20 @@ public class CubeController : MonoBehaviour
         c = solver.getSlovedCube();
         cubeAltered = true;
         yield return null;
+    }
+
+    IEnumerator animate(Cube c)
+    {
+        CubeSolver solver = new LayerByLayer(c);
+        Queue<Move> moves = solver.getSolution();
+        while (moves.Count > 0)
+        {
+            UnityEngine.Debug.Log(moves.Count);
+            Move m = moves.Dequeue();
+            c.rotate(m);
+            updateCube(c);
+            yield return new WaitForSeconds(1);
+        }
     }
     void RotCube()
     {

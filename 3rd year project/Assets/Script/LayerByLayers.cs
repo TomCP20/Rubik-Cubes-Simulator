@@ -10,6 +10,7 @@ using CubeSolvers;
 using WhiteCrossSolvers;
 using WhiteCornersSolvers;
 using MiddleLayerSolvers;
+using YellowCrossSolvers;
 using ExtensionMethods;
 
 namespace LayerByLayers
@@ -30,14 +31,12 @@ namespace LayerByLayers
             subCubeSolver(new WhiteCornersSolver(cube));
 
             subCubeSolver(new MiddleLayerSolver(cube));
+
+            subCubeSolver(new YellowCrossSolver(cube));
         }
 
         
-        private void yellowCross()
-        {
-
-        }
-
+        
         private void yellowEdges()
         {
 

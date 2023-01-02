@@ -122,5 +122,18 @@ namespace Cubes
             }
             return output;
         }
+
+        public Piece getPiece(Vector3 pos)
+        {
+            foreach(Piece p in pieces)
+            {
+                if (p.position == pos)
+                {
+                    return p;
+                }
+            }
+            UnityEngine.Debug.Log("get piece error");
+            return null;
+        }
     }
 }

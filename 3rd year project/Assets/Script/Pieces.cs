@@ -71,7 +71,7 @@ namespace Pieces
                         solved[0] = 1;
                         break;
                     case Colour.Yellow:
-                        solved[1] = -2;
+                        solved[1] = 1;
                         break;
                     case Colour.Orange:
                         solved[0] = -1;

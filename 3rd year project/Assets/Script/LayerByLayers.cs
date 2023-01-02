@@ -11,6 +11,7 @@ using WhiteCrossSolvers;
 using WhiteCornersSolvers;
 using MiddleLayerSolvers;
 using YellowCrossSolvers;
+using YellowEdgesSolvers;
 using ExtensionMethods;
 
 namespace LayerByLayers
@@ -33,14 +34,11 @@ namespace LayerByLayers
             subCubeSolver(new MiddleLayerSolver(cube));
 
             subCubeSolver(new YellowCrossSolver(cube));
+
+            subCubeSolver(new YellowEdgesSolver(cube));
         }
 
         
-        
-        private void yellowEdges()
-        {
-
-        }
 
         private void permuteYellowCorners()
         {

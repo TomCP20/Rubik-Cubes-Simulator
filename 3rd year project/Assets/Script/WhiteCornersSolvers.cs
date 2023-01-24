@@ -60,7 +60,7 @@ namespace WhiteCornersSolvers
             while (!whiteCorner.correctOrientation())
             {
                 int shiftVal = getShiftVal(whiteCorner.position);
-                rotateSequence(shiftVal, new string[ ] {"R", "U", "R'", "U'"});
+                rotateSequence(shiftVal, new string[] {"R", "U", "R'", "U'"});
                 count++;
                 if (count >= 10)
                 {

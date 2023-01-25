@@ -33,9 +33,22 @@ namespace F2Ls
             Piece edge = getEdge(corner);
                 // first get edge to the top unless correct x, z
                 getEdgeInPosition(edge);
-                // then get corner to correct x, z
+                // then get corner to top unless correct x, z
                 getCornerInPosition(corner);
+
+                if (!propperPosition(edge))
+                {
+                    UnityEngine.Debug.LogError("edge not in valid position");
+                }
+
+                if (!propperPosition(corner))
+                {
+                    UnityEngine.Debug.LogError("corner not in valid position");
+                }
+                // get corner to correct x, z
+                rotateToCorrectPosition(corner, targetpos);
                 // identify broad case
+                
                 Vector3 cornerstartpos = corner.position;
                 Vector3 edgestartpos = edge.position;
                 if (cornerstartpos.y == 1) //corner on top
@@ -83,39 +96,23 @@ namespace F2Ls
 
         public void getCornerInPosition(Piece corner)
         {
-            Vector3 startpos = corner.position;
-            Vector3 targetpos = corner.SolvedPosition();
-            if (startpos.x == targetpos.x && startpos.z == targetpos.z)
-            {
-                return;
-            }
-            
-            if (startpos.y == 1)
-            {
-                rotateToCorrectPosition(corner, targetpos);
-            }
-            else
-            {
-                int shiftVal = getShiftVal(startpos);
-                shiftRotate(shiftVal, "R");
-                rotateToCorrectPosition(corner, targetpos);
-                shiftRotate(shiftVal, "R'");
-            }
+            if (propperPosition(edge)) { return; } 
+            int shiftVal = getShiftVal(startpos);
+            rotateSequence(shiftVal, new string[] {"R", "U", "R''"});
         }
 
         public void getEdgeInPosition(Piece edge)
         {
-            Vector3 startpos = edge.position;
-            Vector3 targetpos = edge.SolvedPosition();
-            if (startpos.x == targetpos.x && startpos.z == targetpos.z)
-            {
-                return;
-            } 
-            if (startpos.y == 0)
-            {
-                int shiftVal = getShiftVal(startpos);
-                rotateSequence(shiftVal, new string[] {"F", "U", "F'"});
-            }
+            if (propperPosition(edge)) { return; } 
+            int shiftVal = getShiftVal(startpos);
+            rotateSequence(shiftVal, new string[] {"F", "U", "F'"});
+        }
+
+        public Boolean propperPosition(Predicate p)
+        {
+            Vector3 startpos = p.position;
+            Vector3 targetpos = p.SolvedPosition();
+            return ((startpos.x == targetpos.x && startpos.z == targetpos.z) || startpos.y == 1);
         }
     }
 }

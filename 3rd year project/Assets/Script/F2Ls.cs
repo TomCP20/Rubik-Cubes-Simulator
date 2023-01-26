@@ -46,7 +46,7 @@ namespace F2Ls
                     UnityEngine.Debug.LogError("corner not in valid position");
                 }
                 // get corner to correct x, z
-                rotateToCorrectPosition(corner, targetpos);
+                rotateToCorrectPosition(corner, corner.SolvedPosition());
                 // identify broad case
                 
                 Vector3 cornerstartpos = corner.position;
@@ -96,19 +96,19 @@ namespace F2Ls
 
         public void getCornerInPosition(Piece corner)
         {
-            if (propperPosition(edge)) { return; } 
-            int shiftVal = getShiftVal(startpos);
+            if (propperPosition(corner)) { return; } 
+            int shiftVal = getShiftVal(corner.position);
             rotateSequence(shiftVal, new string[] {"R", "U", "R''"});
         }
 
         public void getEdgeInPosition(Piece edge)
         {
             if (propperPosition(edge)) { return; } 
-            int shiftVal = getShiftVal(startpos);
+            int shiftVal = getShiftVal(edge.position);
             rotateSequence(shiftVal, new string[] {"F", "U", "F'"});
         }
 
-        public Boolean propperPosition(Predicate p)
+        public bool propperPosition(Piece p)
         {
             Vector3 startpos = p.position;
             Vector3 targetpos = p.SolvedPosition();

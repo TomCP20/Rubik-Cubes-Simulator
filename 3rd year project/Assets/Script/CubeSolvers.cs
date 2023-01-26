@@ -34,7 +34,37 @@ namespace CubeSolvers
         public Queue<Move> getSolution()
         {
             solve();
+            optimiseMoves();
             return moves;
+        }
+
+        public void optimiseMoves()
+        {
+            Queue<Move> newMoves = new Queue<Move>();
+            Move current = moves.Dequeue();
+            while (moves.Count > 0)
+            {
+                Move next = moves.Dequeue();
+                if (current.axis == next.axis && current.slice == next.slice)
+                {
+                    int angle = (current.angle + next.angle) % 4;
+                    if (angle == 0)
+                    {
+                        current = moves.Dequeue();
+                    }
+                    else
+                    {
+                        current = new Move(current.axis, current.slice, angle);
+                    }
+                }
+                else
+                {
+                    newMoves.Enqueue(current);
+                    current = next;
+                }
+            }
+            newMoves.Enqueue(current);
+            moves = newMoves;
         }
         public Cube getSlovedCube() // for testing
         {

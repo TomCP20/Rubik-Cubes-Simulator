@@ -9,6 +9,7 @@ using System.Collections;
 using Cubes;
 using Moves;
 using System.Collections.Generic;
+using MultiCubeAnalysers;
 
 public class CubeController : MonoBehaviour
 {
@@ -62,6 +63,10 @@ public class CubeController : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit)) { rotateFace(hit.transform.name, -1); }
             
+        }
+        if (Input.GetKeyDown("o"))
+        {
+            StartCoroutine(Analysis());
         }
     }
 
@@ -117,6 +122,13 @@ public class CubeController : MonoBehaviour
             updateCube(c);
             yield return new WaitForSeconds(1);
         }
+    }
+
+    IEnumerator Analysis()
+    {
+        MultiCubeAnalyser m = new MultiCubeAnalyser(10);
+        m.printAnalysis();
+        yield return null;
     }
     void RotCube()
     {

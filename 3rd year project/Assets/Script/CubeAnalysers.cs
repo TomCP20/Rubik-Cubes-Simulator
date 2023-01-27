@@ -5,7 +5,7 @@ using UnityEngine;
 using Cubes;
 using LayerByLayers;
 using Moves;
-
+using MovesNos;
 namespace CubeAnalysers
 {
     public class CubeAnalyser
@@ -61,7 +61,7 @@ namespace CubeAnalysers
             return sum;
         }
 
-        public int getQSTM()
+        public int getQSTM() //TODO fix QSTM
         {
             Queue<Move> newQueue = new Queue<Move>(moves);
             int sum = 0;
@@ -121,6 +121,11 @@ namespace CubeAnalysers
                 }
             }
             return sum;
+        }
+
+        public MovesNo getCount()
+        {
+            return new MovesNo(getHTM(), getQTM(), getSTM(), getQSTM(), getATM(), get15HTM());
         }
     }
 }

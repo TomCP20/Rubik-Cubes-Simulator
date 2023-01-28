@@ -61,7 +61,7 @@ namespace CubeAnalysers
             return sum;
         }
 
-        public int getQSTM() //TODO fix QSTM
+        public int getQSTM()
         {
             Queue<Move> newQueue = new Queue<Move>(moves);
             int sum = 0;
@@ -71,12 +71,12 @@ namespace CubeAnalysers
                 Move next = newQueue.Dequeue();
                 if (current.axis == next.axis && current.angle == next.angle)
                 {
-                    sum+=current.angle;
+                    sum+=Math.Abs(current.angle);
                     current = newQueue.Dequeue();
                 }
                 else
                 {
-                    sum+=current.angle;
+                    sum+=Math.Abs(current.angle);
                     current = next;
                 }
             }

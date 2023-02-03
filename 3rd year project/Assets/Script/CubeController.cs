@@ -10,37 +10,31 @@ using Cubes;
 using Moves;
 using System.Collections.Generic;
 using MultiCubeAnalysers;
+using UnityEngine.Events;
 
 public class CubeController : MonoBehaviour
 {
     public CubeVariable CubeState;
-    bool cubeAltered;
-    public Material BlackMat;
-    public Material WhiteMat;
-    public Material GreenMat;
-    public Material BlueMat;
-    public Material RedMat;
-    public Material YellowMat;
-    public Material OrangeMat;
+
+    public UnityEvent OnCubeChange;
 
     // Start is called before the first frame update
     void Start()
     {
 
         CubeState.CubeValue = new Cube();
-        updateCube();
+        OnCubeChange.Invoke();
         //InvokeRepeating("RotCube", 1.0f, 1.0f);
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (cubeAltered) { updateCube(); }
         if (Input.GetKeyDown("r"))
         {
-            cubeAltered = true;
             CubeState.CubeValue.randomMoveSequence();
+            OnCubeChange.Invoke();
         }
         if (Input.GetKeyDown("l"))
         {
@@ -98,14 +92,14 @@ public class CubeController : MonoBehaviour
         if (direction == -1) { move += "'"; }
         CubeState.CubeValue.rotate(move);
         UnityEngine.Debug.Log(move);
-        cubeAltered = true;
+        OnCubeChange.Invoke();
     }
 
     IEnumerator showSolution()
     {
         CubeSolver solver = new LayerByLayer(CubeState.CubeValue);
         CubeState.CubeValue = solver.getSlovedCube();
-        updateCube();
+        OnCubeChange.Invoke();
         yield return null;
     }
 
@@ -118,7 +112,7 @@ public class CubeController : MonoBehaviour
             UnityEngine.Debug.Log(moves.Count);
             Move m = moves.Dequeue();
             CubeState.CubeValue.rotate(m);
-            updateCube();
+            OnCubeChange.Invoke();
             yield return new WaitForSeconds(1);
         }
     }
@@ -128,55 +122,5 @@ public class CubeController : MonoBehaviour
         MultiCubeAnalyser m = new MultiCubeAnalyser(10);
         m.printAnalysis();
         yield return null;
-    }
-    void RotCube()
-    {
-        CubeState.CubeValue.rotate(Axis.X, 1, 1);
-        cubeAltered = true;
-    }
-
-    void updateCube()
-    {
-        foreach (Piece p in CubeState.CubeValue.pieces)
-        {
-            foreach (Face f in p.faces)
-            {
-                Vector3 coords = p.position + f.direction/2;
-                Collider[] hitColliders = Physics.OverlapSphere(coords, 0.1f);
-                if (hitColliders.Length.Equals(1))
-                {
-                    //UnityEngine.Debug.Log(hitColliders[0]);
-                    hitColliders[0].GetComponent<MeshRenderer>().material = GetMaterial(f.colour);
-                }
-                else
-                {
-                    UnityEngine.Debug.Log("colliders != 1");
-                }
-            }
-        }
-        cubeAltered = false;
-    }
-
-    Material GetMaterial(Colour col)
-    {
-        switch(col)
-        {
-            case Colour.Blue:
-                return BlueMat;
-            case Colour.Green:
-                return GreenMat;
-            case Colour.Red:
-                return RedMat;
-            case Colour.Yellow:
-                return YellowMat;
-            case Colour.Orange:
-                return OrangeMat;
-            case Colour.White:
-                return WhiteMat;
-            case Colour.Black:
-                return BlackMat;
-            default:
-                return null;
-        }
     }
 }

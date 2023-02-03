@@ -2347,7 +2347,7 @@ GameObject:
   m_Component:
   - component: {fileID: 779143916}
   - component: {fileID: 779143917}
-  - component: {fileID: 779143918}
+  - component: {fileID: 779143919}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -2388,15 +2388,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1a6e812c1ace384e80258d3b54f0ab9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cube: {fileID: 11400000, guid: 9a99b27e3c692a34baa37bd1fcf284ce, type: 2}
-  BlackMat: {fileID: 2100000, guid: 0d1e00a6db9bb2a499d96f6b585b753d, type: 2}
-  WhiteMat: {fileID: 2100000, guid: 9310e71ee9ba90e46b1a2906b82e6812, type: 2}
-  GreenMat: {fileID: 2100000, guid: bd24e3c91d73f664f96767aaa6207030, type: 2}
-  BlueMat: {fileID: 2100000, guid: db78896e30006b0468a35d3370e69f18, type: 2}
-  RedMat: {fileID: 2100000, guid: 058d820d640a7ac46b29ada17376e8e3, type: 2}
-  YellowMat: {fileID: 2100000, guid: 457207965ef520f47a91a12922e47d48, type: 2}
-  OrangeMat: {fileID: 2100000, guid: 7291d521eb9c78d41b67519e54a9d4b9, type: 2}
---- !u!114 &779143918
+  CubeState: {fileID: 11400000, guid: 9a99b27e3c692a34baa37bd1fcf284ce, type: 2}
+  OnCubeChange:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 779143919}
+        m_TargetAssemblyTypeName: CubeUpdater, Assembly-CSharp
+        m_MethodName: updateCube
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &779143919
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2405,12 +2413,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 779143915}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e741851cba3ad425c91ecf922cc6b379, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f443d6a3baf9704a8243c3e28cca220, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _data:
-    _json: '{"declarations":{"Kind":"Object","collection":{"$content":[],"$version":"A"},"$version":"A"}}'
-    _objectReferences: []
+  CubeState: {fileID: 11400000, guid: 9a99b27e3c692a34baa37bd1fcf284ce, type: 2}
+  BlackMat: {fileID: 2100000, guid: 0d1e00a6db9bb2a499d96f6b585b753d, type: 2}
+  WhiteMat: {fileID: 2100000, guid: 9310e71ee9ba90e46b1a2906b82e6812, type: 2}
+  GreenMat: {fileID: 2100000, guid: bd24e3c91d73f664f96767aaa6207030, type: 2}
+  BlueMat: {fileID: 2100000, guid: db78896e30006b0468a35d3370e69f18, type: 2}
+  RedMat: {fileID: 2100000, guid: 058d820d640a7ac46b29ada17376e8e3, type: 2}
+  YellowMat: {fileID: 2100000, guid: 457207965ef520f47a91a12922e47d48, type: 2}
+  OrangeMat: {fileID: 2100000, guid: 7291d521eb9c78d41b67519e54a9d4b9, type: 2}
 --- !u!1 &822205264
 GameObject:
   m_ObjectHideFlags: 0

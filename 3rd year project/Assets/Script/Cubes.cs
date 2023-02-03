@@ -11,7 +11,7 @@ using Faces;
 using Pieces;
 namespace Cubes
 {
-    class Cube
+    public class Cube
     {
         public Piece[] pieces;
 

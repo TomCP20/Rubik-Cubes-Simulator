@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-enum Axis
+public enum Axis
     {
         X = 0,
         Y = 1,

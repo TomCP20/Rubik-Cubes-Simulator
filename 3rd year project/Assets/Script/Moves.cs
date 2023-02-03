@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Moves
 {
-    readonly struct Move
+    public readonly struct Move
     {
         public Axis axis { get; }
         public int slice { get; }

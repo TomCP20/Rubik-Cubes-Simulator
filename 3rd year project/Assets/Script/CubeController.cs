@@ -13,7 +13,7 @@ using MultiCubeAnalysers;
 
 public class CubeController : MonoBehaviour
 {
-    Cube c;
+    public CubeVariable CubeState;
     bool cubeAltered;
     public Material BlackMat;
     public Material WhiteMat;
@@ -26,9 +26,9 @@ public class CubeController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-        c = new Cube();
-        updateCube(c);
+
+        CubeState.CubeValue = new Cube();
+        updateCube();
         //InvokeRepeating("RotCube", 1.0f, 1.0f);
         
     }
@@ -36,11 +36,11 @@ public class CubeController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (cubeAltered) { updateCube(c); }
+        if (cubeAltered) { updateCube(); }
         if (Input.GetKeyDown("r"))
         {
             cubeAltered = true;
-            c.randomMoveSequence();
+            CubeState.CubeValue.randomMoveSequence();
         }
         if (Input.GetKeyDown("l"))
         {
@@ -55,7 +55,6 @@ public class CubeController : MonoBehaviour
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit)) { rotateFace(hit.transform.name, 1); }
-            
         }
         if (Input.GetMouseButtonDown(1))
         {
@@ -97,29 +96,29 @@ public class CubeController : MonoBehaviour
                 return;
         }
         if (direction == -1) { move += "'"; }
-        c.rotate(move);
+        CubeState.CubeValue.rotate(move);
         UnityEngine.Debug.Log(move);
         cubeAltered = true;
     }
 
     IEnumerator showSolution()
     {
-        CubeSolver solver = new LayerByLayer(c);
-        c = solver.getSlovedCube();
-        updateCube(c);
+        CubeSolver solver = new LayerByLayer(CubeState.CubeValue);
+        CubeState.CubeValue = solver.getSlovedCube();
+        updateCube();
         yield return null;
     }
 
     IEnumerator animate()
     {
-        CubeSolver solver = new LayerByLayer(c);
+        CubeSolver solver = new LayerByLayer(CubeState.CubeValue);
         Queue<Move> moves = solver.getSolution();
         while (moves.Count > 0)
         {
             UnityEngine.Debug.Log(moves.Count);
             Move m = moves.Dequeue();
-            c.rotate(m);
-            updateCube(c);
+            CubeState.CubeValue.rotate(m);
+            updateCube();
             yield return new WaitForSeconds(1);
         }
     }
@@ -132,13 +131,13 @@ public class CubeController : MonoBehaviour
     }
     void RotCube()
     {
-        c.rotate(Axis.X, 1, 1);
+        CubeState.CubeValue.rotate(Axis.X, 1, 1);
         cubeAltered = true;
     }
 
-    void updateCube(Cube c)
+    void updateCube()
     {
-        foreach (Piece p in c.pieces)
+        foreach (Piece p in CubeState.CubeValue.pieces)
         {
             foreach (Face f in p.faces)
             {
@@ -158,9 +157,9 @@ public class CubeController : MonoBehaviour
         cubeAltered = false;
     }
 
-    Material GetMaterial(Colour c)
+    Material GetMaterial(Colour col)
     {
-        switch(c)
+        switch(col)
         {
             case Colour.Blue:
                 return BlueMat;

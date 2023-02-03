@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-enum Colour
+public enum Colour
 {
     Black,
     White,

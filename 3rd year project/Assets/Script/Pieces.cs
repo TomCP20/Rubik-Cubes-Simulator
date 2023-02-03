@@ -6,7 +6,7 @@ using System;
 
 namespace Pieces
 {
-    class Piece
+    public class Piece
     {
         public Vector3 position;
         public Face[] faces;

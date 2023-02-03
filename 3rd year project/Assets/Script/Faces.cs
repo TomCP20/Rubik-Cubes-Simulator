@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Faces
 {
-    class Face
+    public class Face
     {
         public Colour colour;
         public Vector3 direction;//unit vector

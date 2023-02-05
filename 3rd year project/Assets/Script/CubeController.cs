@@ -9,7 +9,6 @@ using System.Collections;
 using Cubes;
 using Moves;
 using System.Collections.Generic;
-using MultiCubeAnalysers;
 using UnityEngine.Events;
 
 public class CubeController : MonoBehaviour
@@ -18,109 +17,77 @@ public class CubeController : MonoBehaviour
 
     public UnityEvent OnCubeChange;
 
-    // Start is called before the first frame update
     void Start()
     {
-
         CubeState.CubeValue = new Cube();
         OnCubeChange.Invoke();
-        //InvokeRepeating("RotCube", 1.0f, 1.0f);
-
     }
 
-    // Update is called once per frame
-    void Update()
+    public void userMove(int direction)
     {
-        if (Input.GetKeyDown("r"))
-        {
-            CubeState.CubeValue.randomMoveSequence();
-            OnCubeChange.Invoke();
-        }
-        if (Input.GetKeyDown("l"))
-        {
-            StartCoroutine(showSolution());
-        }
-        if (Input.GetKeyDown("p"))
-        {
-            StartCoroutine(animate());
-        }
-        if (Input.GetMouseButtonDown(0))
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit)) { rotateFace(hit.transform.name, 1); }
-        }
-        if (Input.GetMouseButtonDown(1))
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit)) { rotateFace(hit.transform.name, -1); }
-            
-        }
-        if (Input.GetKeyDown("o"))
-        {
-            StartCoroutine(Analysis());
-        }
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (!Physics.Raycast(ray, out hit)) { return; }
+        String move = getFace(hit.transform.name);
+        if (move == "") { return; }
+        if (direction == -1) { move += "'"; }
+        roatateFace(new Move(move));
     }
 
-    void rotateFace(String name, int direction)
+    public string getFace(String name)
     {
-        String move;
         switch(name)
         {
             case ("Quad 23"):
-                move = "U";
-                break;
+                return "U";
             case ("Quad 32"):
-                move = "D";
-                break;
+                return "D";
             case ("Quad 5"):
-                move = "L";
-                break;
+                return "L";
             case ("Quad 14"):
-                move = "R";
-                break;
+                return "R";
             case ("Quad 41"):
-                move = "F";
-                break;
+                return "F";
             case ("Quad 50"):
-                move = "B";
-                break;
+                return "B";
             default:
-                return;
-        }
-        if (direction == -1) { move += "'"; }
-        CubeState.CubeValue.rotate(move);
-        UnityEngine.Debug.Log(move);
-        OnCubeChange.Invoke();
+                return "";
+        }   
     }
 
-    IEnumerator showSolution()
+    public void showSolution()
     {
         CubeSolver solver = new LayerByLayer(CubeState.CubeValue);
         CubeState.CubeValue = solver.getSlovedCube();
         OnCubeChange.Invoke();
-        yield return null;
     }
 
-    IEnumerator animate()
+    public void startAnimate()
+    {
+        StartCoroutine(animate());
+    }
+
+    public IEnumerator animate()
     {
         CubeSolver solver = new LayerByLayer(CubeState.CubeValue);
         Queue<Move> moves = solver.getSolution();
         while (moves.Count > 0)
         {
             UnityEngine.Debug.Log(moves.Count);
-            Move m = moves.Dequeue();
-            CubeState.CubeValue.rotate(m);
-            OnCubeChange.Invoke();
+            roatateFace(moves.Dequeue());
             yield return new WaitForSeconds(1);
         }
     }
 
-    IEnumerator Analysis()
+    public void scramble()
     {
-        MultiCubeAnalyser m = new MultiCubeAnalyser(10);
-        m.printAnalysis();
-        yield return null;
+        CubeState.CubeValue.randomMoveSequence();
+        OnCubeChange.Invoke();
+    }
+
+    public void roatateFace(Move m)
+    {
+        CubeState.CubeValue.rotate(m);
+        OnCubeChange.Invoke();
     }
 }

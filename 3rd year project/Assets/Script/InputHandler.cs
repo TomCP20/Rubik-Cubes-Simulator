@@ -19,7 +19,7 @@ public class InputHandler : MonoBehaviour
     void Update()
     {
         float Xrot = Input.GetAxis("Horizontal");
-        float Yrot = Mathf.Clamp(Input.GetAxis("Vertical"), -90, 90);
+        float Yrot = Mathf.Clamp(Input.GetAxis("Vertical"), -89, 89);
         transform.LookAt(target.transform);
         transform.Translate(new Vector3(Xrot, Yrot, 0) * Time.deltaTime * rotationSpeed);
 

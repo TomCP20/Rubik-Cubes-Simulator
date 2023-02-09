@@ -5,10 +5,7 @@ using UnityEngine.Events;
 
 public class InputHandler : MonoBehaviour
 {
-    public UnityEvent onScrambleCube;
     public UnityEvent onSolveCube;
-    public UnityEvent onAnimateCube;
-    public UnityEvent onDisplayAnalysis;
     public UnityEvent onMouseLeft;
     public UnityEvent onMouseRight;
 
@@ -22,22 +19,9 @@ public class InputHandler : MonoBehaviour
         float Yrot = Mathf.Clamp(Input.GetAxis("Vertical"), -89, 89);
         transform.LookAt(target.transform);
         transform.Translate(new Vector3(Xrot, Yrot, 0) * Time.deltaTime * rotationSpeed);
-
-        if (Input.GetKeyDown("r"))
-        {
-            onScrambleCube.Invoke();
-        }
         if (Input.GetKeyDown("l"))
         {
             onSolveCube.Invoke();
-        }
-        if (Input.GetKeyDown("p"))
-        {
-            onAnimateCube.Invoke();
-        }
-        if (Input.GetKeyDown("o"))
-        {
-            onDisplayAnalysis.Invoke();
         }
         if (Input.GetKeyDown(KeyCode.Tab))
         {

@@ -48,14 +48,17 @@ namespace MultiCubeAnalysers
             avghalfHTM = avghalfHTM/cubeNo;
         }
 
-        public void printAnalysis() //TODO add multi threading
+        public string printAnalysis() //TODO add multi threading
         {
-            UnityEngine.Debug.Log("Avearge HTM of: " + avgHTM);
-            UnityEngine.Debug.Log("Avearge QTM of: " + avgQTM);
-            UnityEngine.Debug.Log("Avearge STM of: " + avgSTM);
-            UnityEngine.Debug.Log("Avearge QSTM of: " + avgQSTM);
-            UnityEngine.Debug.Log("Avearge ATM of: " + avgATM);
-            UnityEngine.Debug.Log("Avearge 1.5HTM of: " + avghalfHTM);
+            string output = "";
+            output += "Avearge HTM of: " + avgHTM + "\n";
+            output += "Avearge QTM of: " + avgQTM + "\n";
+            output += "Avearge STM of: " + avgSTM + "\n";
+            output += "Avearge QSTM of: " + avgQSTM + "\n";
+            output += "Avearge ATM of: " + avgATM + "\n";
+            output += "Avearge 1.5HTM of: " + avghalfHTM + "\n";
+            Debug.Log(output);
+            return output;
         }
     }
 }

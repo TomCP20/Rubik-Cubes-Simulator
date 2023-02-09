@@ -2,9 +2,6 @@ using System;
 using UnityEngine;
 using LayerByLayers;
 using CubeSolvers;
-using Faces;
-using Pieces;
-using System.Collections.Specialized;
 using System.Collections;
 using Cubes;
 using Moves;
@@ -59,6 +56,12 @@ public class CubeController : MonoBehaviour
     {
         CubeSolver solver = new LayerByLayer(CubeState.CubeValue);
         CubeState.CubeValue = solver.getSlovedCube();
+        OnCubeChange.Invoke();
+    }
+
+    public void resetCube()
+    {
+        CubeState.CubeValue = new Cube();
         OnCubeChange.Invoke();
     }
 

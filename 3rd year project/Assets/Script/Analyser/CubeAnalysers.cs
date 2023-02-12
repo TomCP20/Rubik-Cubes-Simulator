@@ -123,9 +123,9 @@ namespace CubeAnalysers
             return sum;
         }
 
-        public MovesNo getCount()
+        public float[] getCount()
         {
-            return new MovesNo(getHTM(), getQTM(), getSTM(), getQSTM(), getATM(), get15HTM());
+            return new float[] {getHTM(), getQTM(), getSTM(), getQSTM(), getATM(), (float)get15HTM()};
         }
     }
 }

@@ -25,32 +25,44 @@ public class CubeController : MonoBehaviour
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (!Physics.Raycast(ray, out hit)) { return; }
-        String move = getFace(hit.transform.name);
+        String move = getFace(hit.transform.position);
         if (move == "") { return; }
         if (direction == -1) { move += "'"; }
         roatateFace(new Move(move));
     }
 
-    public string getFace(String name)
+    public string getFace(Vector3 pos) 
     {
-        switch(name)
+        if (pos.y >= 1.4)
         {
-            case ("Quad 23"):
-                return "U";
-            case ("Quad 32"):
-                return "D";
-            case ("Quad 5"):
-                return "L";
-            case ("Quad 14"):
-                return "R";
-            case ("Quad 41"):
-                return "F";
-            case ("Quad 50"):
-                return "B";
-            default:
-                return "";
-        }   
+            return "U";
+        }
+        else if (pos.y <= -1.4)
+        {
+            return "D";
+        }
+        else if (pos.x >= 1.4)
+        {
+            return "L";
+        }
+        else if (pos.x <= -1.4)
+        {
+            return "R";
+        }
+        else if (pos.z >= 1.4)
+        {
+            return "F";
+        }
+        else if (pos.z <= -1.4)
+        {
+            return "B";
+        }
+        else
+        {
+            return "";
+        }
     }
+    
 
     public void showSolution()
     {

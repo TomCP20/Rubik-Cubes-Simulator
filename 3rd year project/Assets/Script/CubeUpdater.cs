@@ -8,14 +8,7 @@ using Faces;
 public class CubeUpdater : MonoBehaviour
 {
     public CubeVariable CubeState;
-
-    public Material BlackMat;
-    public Material WhiteMat;
-    public Material GreenMat;
-    public Material BlueMat;
-    public Material RedMat;
-    public Material YellowMat;
-    public Material OrangeMat;
+    public Material[] materials; 
 
     public void updateCube()
     {
@@ -28,37 +21,13 @@ public class CubeUpdater : MonoBehaviour
                 if (hitColliders.Length.Equals(1))
                 {
                     //UnityEngine.Debug.Log(hitColliders[0]);
-                    hitColliders[0].GetComponent<MeshRenderer>().material = GetMaterial(f.colour);
+                    hitColliders[0].GetComponent<MeshRenderer>().material = materials[(int)f.colour];
                 }
                 else
                 {
                     UnityEngine.Debug.Log("colliders != 1");
                 }
             }
-        }
-    }
-
-
-    Material GetMaterial(Colour col)
-    {
-        switch (col)
-        {
-            case Colour.Blue:
-                return BlueMat;
-            case Colour.Green:
-                return GreenMat;
-            case Colour.Red:
-                return RedMat;
-            case Colour.Yellow:
-                return YellowMat;
-            case Colour.Orange:
-                return OrangeMat;
-            case Colour.White:
-                return WhiteMat;
-            case Colour.Black:
-                return BlackMat;
-            default:
-                return null;
         }
     }
 }

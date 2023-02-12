@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 public enum Colour
 {
-    Black,
-    White,
-    Green,
-    Blue,
-    Red,
-    Yellow,
-    Orange,
+    Black = 0,
+    White = 1,
+    Green = 2,
+    Blue = 3,
+    Red = 4,
+    Yellow = 5,
+    Orange = 6,
 }
 

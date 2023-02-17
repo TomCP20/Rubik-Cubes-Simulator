@@ -24,6 +24,7 @@ namespace F2Ls
             List<Piece> whiteCorners = cube.filter(Colour.White, 3);
             foreach (Piece corner in whiteCorners)
             {
+                Debug.Log("solving pair");
                 solveCornerEdgePair(corner);
             }
         }
@@ -31,52 +32,55 @@ namespace F2Ls
         public void solveCornerEdgePair(Piece corner)
         {
             Piece edge = getEdge(corner);
-                // first get edge to the top unless correct x, z
-                getEdgeInPosition(edge);
-                // then get corner to top unless correct x, z
-                getCornerInPosition(corner);
+            
+            // first get edge to the top unless correct x, z
+            getEdgeInPosition(edge);
+            // then get corner to top unless correct x, z
+            getCornerInPosition(corner, edge);
 
-                if (!propperPosition(edge))
-                {
-                    UnityEngine.Debug.LogError("edge not in valid position");
-                }
+            if (!propperPosition(edge))
+            {
+                Debug.LogError("edge not in valid position");
+            }
 
-                if (!propperPosition(corner))
-                {
-                    UnityEngine.Debug.LogError("corner not in valid position");
-                }
-                // get corner to correct x, z
-                rotateToCorrectPosition(corner, corner.SolvedPosition());
-                // identify broad case
+            if (!propperPosition(corner))
+            {
+                Debug.LogError("corner not in valid position");
+            }
+
+            Vector3 cornerstartpos = corner.position;
+            Vector3 edgestartpos = edge.position;
                 
-                Vector3 cornerstartpos = corner.position;
-                Vector3 edgestartpos = edge.position;
-                if (cornerstartpos.y == 1) //corner on top
+            // get corner to correct x, z
+            rotateToCorrectPosition(corner, corner.SolvedPosition());
+            // identify broad case
+
+            if (cornerstartpos.y == 1) //corner on top
+            {
+                if (edgestartpos.y == 1) //edge on top
                 {
-                    if (edgestartpos.y == 1) //edge on top
-                    {
-                        //case1
-                        //case4
-                        //case5
-                    }
-                    else//edge in middle
-                    {
-                        //case3
-                    }
+                    //case1
+                    //case4
+                    //case5
                 }
-                else //corner on bottom
+                else//edge in middle
                 {
-                    if (edgestartpos.y == 1) //edge on top
-                    {
-                        //case2
-                    }
-                    else  //edge in middle
-                    {
-                        //case6
-                    }
+                    //case3
                 }
-                // identify specific case
-                // execute solution
+            }
+            else //corner on bottom
+            {
+                if (edgestartpos.y == 1) //edge on top
+                {
+                    //case2
+                }
+                else  //edge in middle
+                {
+                    //case6
+                }
+            }
+            // identify specific case
+            // execute solution
         }
 
         public Piece getEdge(Piece corner)
@@ -94,25 +98,56 @@ namespace F2Ls
             return null;
         }
 
-        public void getCornerInPosition(Piece corner)
+        public void getCornerInPosition(Piece corner, Piece edge)
         {
             if (propperPosition(corner)) { return; } 
             int shiftVal = getShiftVal(corner.position);
-            rotateSequence(shiftVal, new string[] {"R", "U", "R''"});
+            if (badEdge(edge, corner))
+            {
+                Debug.Log("Bad edge");
+                rotateSequence(shiftVal, new string[] {"R", "U2", "R'"});
+            }
+            else
+            {
+                rotateSequence(shiftVal, new string[] {"R", "U", "R'"});
+            }
         }
 
         public void getEdgeInPosition(Piece edge)
         {
             if (propperPosition(edge)) { return; } 
             int shiftVal = getShiftVal(edge.position);
-            rotateSequence(shiftVal, new string[] {"F", "U", "F'"});
+            if (edge.position.y == -1)
+            {
+                rotateSequence(shiftVal, new string[] {"F2", "U", "F2"});
+            }
+            else if (edge.position.y == 0)
+            {
+                rotateSequence(shiftVal, new string[] {"F'", "U", "F"});
+            }
+            else
+            {
+                Debug.LogError("edge in top layer");
+                Debug.Log(edge.position);
+            }
         }
 
         public bool propperPosition(Piece p)
         {
-            Vector3 startpos = p.position;
-            Vector3 targetpos = p.SolvedPosition();
-            return ((startpos.x == targetpos.x && startpos.z == targetpos.z) || startpos.y == 1);
+            return (p.correctPosition() || p.position.y == 1);
+        }
+
+        public bool badEdge(Piece edge, Piece corner)
+        {
+            int ex = (int)edge.position.x;
+            int ez = (int)edge.position.z;
+            int cx = (int)corner.position.x;
+            int cz = (int)corner.position.z;
+            if (cx == 1 && cz == 1 && ex == -1 && ez == 0) return true;
+            if (cx == 1 && cz == -1 && ex == 0 && ez == 1) return true;
+            if (cx == -1 && cz == 1 && ex == 0 && ez == -1) return true;
+            if (cx == -1 && cz == -1 && ex == 1 && ez == 0) return true;
+            return false;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using CFOPs;
 using LayerByLayers;
 using CubeSolvers;
 using System.Collections;
@@ -66,7 +67,7 @@ public class CubeController : MonoBehaviour
 
     public void showSolution()
     {
-        CubeSolver solver = new LayerByLayer(CubeState.CubeValue);
+        CubeSolver solver = new CFOP(CubeState.CubeValue);
         CubeState.CubeValue = solver.getSlovedCube();
         OnCubeChange.Invoke();
     }

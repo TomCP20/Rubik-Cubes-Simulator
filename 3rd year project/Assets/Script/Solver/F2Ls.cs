@@ -51,30 +51,31 @@ namespace F2Ls
             Vector3 cornerstartpos = corner.position;
             Vector3 edgestartpos = edge.position;
                 
-            // get corner to correct x, z
-            rotateToCorrectPosition(corner, corner.SolvedPosition());
-            // identify broad case
+            
+            // identify broad case from https://ruwix.com/the-rubiks-cube/advanced-cfop-fridrich/first-two-layers-f2l/
 
             if (cornerstartpos.y == 1) //corner on top
             {
+                rotateToCorrectPosition(corner, corner.SolvedPosition()); // get corner to correct x, z if not solved
+
                 if (edgestartpos.y == 1) //edge on top
                 {
                     //case1
                     //case4
                     //case5
                 }
-                else//edge in middle
+                else //edge solved
                 {
                     //case3
                 }
             }
-            else //corner on bottom
+            else //corner solved
             {
                 if (edgestartpos.y == 1) //edge on top
                 {
-                    //case2
+                    case2(edge, corner);
                 }
-                else  //edge in middle
+                else  //edge solved
                 {
                     //case6
                 }
@@ -104,7 +105,7 @@ namespace F2Ls
             int shiftVal = getShiftVal(corner.position);
             if (badEdge(edge, corner))
             {
-                Debug.Log("Bad edge");
+                //Debug.Log("Bad edge");
                 rotateSequence(shiftVal, new string[] {"R", "U2", "R'"});
             }
             else
@@ -148,6 +149,50 @@ namespace F2Ls
             if (cx == -1 && cz == 1 && ex == 0 && ez == -1) return true;
             if (cx == -1 && cz == -1 && ex == 1 && ez == 0) return true;
             return false;
+        }
+
+        public void machTopEdgeColour(Piece edge)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (doesColourEdgeMatch(edge))
+                {
+                    Debug.Log("succsessfull match");
+                    return;
+                }
+                rotate("U");
+            }
+            Debug.LogError("could not match edge on top layer to middle layer face");
+
+        }
+
+        public bool doesColourEdgeMatch(Piece edge)
+        {
+            foreach (Face f in edge.faces)
+            {
+                if (f.correctOrientation())
+                {
+                    return true;
+                } 
+            }
+            return false;
+        }
+    
+        public void case2(Piece edge, Piece corner)
+        {
+            machTopEdgeColour(edge);
+            if (corner.correctOrientation())
+            {
+                int shiftval = getShiftVal(edge.SolvedPosition());
+                if (edge.position.x * edge.SolvedPosition().z + edge.position.z * edge.SolvedPosition().x == 1)
+                {
+                    rotateSequence(shiftval, new string[] {"U", "R", "U'", "R'", "U'", "F'", "U", "F"});
+                }
+                else
+                {
+                    rotateSequence(shiftval, new string[] {"U'", "F'", "U", "F", "U", "R", "U'", "R'"});
+                }
+            }
         }
     }
 }

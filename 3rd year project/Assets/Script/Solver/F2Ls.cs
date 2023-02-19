@@ -53,6 +53,8 @@ namespace F2Ls
                 
             
             // identify broad case from https://ruwix.com/the-rubiks-cube/advanced-cfop-fridrich/first-two-layers-f2l/
+            // identify specific case
+            // execute solution
 
             if (cornerstartpos.y == 1) //corner on top
             {
@@ -80,8 +82,15 @@ namespace F2Ls
                     //case6
                 }
             }
-            // identify specific case
-            // execute solution
+            if (corner.correctOrientation() && edge.correctOrientation())
+            {
+                Debug.Log("Succsess");
+            }
+            else
+            {
+                Debug.LogError("Faliure");
+            }
+            
         }
 
         public Piece getEdge(Piece corner)
@@ -181,10 +190,11 @@ namespace F2Ls
         public void case2(Piece edge, Piece corner)
         {
             machTopEdgeColour(edge);
-            if (corner.correctOrientation())
+            Vector3 whiteCornerDirection = faceletRelativeDirection(corner, Colour.White);
+            int shiftval = getShiftVal(edge.SolvedPosition());
+            if (corner.correctOrientation()) // white face points down
             {
-                int shiftval = getShiftVal(edge.SolvedPosition());
-                if (edge.position.x * edge.SolvedPosition().z + edge.position.z * edge.SolvedPosition().x == 1)
+                if (edgeIsLeftOfSolved(edge))
                 {
                     rotateSequence(shiftval, new string[] {"U", "R", "U'", "R'", "U'", "F'", "U", "F"});
                 }
@@ -193,6 +203,33 @@ namespace F2Ls
                     rotateSequence(shiftval, new string[] {"U'", "F'", "U", "F", "U", "R", "U'", "R'"});
                 }
             }
+            else if (whiteCornerDirection == Vector3.left) // white faces right due to mirroring issues
+            {
+                if (edgeIsLeftOfSolved(edge))
+                {
+                    rotateSequence(shiftval, new string[] {"F'", "U", "F", "U'", "F'", "U", "F"});
+                }
+                else
+                {
+                    rotateSequence(shiftval, new string[] {"R", "U", "R'", "U'", "R", "U", "R'"});
+                }
+            }
+            else // white faces forward
+            {
+                if (edgeIsLeftOfSolved(edge))
+                {
+                    rotateSequence(shiftval, new string[] {"R", "U'", "R'", "U", "R", "U'", "R'"});
+                }
+                else
+                {
+                    rotateSequence(shiftval, new string[] {"F'", "U'", "F", "U", "F'", "U'", "F"});
+                }
+            }
+        }
+
+        public bool edgeIsLeftOfSolved(Piece edge)
+        {
+            return edge.position.x * edge.SolvedPosition().z + edge.position.z * edge.SolvedPosition().x == 1;
         }
     }
 }

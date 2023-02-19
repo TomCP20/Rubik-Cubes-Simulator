@@ -157,5 +157,11 @@ namespace CubeSolvers
         {
             return ((int)current.x == (int)target.x && (int)current.z == (int)target.z);
         }
+
+        protected Vector3 faceletRelativeDirection(Piece p, Colour c)
+        {
+            Face f = p.getFaceByColour(c);
+            return Quaternion.Euler(0, 90*getShiftVal(f.direction), 0) * f.direction;
+        }
     }  
 }

@@ -106,5 +106,17 @@ namespace Pieces
         {
             return SolvedPosition() == position;
         }
+
+        public Face getFaceByColour(Colour c)
+        {
+            foreach (Face f in faces)
+            {
+                if (f.colour == c)
+                {
+                    return f;
+                }
+            }
+            return null;
+        }
     }
 }

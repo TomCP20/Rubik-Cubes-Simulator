@@ -24,7 +24,7 @@ namespace F2Ls
             List<Piece> whiteCorners = cube.filter(Colour.White, 3);
             foreach (Piece corner in whiteCorners)
             {
-                Debug.Log("solving pair");
+                //Debug.Log("solving pair");
                 solveCornerEdgePair(corner);
             }
         }
@@ -32,6 +32,7 @@ namespace F2Ls
         public void solveCornerEdgePair(Piece corner)
         {
             Piece edge = getEdge(corner);
+            string CubeCase;
             
             // first get edge to the top unless correct x, z
             getEdgeInPosition(edge);
@@ -65,13 +66,18 @@ namespace F2Ls
                     Vector3 whiteCornerDirection = faceletRelativeDirection(corner, Colour.White);
                     if (whiteCornerDirection == Vector3.up) // white faelet points up
                     {
+                        CubeCase = "5";
                         case5(edge, corner);
                     }
-                    //case1
-                    //case4
+                    else
+                    {
+                        CubeCase = "1 or 4";
+                        case1or4(edge, corner);
+                    }
                 }
                 else //edge solved
                 {
+                    CubeCase = "3";
                     case3(edge, corner);
                 }
             }
@@ -79,22 +85,25 @@ namespace F2Ls
             {
                 if (edgestartpos.y == 1) //edge on top
                 {
+                    CubeCase = "2";
                     case2(edge, corner);
                 }
                 else  //edge solved
                 {
+                    CubeCase = "6";
                     case6(edge, corner);
                 }
             }
             if (corner.correctOrientation() && edge.correctOrientation())
             {
-                Debug.Log("Succsess");
+                //Debug.Log("Succsess");
             }
             else
             {
-                Debug.LogError("Faliure");
+                Debug.LogError("Faliure, Case: " + CubeCase);
+                //Debug.LogError("corner position: " + corner.position);
+                //Debug.LogError("edge position: " + edge.position);
             }
-            
         }
 
         public Piece getEdge(Piece corner)
@@ -170,7 +179,7 @@ namespace F2Ls
             {
                 if (doesColourEdgeMatch(edge))
                 {
-                    Debug.Log("succsessfull match");
+                    //Debug.Log("succsessfull match");
                     return;
                 }
                 rotate("U");
@@ -221,7 +230,7 @@ namespace F2Ls
                         rotateSequence(shiftval, "U F' U2 F U' R U R'");
                     }
                 }
-                else
+                else if (whiteCornerDirection == Vector3.forward)
                 {
                     if (doesColourEdgeMatch(edge))
                     {
@@ -231,6 +240,10 @@ namespace F2Ls
                     {
                         rotateSequence(shiftval, "F' U F U' U' R U R");
                     }
+                }
+                else
+                {
+                    Debug.LogError("bad white corner direction: " + whiteCornerDirection);
                 }
             }
             else if (relativePosition == Vector3.back)
@@ -246,7 +259,7 @@ namespace F2Ls
                         rotateSequence(shiftval, "R U' R' U2 F' U' F");
                     }
                 }
-                else
+                else if (whiteCornerDirection == Vector3.forward)
                 {
                     if (doesColourEdgeMatch(edge))
                     {
@@ -256,6 +269,10 @@ namespace F2Ls
                     {
                         rotateSequence(shiftval, "U' R U2 R' U F' U' F");
                     }
+                }
+                else
+                {
+                    Debug.LogError("bad white corner direction: " + whiteCornerDirection);
                 }
             }
             else if (relativePosition == new Vector3(2, 0, -1))
@@ -271,7 +288,7 @@ namespace F2Ls
                         shiftRotate(shiftval, "U F' U' F U F' U2 F");
                     }
                 }
-                else
+                else if (whiteCornerDirection == Vector3.forward)
                 {
                     if (doesColourEdgeMatchOposite(edge))
                     {
@@ -282,8 +299,12 @@ namespace F2Ls
                         shiftRotate(shiftval, "F' U' F");
                     }
                 }
+                else
+                {
+                    Debug.LogError("bad white corner direction: " + whiteCornerDirection);
+                }
             }
-            else
+            else if (relativePosition == new Vector3(1, 0, -2))
             {
                 if (whiteCornerDirection == Vector3.left)
                 {
@@ -296,7 +317,7 @@ namespace F2Ls
                         shiftRotate(shiftval, "R U R'");
                     }
                 }
-                else
+                else if (whiteCornerDirection == Vector3.forward)
                 {
                     if (doesColourEdgeMatchOposite(edge))
                     {
@@ -307,6 +328,14 @@ namespace F2Ls
                         shiftRotate(shiftval, "U' R U R' U' R U2 R'");
                     }
                 }
+                else
+                {
+                    Debug.LogError("bad white corner direction: " + whiteCornerDirection);
+                }
+            }
+            else
+            {
+                Debug.LogError("Bad relative position, " + relativePosition);
             }
         }
         public void case2(Piece edge, Piece corner)
@@ -425,7 +454,7 @@ namespace F2Ls
                     rotateSequence(shiftval, "U' F' U2 F U' F' U F");
                 }
             }
-            else
+            else if (relativePosition == new Vector3(1, 0, -2))
             {
                 if (doesColourEdgeMatchOposite(edge))
                 {
@@ -436,12 +465,16 @@ namespace F2Ls
                     rotateSequence(shiftval, "U R U2 R' U R U' R'");
                 }
             }
+            else
+            {
+                Debug.LogError("Bad relative position, " + relativePosition);
+            }
         }
         public void case6(Piece edge, Piece corner)
         {
             Vector3 whiteCornerDirection = faceletRelativeDirection(corner, Colour.White);
             int shiftval = getShiftVal(edge.SolvedPosition());
-            if (whiteCornerDirection == Vector3.up)
+            if (corner.correctPosition())
             {
                 if (edge.correctOrientation())
                 {
@@ -463,7 +496,7 @@ namespace F2Ls
                     rotateSequence(shiftval, "R U R' U' R U' R' U2 R' U' R");
                 }
             }
-            else
+            else if (whiteCornerDirection == Vector3.forward)
             {
                 if (edge.correctOrientation())
                 {
@@ -474,6 +507,10 @@ namespace F2Ls
                     rotateSequence(shiftval, "R U' R' U F' U' F U' F' U' F");
                 }
             }
+            else
+            {
+                Debug.LogError("bad white corner direction: " + whiteCornerDirection);
+            }
         }
         public bool edgeIsLeftOfSolved(Piece edge)
         {
@@ -482,7 +519,7 @@ namespace F2Ls
 
         public Vector3 relativePositionOfEdge(Piece corner, Piece edge)
         {
-            return Quaternion.Euler(0, 90*getShiftVal(corner.position), 0) * (corner.position - edge.position);
+            return Quaternion.Euler(0, 90*getShiftVal(corner.position), 0) * (edge.position - corner.position);
         }
     }
 }

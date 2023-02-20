@@ -190,6 +190,18 @@ namespace F2Ls
             }
             return false;
         }
+
+        public bool doesColourEdgeMatchOposite(Piece edge)
+        {
+            foreach (Face f in edge.faces)
+            {
+                if (f.defaultDirection() == -f.direction)
+                {
+                    return true;
+                } 
+            }
+            return false;
+        }
     
         public void case2(Piece edge, Piece corner)
         {
@@ -298,11 +310,25 @@ namespace F2Ls
             }
             else if (relativePosition == new Vector3(2, 0, -1))
             {
-                //U2 R U R' U R U' R or U' F' U2 F U' F' U F
+                if (doesColourEdgeMatchOposite(edge))
+                {
+                    rotateSequence(shiftval, "U2 R U R' U R U' R");
+                }
+                else
+                {
+                    rotateSequence(shiftval, "U' F' U2 F U' F' U F");
+                }
             }
             else
             {
-                //U2 F' U' F U' F' U F or U R U2 R' U R U' R'
+                if (doesColourEdgeMatchOposite(edge))
+                {
+                    rotateSequence(shiftval, "U2 F' U' F U' F' U F");
+                }
+                else
+                {
+                    rotateSequence(shiftval, "U R U2 R' U R U' R'");
+                }
             }
         }
         public void case6(Piece edge, Piece corner)

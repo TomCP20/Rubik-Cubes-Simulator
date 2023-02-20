@@ -62,13 +62,17 @@ namespace F2Ls
 
                 if (edgestartpos.y == 1) //edge on top
                 {
+                    Vector3 whiteCornerDirection = faceletRelativeDirection(corner, Colour.White);
+                    if (whiteCornerDirection == Vector3.up) // white faelet points up
+                    {
+                        case5(edge, corner);
+                    }
                     //case1
                     //case4
-                    //case5
                 }
                 else //edge solved
                 {
-                    //case3
+                    case3(edge, corner);
                 }
             }
             else //corner solved
@@ -79,7 +83,7 @@ namespace F2Ls
                 }
                 else  //edge solved
                 {
-                    //case6
+                    case6(edge, corner);
                 }
             }
             if (corner.correctOrientation() && edge.correctOrientation())
@@ -239,7 +243,7 @@ namespace F2Ls
                 }
                 else
                 {
-                    rotateSequence(shiftval, new string[] {"R", "U", "R'", "U'", "F'", "U", "F"});
+                    rotateSequence(shiftval, new string[] {"R", "U", "R'", "U", "F'", "U", "F"});
                 }
             }
             else if (whiteCornerDirection == Vector3.left)
@@ -250,7 +254,7 @@ namespace F2Ls
                 }
                 else
                 {
-                    rotateSequence(shiftval, new string[] {"U", "F'", "U'", "F", "U", "R", "U", "R'"});
+                    rotateSequence(shiftval, new string[] {"U", "F'", "U'", "F", "U'", "R", "U", "R'"});
                 }
             }
             else
@@ -261,14 +265,92 @@ namespace F2Ls
                 }
                 else
                 {
-                    rotateSequence(shiftval, new string[] {"U'", "R", "U", "R'", "U'", "F'", "U'", "F"});
+                    rotateSequence(shiftval, new string[] {"U'", "R", "U", "R'", "U", "F'", "U'", "F"});
                 }
             }
         }
 
+        public void case5(Piece edge, Piece corner)
+        {
+            Vector3 relativePosition = relativePositionOfEdge(corner, edge);
+            int shiftval = getShiftVal(corner.position);
+            if (relativePosition == Vector3.right)
+            {
+                if (edge.correctOrientation())
+                {
+                    rotateSequence(shiftval, "F' U2 F U F' U' F");
+                }
+                else
+                {
+                    rotateSequence(shiftval, "R U R' U' U' R U R' U' R U R'");
+                }
+            }
+            else if (relativePosition == Vector3.back)
+            {
+                if (edge.correctOrientation())
+                {
+                    rotateSequence(shiftval, "R U2 R' U' R U R'");
+                }
+                else
+                {
+                    rotateSequence(shiftval, "F' U' F U2 F' U' F U F' U' F");
+                }
+            }
+            else if (relativePosition == new Vector3(2, 0, -1))
+            {
+                //U2 R U R' U R U' R or U' F' U2 F U' F' U F
+            }
+            else
+            {
+                //U2 F' U' F U' F' U F or U R U2 R' U R U' R'
+            }
+        }
+        public void case6(Piece edge, Piece corner)
+        {
+            Vector3 whiteCornerDirection = faceletRelativeDirection(corner, Colour.White);
+            int shiftval = getShiftVal(edge.SolvedPosition());
+            if (whiteCornerDirection == Vector3.up)
+            {
+                if (edge.correctOrientation())
+                {
+                    return; // the edge and corner are solved
+                }
+                else
+                {
+                    rotateSequence(shiftval, "R U' R' U F' U2 F U F' U2 F");
+                }
+            }
+            else if (whiteCornerDirection == Vector3.left)
+            {
+                if (edge.correctOrientation())
+                {
+                    rotateSequence(shiftval, "R U' R' U R U2 R' U R U' R'");
+                }
+                else
+                {
+                    rotateSequence(shiftval, "R U R' U' R U' R' U2 R' U' R");
+                }
+            }
+            else
+            {
+                if (edge.correctOrientation())
+                {
+                    rotateSequence(shiftval, "R U' R' U' R U R' U' R U2 R'");
+                }
+                else
+                {
+                    rotateSequence(shiftval, "R U' R' U F' U' F U' F' U' F");
+                }
+            }
+        }
         public bool edgeIsLeftOfSolved(Piece edge)
         {
             return edge.position.x * edge.SolvedPosition().z + edge.position.z * edge.SolvedPosition().x == 1;
+        }
+
+        public Vector3 relativePositionOfEdge(Piece corner, Piece edge)
+        {
+            return Quaternion.Euler(0, 90*getShiftVal(corner.position), 0) * (corner.position - edge.position);
         }
     }
 }

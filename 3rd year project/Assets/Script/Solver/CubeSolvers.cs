@@ -101,6 +101,11 @@ namespace CubeSolvers
             }
         }
 
+        protected void rotateSequence(int shiftVal, string sequence)
+        {
+            rotateSequence(shiftVal, sequence.Split(" "));
+        }
+
         protected void rotateSequence(string[] sequence)
         {
             foreach (string move in sequence)
@@ -161,7 +166,7 @@ namespace CubeSolvers
         protected Vector3 faceletRelativeDirection(Piece p, Colour c)
         {
             Face f = p.getFaceByColour(c);
-            return Quaternion.Euler(0, 90*getShiftVal(f.direction), 0) * f.direction;
+            return Quaternion.Euler(0, 90*getShiftVal(p.position), 0) * f.direction;
         }
     }  
 }

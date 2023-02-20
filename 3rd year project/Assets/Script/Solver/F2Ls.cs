@@ -203,6 +203,112 @@ namespace F2Ls
             return false;
         }
     
+        public void case1or4(Piece edge, Piece corner)
+        {
+            Vector3 relativePosition = relativePositionOfEdge(corner, edge);
+            Vector3 whiteCornerDirection = faceletRelativeDirection(corner, Colour.White);
+            int shiftval = getShiftVal(corner.position);
+            if (relativePosition == Vector3.right)
+            {
+                if (whiteCornerDirection == Vector3.left)
+                {
+                    if (doesColourEdgeMatch(edge))
+                    {
+                        rotateSequence(shiftval, "U' F' U F");
+                    }
+                    else
+                    {
+                        rotateSequence(shiftval, "U F' U2 F U' R U R'");
+                    }
+                }
+                else
+                {
+                    if (doesColourEdgeMatch(edge))
+                    {
+                        rotateSequence(shiftval, "U F' U F U' F' U' F");
+                    }
+                    else
+                    {
+                        rotateSequence(shiftval, "F' U F U' U' R U R");
+                    }
+                }
+            }
+            else if (relativePosition == Vector3.back)
+            {
+                if (whiteCornerDirection == Vector3.left)
+                {
+                    if (doesColourEdgeMatch(edge))
+                    {
+                        rotateSequence(shiftval, "U' R U' R' U R U R");
+                    }
+                    else
+                    {
+                        rotateSequence(shiftval, "R U' R' U2 F' U' F");
+                    }
+                }
+                else
+                {
+                    if (doesColourEdgeMatch(edge))
+                    {
+                        rotateSequence(shiftval, "U R U' R'");
+                    }
+                    else
+                    {
+                        rotateSequence(shiftval, "U' R U2 R' U F' U' F");
+                    }
+                }
+            }
+            else if (relativePosition == new Vector3(2, 0, -1))
+            {
+                if (whiteCornerDirection == Vector3.left)
+                {
+                    if (doesColourEdgeMatchOposite(edge))
+                    {
+                        shiftRotate(shiftval, "U' R U R' U R U R'");
+                    }
+                    else
+                    {
+                        shiftRotate(shiftval, "U F' U' F U F' U2 F");
+                    }
+                }
+                else
+                {
+                    if (doesColourEdgeMatchOposite(edge))
+                    {
+                        shiftRotate(shiftval, "U' R U2 R' U' R U2 R'");
+                    }
+                    else
+                    {
+                        shiftRotate(shiftval, "F' U' F");
+                    }
+                }
+            }
+            else
+            {
+                if (whiteCornerDirection == Vector3.left)
+                {
+                    if (doesColourEdgeMatchOposite(edge))
+                    {
+                        shiftRotate(shiftval, "U F' U2 F U F' U2 F");
+                    }
+                    else
+                    {
+                        shiftRotate(shiftval, "R U R'");
+                    }
+                }
+                else
+                {
+                    if (doesColourEdgeMatchOposite(edge))
+                    {
+                        shiftRotate(shiftval, "U F' U' F U' F' U' F");
+                    }
+                    else
+                    {
+                        shiftRotate(shiftval, "U' R U R' U' R U2 R'");
+                    }
+                }
+            }
+        }
         public void case2(Piece edge, Piece corner)
         {
             machTopEdgeColour(edge);

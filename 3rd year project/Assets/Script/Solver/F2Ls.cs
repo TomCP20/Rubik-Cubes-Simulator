@@ -95,7 +95,7 @@ namespace F2Ls
                 else if (edge.correctPosition())  //edge solved
                 {
                     CubeCase = "6";
-                    //case6(edge, corner);
+                    case6(edge, corner);
                 }
                 else
                 {
@@ -106,7 +106,7 @@ namespace F2Ls
             {
                 Debug.LogError("corner not in position");
             }
-            if (CubeCase == "5")
+            if (CubeCase == "6")
             {
                 if (corner.correctOrientation() && edge.correctOrientation())
                 {
@@ -528,15 +528,17 @@ namespace F2Ls
         {
             Vector3 whiteCornerDirection = faceletRelativeDirection(corner, Colour.White);
             int shiftval = getShiftVal(edge.SolvedPosition());
-            if (corner.correctPosition())
+            if (whiteCornerDirection == Vector3.down)
             {
                 if (edge.correctOrientation())
                 {
+                    //Debug.Log("option 1");
                     return; // the edge and corner are solved
                 }
                 else
                 {
                     rotateSequence(shiftval, "R U' R' U F' U2 F U F' U2 F");
+                    //Debug.Log("option 2");
                 }
             }
             else if (whiteCornerDirection == Vector3.left)
@@ -544,10 +546,12 @@ namespace F2Ls
                 if (edge.correctOrientation())
                 {
                     rotateSequence(shiftval, "R U' R' U R U2 R' U R U' R'");
+                    //Debug.Log("option 3");
                 }
                 else
                 {
-                    rotateSequence(shiftval, "R U R' U' R U' R' U2 R' U' R");
+                    rotateSequence(shiftval, "R U R' U' R U' R' U2 F' U' F");
+                    //Debug.Log("option 4");
                 }
             }
             else if (whiteCornerDirection == Vector3.forward)
@@ -555,10 +559,12 @@ namespace F2Ls
                 if (edge.correctOrientation())
                 {
                     rotateSequence(shiftval, "R U' R' U' R U R' U' R U2 R'");
+                    //Debug.Log("option 5");
                 }
                 else
                 {
                     rotateSequence(shiftval, "R U' R' U F' U' F U' F' U' F");
+                    //Debug.Log("option 6");
                 }
             }
             else

@@ -24,9 +24,9 @@ namespace CFOPs
         public override void solve()
         {
             moves = new Queue<Move>();
-            UnityEngine.Debug.Log("white cross");
+            //UnityEngine.Debug.Log("white cross");
             subCubeSolver(new WhiteCrossSolver(cube));
-            UnityEngine.Debug.Log("F2L");
+            //UnityEngine.Debug.Log("F2L");
             subCubeSolver(new F2L(cube));
         }
     }

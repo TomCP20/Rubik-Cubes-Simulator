@@ -11,6 +11,7 @@ using ExtensionMethods;
 using WhiteCrossSolvers;
 using F2Ls;
 using OLLs;
+using PLLs;
 
 namespace CFOPs
 {
@@ -31,6 +32,8 @@ namespace CFOPs
             subCubeSolver(new F2L(cube));
 
             subCubeSolver(new OLL(cube));
+
+            subCubeSolver(new PLL(cube));
         }
     }
 }

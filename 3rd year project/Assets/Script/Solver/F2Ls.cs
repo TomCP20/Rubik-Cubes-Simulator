@@ -216,7 +216,7 @@ namespace F2Ls
     
         public void case1or4(Piece edge, Piece corner)
         {
-            Vector3 relativePosition = relativePositionOfEdge(corner, edge);
+            Vector3 relativePosition = relativePositionOfPieces(corner, edge);
             Vector3 whiteCornerDirection = faceletRelativeDirection(corner, Colour.White);
             int shiftval = getShiftVal(corner.SolvedPosition());
             if (relativePosition == Vector3.right)
@@ -344,7 +344,7 @@ namespace F2Ls
         {
             machTopEdgeColour(edge);
             Vector3 whiteCornerDirection = faceletRelativeDirection(corner, Colour.White);
-            Vector3 relativePosition = relativePositionOfEdge(corner, edge);
+            Vector3 relativePosition = relativePositionOfPieces(corner, edge);
             int shiftval = getShiftVal(edge.SolvedPosition());
             if (corner.correctOrientation()) // white face points down
             {
@@ -440,7 +440,7 @@ namespace F2Ls
         }
         public void case5(Piece edge, Piece corner)
         {
-            Vector3 relativePosition = relativePositionOfEdge(corner, edge);
+            Vector3 relativePosition = relativePositionOfPieces(corner, edge);
             int shiftval = getShiftVal(corner.position);
             if (relativePosition == Vector3.right)
             {
@@ -538,9 +538,6 @@ namespace F2Ls
             return edge.position.x * edge.SolvedPosition().z + edge.position.z * edge.SolvedPosition().x == 1;
         }
 
-        public Vector3 relativePositionOfEdge(Piece corner, Piece edge)
-        {
-            return Quaternion.Euler(0, 90*getShiftVal(corner.position), 0) * (edge.position - corner.position);
-        }
+        
     }
 }

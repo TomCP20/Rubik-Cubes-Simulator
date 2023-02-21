@@ -10,6 +10,7 @@ using CubeSolvers;
 using ExtensionMethods;
 using WhiteCrossSolvers;
 using F2Ls;
+using OLLs;
 
 namespace CFOPs
 {
@@ -28,6 +29,8 @@ namespace CFOPs
             subCubeSolver(new WhiteCrossSolver(cube));
             //UnityEngine.Debug.Log("F2L");
             subCubeSolver(new F2L(cube));
+
+            subCubeSolver(new OLL(cube));
         }
     }
 }

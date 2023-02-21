@@ -106,6 +106,11 @@ namespace CubeSolvers
             rotateSequence(shiftVal, sequence.Split(" "));
         }
 
+        protected void rotateSequence(string sequence)
+        {
+            rotateSequence(sequence.Split(" "));
+        }
+
         protected void rotateSequence(string[] sequence)
         {
             foreach (string move in sequence)
@@ -167,6 +172,11 @@ namespace CubeSolvers
         {
             Face f = p.getFaceByColour(c);
             return Quaternion.Euler(0, 90*getShiftVal(p.position), 0) * f.direction;
+        }
+
+        protected Vector3 relativePositionOfPieces(Piece start, Piece end)
+        {
+            return Quaternion.Euler(0, 90*getShiftVal(start.position), 0) * (end.position - start.position);
         }
     }  
 }

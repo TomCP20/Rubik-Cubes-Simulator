@@ -67,7 +67,7 @@ namespace F2Ls
                     if (whiteCornerDirection == Vector3.up) // white faelet points up
                     {
                         CubeCase = "5";
-                        //case5(edge, corner);
+                        case5(edge, corner);
                     }
                     else
                     {
@@ -106,7 +106,7 @@ namespace F2Ls
             {
                 Debug.LogError("corner not in position");
             }
-            if (CubeCase == "3")
+            if (CubeCase == "5")
             {
                 if (corner.correctOrientation() && edge.correctOrientation())
                 {
@@ -415,7 +415,6 @@ namespace F2Ls
                 Debug.LogError("bad white Corner Direction: " + whiteCornerDirection);
             }
         }
-
         public void case3(Piece edge, Piece corner)
         {
             Vector3 whiteCornerDirection = faceletRelativeDirection(corner, Colour.White);
@@ -464,42 +463,47 @@ namespace F2Ls
                 Debug.LogError("bad white Corner Direction: " + whiteCornerDirection);
             }
         }
-
         public void case5(Piece edge, Piece corner)
         {
             Vector3 relativePosition = relativePositionOfEdge(corner, edge);
             int shiftval = getShiftVal(corner.position);
             if (relativePosition == Vector3.right)
             {
-                if (edge.correctOrientation())
+                if (doesColourEdgeMatch(edge))
                 {
                     rotateSequence(shiftval, "F' U2 F U F' U' F");
+                    //Debug.Log("Option 1");
                 }
                 else
                 {
                     rotateSequence(shiftval, "R U R' U' U' R U R' U' R U R'");
+                    //Debug.Log("Option 2");
                 }
             }
             else if (relativePosition == Vector3.back)
             {
-                if (edge.correctOrientation())
+                if (doesColourEdgeMatch(edge))
                 {
                     rotateSequence(shiftval, "R U2 R' U' R U R'");
+                    //Debug.Log("Option 3");
                 }
                 else
                 {
                     rotateSequence(shiftval, "F' U' F U2 F' U' F U F' U' F");
+                    //Debug.Log("Option 4");
                 }
             }
             else if (relativePosition == new Vector3(2, 0, -1))
             {
                 if (doesColourEdgeMatchOposite(edge))
                 {
-                    rotateSequence(shiftval, "U2 R U R' U R U' R");
+                    rotateSequence(shiftval, "U2 R U R' U R U' R'");
+                    //Debug.Log("Option 5");
                 }
                 else
                 {
                     rotateSequence(shiftval, "U' F' U2 F U' F' U F");
+                    //Debug.Log("Option 6");
                 }
             }
             else if (relativePosition == new Vector3(1, 0, -2))
@@ -507,10 +511,12 @@ namespace F2Ls
                 if (doesColourEdgeMatchOposite(edge))
                 {
                     rotateSequence(shiftval, "U2 F' U' F U' F' U F");
+                    //Debug.Log("Option 7");
                 }
                 else
                 {
                     rotateSequence(shiftval, "U R U2 R' U R U' R'");
+                    //ssDebug.Log("Option 8");
                 }
             }
             else

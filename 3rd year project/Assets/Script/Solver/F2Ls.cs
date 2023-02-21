@@ -78,7 +78,7 @@ namespace F2Ls
                 else if (edge.correctPosition()) //edge solved
                 {
                     CubeCase = "3";
-                    //case3(edge, corner);
+                    case3(edge, corner);
                 }
                 else
                 {
@@ -106,18 +106,18 @@ namespace F2Ls
             {
                 Debug.LogError("corner not in position");
             }
-            if (CubeCase == "2")
+            if (CubeCase == "3")
             {
                 if (corner.correctOrientation() && edge.correctOrientation())
-            {
-                //Debug.Log("Succsess");
-            }
-            else
-            {
-                Debug.LogError("Faliure, Case: " + CubeCase);
-                //Debug.LogError("corner position: " + corner.position);
-                //Debug.LogError("edge position: " + edge.position);
-            }
+                {
+                    Debug.Log("Succsess");
+                }
+                else
+                {
+                    Debug.LogError("Faliure, Case: " + CubeCase);
+                    //Debug.LogError("corner position: " + corner.position);
+                    //Debug.LogError("edge position: " + edge.position);
+                }
             }  
         }
 
@@ -364,12 +364,12 @@ namespace F2Ls
                 if (relativePosition == new Vector3(1, 2, 0))
                 {
                     rotateSequence(shiftval, new string[] {"U", "R", "U'", "R'", "U'", "F'", "U", "F"});
-                    Debug.Log("option 1");
+                    //Debug.Log("option 1");
                 }
                 else if (relativePosition == new Vector3(0, 2, -1))
                 {
                     rotateSequence(shiftval, new string[] {"U'", "F'", "U", "F", "U", "R", "U'", "R'"});
-                    Debug.Log("option 2");
+                    //Debug.Log("option 2");
                 }
                 else
                 {
@@ -381,12 +381,12 @@ namespace F2Ls
                 if (relativePosition == new Vector3(1, 2, 0))
                 {
                     rotateSequence(shiftval, new string[] {"F'", "U", "F", "U'", "F'", "U", "F"});
-                    Debug.Log("option 3");
+                    //Debug.Log("option 3");
                 }
                 else if (relativePosition == new Vector3(0, 2, -1))
                 {
                     rotateSequence(shiftval, new string[] {"R", "U", "R'", "U'", "R", "U", "R'"});
-                    Debug.Log("option 4");
+                    //Debug.Log("option 4");
                 }
                 else
                 {
@@ -398,12 +398,12 @@ namespace F2Ls
                 if (relativePosition == new Vector3(1, 2, 0))
                 {
                     rotateSequence(shiftval, new string[] {"F'", "U'", "F", "U", "F'", "U'", "F"});
-                    Debug.Log("option 5");
+                    //Debug.Log("option 5");
                 }
                 else if (relativePosition == new Vector3(0, 2, -1))
                 {
                     rotateSequence(shiftval, "R U' R' U R U' R'");
-                    Debug.Log("option 6");
+                    //Debug.Log("option 6");
                 }
                 else
                 {
@@ -422,36 +422,46 @@ namespace F2Ls
             int shiftval = getShiftVal(edge.SolvedPosition());
             if (whiteCornerDirection == Vector3.up)
             {
-                if (corner.correctOrientation())
+                if (edge.correctOrientation())
                 {
                     rotateSequence(shiftval, new string[] {"R", "U", "R'", "U'", "R", "U", "R'", "U'", "R", "U", "R'"});
+                    //Debug.Log("option 1");
                 }
                 else
                 {
-                    rotateSequence(shiftval, new string[] {"R", "U", "R'", "U", "F'", "U", "F"});
+                    rotateSequence(shiftval, "R U' R' U F' U F");
+                    //Debug.Log("option 2");
                 }
             }
             else if (whiteCornerDirection == Vector3.left)
             {
-                if (corner.correctOrientation())
+                if (edge.correctOrientation())
                 {
                     rotateSequence(shiftval, new string[] {"U", "F'", "U", "F", "U", "F'", "U2", "F"});
+                    //Debug.Log("option 3");
                 }
                 else
                 {
-                    rotateSequence(shiftval, new string[] {"U", "F'", "U'", "F", "U'", "R", "U", "R'"});
+                    rotateSequence(shiftval, "U F' U' F U' R U R'");
+                    //Debug.Log("option 4");
+                }
+            }
+            else if (whiteCornerDirection == Vector3.forward)
+            {
+                if (edge.correctOrientation())
+                {
+                    rotateSequence(shiftval, new string[] {"U'", "R", "U'", "R'", "U'", "R", "U2", "R'"});
+                    //Debug.Log("option 5");
+                }
+                else
+                {
+                    rotateSequence(shiftval, "U' R U R' U F' U' F");
+                    //Debug.Log("option 6");
                 }
             }
             else
             {
-                if (corner.correctOrientation())
-                {
-                    rotateSequence(shiftval, new string[] {"U'", "R", "U'", "R'", "U'", "R", "U2", "R'"});
-                }
-                else
-                {
-                    rotateSequence(shiftval, new string[] {"U'", "R", "U", "R'", "U", "F'", "U'", "F"});
-                }
+                Debug.LogError("bad white Corner Direction: " + whiteCornerDirection);
             }
         }
 

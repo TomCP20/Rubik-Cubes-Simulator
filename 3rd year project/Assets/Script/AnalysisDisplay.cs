@@ -54,7 +54,7 @@ public class AnalysisDisplay : MonoBehaviour
 
         for (int i = 0; i < cubeNo; i++)
         {
-            CubeAnalyser c = new CubeAnalyser();
+            CubeAnalyser c = new CubeAnalyser(1);
             results[i] = c.getCount();
         }
         return results;

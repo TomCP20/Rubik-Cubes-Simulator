@@ -6,6 +6,8 @@ using Cubes;
 using LayerByLayers;
 using Moves;
 using MovesNos;
+using CFOPs;
+using CubeSolvers;
 namespace CubeAnalysers
 {
     public class CubeAnalyser
@@ -15,11 +17,19 @@ namespace CubeAnalysers
 
         Queue<Move> moves;
 
-        public CubeAnalyser()
+        public CubeAnalyser(int t)
         {
             Cube c = new Cube();
             c.randomMoveSequence();
-            LayerByLayer s = new LayerByLayer(c);
+            CubeSolver s;
+            if (t == 0)
+            {
+                s = new LayerByLayer(c);
+            }
+            else
+            {
+                s = new CFOP(c);
+            }
             moves = s.getSolution();
         }
 

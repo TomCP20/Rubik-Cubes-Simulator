@@ -70,29 +70,26 @@ namespace PLLs
             {
                 if (notYellowFace(yellowEdges[0]).defaultDirection() == -notYellowFace(yellowEdges[0]).direction)
                 {
-                    Debug.Log("H");
                     rotateSequence("L2 R2 D L2 R2 U2 L2 R2 D L2 R2");
                 }
                 else
                 {
-                    Debug.Log("Z");
                     int shiftValue = getZShiftValue(yellowEdges);
                     rotateSequence(shiftValue, "L R' F L2 R2 B L2 R2 F L R' D2 L2 R2 U'");
                 }
             }
             else if (solvedCount == 1)
             {
-                Debug.Log("Ua or Ub");
-                int shiftValue = getUShiftValue(yellowEdges);
-                rotateSequence(shiftValue, "R U' R U R U R U' R' U' R2");
-                if (yellowSolvedCount(yellowEdges) != 4) // TODO add distinction for Ua and Ub
+                Piece middleEdge = getMiddleEdge(yellowEdges);
+                int shiftValue = getShiftVal(middleEdge.position);
+                if (Quaternion.Euler(0, 90*getShiftVal(middleEdge.position), 0) * (middleEdge.SolvedPosition() - middleEdge.position) == new Vector3(-1, 0, -1))
                 {
                     rotateSequence(shiftValue, "R U' R U R U R U' R' U' R2");
                 }
-            }
-            else
-            {
-                Debug.Log("solved");
+                else
+                {
+                    rotateSequence(shiftValue, "R2 U R U R' U' R' U' R' U R'");
+                }
             }
         }
 
@@ -143,17 +140,17 @@ namespace PLLs
             return 0;
         }
 
-        public int getUShiftValue(List<Piece> yellowEdges)
+        public Piece getMiddleEdge(List<Piece> yellowEdges)
         {
             foreach (Piece p in yellowEdges)
             {
                 if (p.correctPosition())
                 {
-                    return getShiftVal(-p.position);
+                    return cube.getPiece(new Vector3(-p.position.x, p.position.y, -p.position.z));
                 }
             }
-            Debug.LogError("couldn't get U shift value");
-            return 0;
+            Debug.LogError("couldn't get middle edge");
+            return null;
         }
     }
 }

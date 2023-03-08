@@ -1,24 +1,15 @@
 using System;
 using UnityEngine;
-using CFOPs;
-using LayerByLayers;
-using CubeSolvers;
-using System.Collections;
-using Cubes;
 using Moves;
-using System.Collections.Generic;
-using UnityEngine.Events;
 
+[RequireComponent(typeof(CubeComponent))]
 public class CubeController : MonoBehaviour
 {
-    public CubeVariable CubeState;
-
-    public UnityEvent OnCubeChange;
+    public CubeComponent cube;
 
     void Start()
     {
-        CubeState.CubeValue = new Cube();
-        OnCubeChange.Invoke();
+        cube = GetComponent<CubeComponent>();
     }
 
     public void userMove(int direction)
@@ -29,7 +20,7 @@ public class CubeController : MonoBehaviour
         String move = getFace(hit.transform.position);
         if (move == "") { return; }
         if (direction == -1) { move += "'"; }
-        roatateFace(new Move(move));
+        cube.rotateCube(new Move(move));
     }
 
     public string getFace(Vector3 pos) 
@@ -62,48 +53,5 @@ public class CubeController : MonoBehaviour
         {
             return "";
         }
-    }
-    
-
-    public void showSolution()
-    {
-        CubeSolver solver = new CFOP(CubeState.CubeValue);
-        CubeState.CubeValue = solver.getSlovedCube();
-        OnCubeChange.Invoke();
-    }
-
-    public void resetCube()
-    {
-        CubeState.CubeValue = new Cube();
-        OnCubeChange.Invoke();
-    }
-
-    public void startAnimate()
-    {
-        StartCoroutine(animate());
-    }
-
-    public IEnumerator animate()
-    {
-        CubeSolver solver = new LayerByLayer(CubeState.CubeValue);
-        Queue<Move> moves = solver.getSolution();
-        while (moves.Count > 0)
-        {
-            UnityEngine.Debug.Log(moves.Count);
-            roatateFace(moves.Dequeue());
-            yield return new WaitForSeconds(1);
-        }
-    }
-
-    public void scramble()
-    {
-        CubeState.CubeValue.randomMoveSequence();
-        OnCubeChange.Invoke();
-    }
-
-    public void roatateFace(Move m)
-    {
-        CubeState.CubeValue.rotate(m);
-        OnCubeChange.Invoke();
     }
 }

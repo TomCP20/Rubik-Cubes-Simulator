@@ -11,7 +11,6 @@ public class AnalysisDisplay : MonoBehaviour
     private int cubeNo;
     [SerializeField] private TextMeshProUGUI text;
 
-    //public TMPro.TMP_Dropdown dropdown;
     [SerializeField] private TMP_Dropdown d;
 
     int type;

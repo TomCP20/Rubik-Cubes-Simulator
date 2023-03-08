@@ -7,12 +7,20 @@ using Faces;
 
 public class CubeUpdater : MonoBehaviour
 {
-    public CubeVariable CubeState;
+
+    public CubeComponent cube;
+
+    void Start()
+    {
+        cube = GetComponent<CubeComponent>();
+    }
+
     public Material[] materials; 
 
     public void updateCube()
     {
-        foreach (Piece p in CubeState.CubeValue.pieces)
+        Cube c = cube.getCube();
+        foreach (Piece p in c.pieces)
         {
             foreach (Face f in p.faces)
             {

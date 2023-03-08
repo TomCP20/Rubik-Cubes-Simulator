@@ -379,7 +379,7 @@ PrefabInstance:
     - target: {fileID: 8768822061999128335, guid: df159d081df9991488303e8f863a339e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 779143917}
+      objectReference: {fileID: 779143920}
     - target: {fileID: 8768822061999128335, guid: df159d081df9991488303e8f863a339e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -390,7 +390,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8768822061999128335, guid: df159d081df9991488303e8f863a339e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: CubeController, Assembly-CSharp
+      value: CubeComponent, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 8768822061999128335, guid: df159d081df9991488303e8f863a339e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -2495,6 +2495,7 @@ GameObject:
   - component: {fileID: 779143916}
   - component: {fileID: 779143917}
   - component: {fileID: 779143919}
+  - component: {fileID: 779143920}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -2535,7 +2536,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1a6e812c1ace384e80258d3b54f0ab9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CubeState: {fileID: 11400000, guid: 9a99b27e3c692a34baa37bd1fcf284ce, type: 2}
+  cube: {fileID: 0}
+--- !u!114 &779143919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 779143915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f443d6a3baf9704a8243c3e28cca220, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cube: {fileID: 0}
+  materials:
+  - {fileID: 2100000, guid: 0d1e00a6db9bb2a499d96f6b585b753d, type: 2}
+  - {fileID: 2100000, guid: 9310e71ee9ba90e46b1a2906b82e6812, type: 2}
+  - {fileID: 2100000, guid: bd24e3c91d73f664f96767aaa6207030, type: 2}
+  - {fileID: 2100000, guid: db78896e30006b0468a35d3370e69f18, type: 2}
+  - {fileID: 2100000, guid: 058d820d640a7ac46b29ada17376e8e3, type: 2}
+  - {fileID: 2100000, guid: 457207965ef520f47a91a12922e47d48, type: 2}
+  - {fileID: 2100000, guid: 7291d521eb9c78d41b67519e54a9d4b9, type: 2}
+--- !u!114 &779143920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 779143915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bddc74363c242c41bce55ceee8512cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   OnCubeChange:
     m_PersistentCalls:
       m_Calls:
@@ -2551,34 +2585,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &779143919
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 779143915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f443d6a3baf9704a8243c3e28cca220, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CubeState: {fileID: 11400000, guid: 9a99b27e3c692a34baa37bd1fcf284ce, type: 2}
-  BlackMat: {fileID: 2100000, guid: 0d1e00a6db9bb2a499d96f6b585b753d, type: 2}
-  WhiteMat: {fileID: 2100000, guid: 9310e71ee9ba90e46b1a2906b82e6812, type: 2}
-  GreenMat: {fileID: 2100000, guid: bd24e3c91d73f664f96767aaa6207030, type: 2}
-  BlueMat: {fileID: 2100000, guid: db78896e30006b0468a35d3370e69f18, type: 2}
-  RedMat: {fileID: 2100000, guid: 058d820d640a7ac46b29ada17376e8e3, type: 2}
-  YellowMat: {fileID: 2100000, guid: 457207965ef520f47a91a12922e47d48, type: 2}
-  OrangeMat: {fileID: 2100000, guid: 7291d521eb9c78d41b67519e54a9d4b9, type: 2}
-  materials:
-  - {fileID: 2100000, guid: 0d1e00a6db9bb2a499d96f6b585b753d, type: 2}
-  - {fileID: 2100000, guid: 9310e71ee9ba90e46b1a2906b82e6812, type: 2}
-  - {fileID: 2100000, guid: bd24e3c91d73f664f96767aaa6207030, type: 2}
-  - {fileID: 2100000, guid: db78896e30006b0468a35d3370e69f18, type: 2}
-  - {fileID: 2100000, guid: 058d820d640a7ac46b29ada17376e8e3, type: 2}
-  - {fileID: 2100000, guid: 457207965ef520f47a91a12922e47d48, type: 2}
-  - {fileID: 2100000, guid: 7291d521eb9c78d41b67519e54a9d4b9, type: 2}
 --- !u!1 &822205264
 GameObject:
   m_ObjectHideFlags: 0
@@ -3469,9 +3475,9 @@ MonoBehaviour:
   onSolveCube:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 779143917}
-        m_TargetAssemblyTypeName: CubeController, Assembly-CSharp
-        m_MethodName: showSolution
+      - m_Target: {fileID: 779143920}
+        m_TargetAssemblyTypeName: CubeComponent, Assembly-CSharp
+        m_MethodName: solveCube
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4955,7 +4961,7 @@ PrefabInstance:
     - target: {fileID: 8768822061999128335, guid: df159d081df9991488303e8f863a339e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 779143917}
+      objectReference: {fileID: 779143920}
     - target: {fileID: 8768822061999128335, guid: df159d081df9991488303e8f863a339e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -4966,7 +4972,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8768822061999128335, guid: df159d081df9991488303e8f863a339e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: CubeController, Assembly-CSharp
+      value: CubeComponent, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 8768822061999128335, guid: df159d081df9991488303e8f863a339e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -6567,7 +6573,7 @@ PrefabInstance:
     - target: {fileID: 8768822061999128335, guid: df159d081df9991488303e8f863a339e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 779143917}
+      objectReference: {fileID: 779143920}
     - target: {fileID: 8768822061999128335, guid: df159d081df9991488303e8f863a339e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -6578,7 +6584,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8768822061999128335, guid: df159d081df9991488303e8f863a339e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: CubeController, Assembly-CSharp
+      value: CubeComponent, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 8768822061999128335, guid: df159d081df9991488303e8f863a339e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName

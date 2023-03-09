@@ -12,17 +12,20 @@ public class CubeComponent : MonoBehaviour
 {
     private Cube c;
 
-    public UnityEvent OnCubeChange;
+    //public UnityEvent OnCubeChange;
+
+    public CubeUpdater updater;
 
     private void Start()
     {
+        updater = GetComponent<CubeUpdater>();
         resetCube();
     }
 
     public void resetCube()
     {
         c = new Cube();
-        OnCubeChange.Invoke();
+        updater.colourCube();
     }
 
     public Cube getCube()
@@ -33,20 +36,20 @@ public class CubeComponent : MonoBehaviour
     public void setCube(Cube cube)
     {
         c = cube;
-        OnCubeChange.Invoke();
+        updater.colourCube();
     }
 
     public void rotateCube(Move m)
     {
         c.rotate(m);
-        OnCubeChange.Invoke();
+        StartCoroutine(updater.animateMove(m));
     }
 
     public void solveCube()
     {
         CubeSolver solver = new CFOP(c);
         c = solver.getSlovedCube();
-        OnCubeChange.Invoke();
+        updater.colourCube();
     }
 
     public IEnumerator animate()
@@ -56,8 +59,9 @@ public class CubeComponent : MonoBehaviour
         while (moves.Count > 0)
         {
             UnityEngine.Debug.Log(moves.Count);
-            rotateCube(moves.Dequeue());
-            yield return new WaitForSeconds(1);
+            Move m = moves.Dequeue();
+            c.rotate(m);
+            yield return StartCoroutine(updater.animateMove(m));
         }
     }
 
@@ -69,6 +73,7 @@ public class CubeComponent : MonoBehaviour
     public void scramble()
     {
         c.randomMoveSequence();
-        OnCubeChange.Invoke();
+        updater.colourCube();
+        //OnCubeChange.Invoke();
     }
 }

@@ -106,5 +106,12 @@ namespace Moves
             }
             return output;
         }
+
+        public Quaternion getQuaternion()
+        {
+            Vector3 rotationVector = new Vector3(0, 0, 0);
+            rotationVector[(int)axis] = 90 * angle;
+            return Quaternion.Euler(rotationVector);
+        }
     }
 }

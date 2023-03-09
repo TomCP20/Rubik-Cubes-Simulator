@@ -59,23 +59,9 @@ namespace Cubes
             return new Cube(p);
         }
 
-        public void rotate(Axis axis, int slice, int quarterTurns)
+        public void rotate(Axis axis, int slice, int angle)
         {
-            //UnityEngine.Debug.Log("Rotating: " + axis + " axis, " + slice + " slice, " + quarterTurns + " quarter Turns");
-            //UnityEngine.Debug.Log(new Slice(axis, slice, quarterTurns).getNotation());
-            Quaternion rotQuaternion = rotateQuaternion(axis, quarterTurns);
-            List<Piece> Piecelist = new List<Piece>();
-            foreach (Piece p in pieces)
-            {
-                //UnityEngine.Debug.Log(p.position[(int)axis]);
-                if (p.position[(int)axis] == slice) { Piecelist.Add(p); }
-            }
-            Piece[] rotatePieces = Piecelist.ToArray();
-            //UnityEngine.Debug.Log("Rotating " + rotatePices.Length + " pices");
-            foreach (Piece rp in rotatePieces)
-            {
-                rp.rotate(rotQuaternion);
-            }
+            rotate( new Move(axis, slice, angle));
         }
 
         public void rotate(string move)
@@ -85,7 +71,12 @@ namespace Cubes
 
         public void rotate(Move move)
         {
-            rotate(move.axis, move.slice, move.angle);
+            Quaternion rotQuaternion = move.getQuaternion();
+            List<Piece> rotatePieces = getLayer(move.axis, move.slice);
+            foreach (Piece rp in rotatePieces)
+            {
+                rp.rotate(rotQuaternion);
+            }
         }
 
         public void randomMove()
@@ -103,13 +94,6 @@ namespace Cubes
             }
         }
 
-        private Quaternion rotateQuaternion(Axis axis, int quarterTurns)
-        {
-            Vector3 rotationVector = new Vector3(0, 0, 0);
-            rotationVector[(int)axis] = 90 * quarterTurns;
-            return Quaternion.Euler(rotationVector);
-        }
-
         public List<Piece> filter(Colour C, int MD)
         {
             List<Piece> output = new List<Piece>();
@@ -119,6 +103,17 @@ namespace Cubes
                 {
                     output.Add(p);
                 }
+            }
+            return output;
+        }
+
+        public List<Piece> getLayer(Axis a, int layer)
+        {
+            List<Piece> output = new List<Piece>();
+            foreach (Piece p in pieces)
+            {
+                if (p.position[(int) a] == layer)
+                output.Add(p);
             }
             return output;
         }

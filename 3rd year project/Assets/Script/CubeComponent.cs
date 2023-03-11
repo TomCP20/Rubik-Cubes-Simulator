@@ -19,7 +19,14 @@ public class CubeComponent : MonoBehaviour
     private void Start()
     {
         updater = GetComponent<CubeUpdater>();
-        resetCube();
+        createCube();
+    }
+
+    public void createCube()
+    {
+        c = new Cube();
+        updater.spawnCube();
+        updater.colourCube();
     }
 
     public void resetCube()

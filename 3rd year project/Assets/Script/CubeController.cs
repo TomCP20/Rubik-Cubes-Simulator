@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Moves;
 
 [RequireComponent(typeof(CubeComponent))]
 public class CubeController : MonoBehaviour

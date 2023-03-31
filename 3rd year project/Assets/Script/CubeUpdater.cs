@@ -1,10 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cubes;
-using Pieces;
-using Faces;
-using Moves;
 
 public class CubeUpdater : MonoBehaviour
 {

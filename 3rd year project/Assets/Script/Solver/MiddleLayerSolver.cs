@@ -11,9 +11,10 @@ class MiddleLayerSolver : CubeSolver
         this.cube = cube.Clone();
         moves = new Queue<Move>();
     }
-    public override void solve()
+    public override IEnumerator solve()
     {
         middleLayer();
+        yield return null;
     }
     private void middleLayer()
     {

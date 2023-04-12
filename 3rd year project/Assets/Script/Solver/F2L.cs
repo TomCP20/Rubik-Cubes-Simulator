@@ -10,7 +10,7 @@ class F2L : CubeSolver
         this.cube = cube.Clone();
         moves = new Queue<Move>();
     }
-    public override void solve()
+    public override IEnumerator solve()
     {
         List<Piece> whiteCorners = cube.filter(Colour.White, 3);
         foreach (Piece corner in whiteCorners)
@@ -18,6 +18,7 @@ class F2L : CubeSolver
             //Debug.Log("solving pair");
             solveCornerEdgePair(corner);
         }
+        yield return null;
     }
     public void solveCornerEdgePair(Piece corner)
     {

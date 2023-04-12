@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 using ExtensionMethods;
 
-abstract class CubeSolver
+public abstract class CubeSolver
 {
     public Cube cube;
     public Queue<Move> moves;
@@ -23,7 +23,6 @@ abstract class CubeSolver
     }
     public Queue<Move> getSolution()
     {
-        solve();
         optimiseMoves();
         return moves;
     }
@@ -58,10 +57,9 @@ abstract class CubeSolver
     }
     public Cube getSlovedCube() // for testing
     {
-        solve();
         return cube;
     }
-    public abstract void solve();
+    public abstract IEnumerator solve();
 
     private string shiftFace(int shiftVal, string face)
     {

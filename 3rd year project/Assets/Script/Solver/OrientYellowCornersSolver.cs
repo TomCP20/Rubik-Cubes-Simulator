@@ -12,9 +12,10 @@ class OrientYellowCornersSolver : CubeSolver
         this.cube = cube.Clone();
         moves = new Queue<Move>();
     }
-    public override void solve()
+    public override IEnumerator solve()
     {
         orientYellowCorners();
+        yield return null;
     }
     private void orientYellowCorners()
     {

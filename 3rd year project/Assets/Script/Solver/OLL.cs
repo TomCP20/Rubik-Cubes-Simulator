@@ -12,10 +12,11 @@ class OLL : CubeSolver
         this.cube = cube.Clone();
         moves = new Queue<Move>();
     }
-    public override void solve()
+    public override IEnumerator solve()
     {
         orientYellowEdges();
         orientYellowCorners();
+        yield return null;
     }
     public bool isFacingUp(Piece p)
     {

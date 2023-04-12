@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System;
 using UnityEngine;
-using System.Diagnostics;
 using System.Collections.Specialized;
 using ExtensionMethods;
 
@@ -69,9 +68,12 @@ public class Cube
     }
     public void randomMove()
     {
-        string[] movesArray = { "F", "U", "R", "B", "D", "L", "F'", "U'", "R'", "B'", "D'", "L'", "F2", "U2", "R2", "B2", "D2", "L2" };
+        string[] movesArray = { "F", "U", "R", "B", "D", "L", "F'", "U'", "R'", "B'", "D'", "L'", "F2", "U2", "R2", "B2", "D2", "L2" }; //G0
+        //string[] movesArray = { "F", "U", "B", "D", "F'", "U'", "B'", "D'", "F2", "U2", "R2", "B2", "D2", "L2" }; //G1
+        //string[] movesArray = { "U", "D", "U'", "D'", "F2", "U2", "R2", "B2", "D2", "L2" }; //G2
+        //string[] movesArray = { "F2", "U2", "R2", "B2", "D2", "L2" }; //G3
         System.Random rnd = new System.Random();
-        rotate(new Move(movesArray[rnd.Next(18)]));
+        rotate(new Move(movesArray[rnd.Next(movesArray.Length)]));
     }
     public void randomMoveSequence(int n = 100)
     {
@@ -113,6 +115,130 @@ public class Cube
         }
         UnityEngine.Debug.Log("get piece error");
         return null;
+    }
+
+    public bool isSolved()
+    {
+        foreach (Piece p in pieces)
+        {
+            if (!p.correctOrientation()) 
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public bool isDominoReduced()
+    {
+        foreach (Piece p in pieces)
+        {
+            foreach (Face f in p.faces)
+            {
+                if (p.position.y == 0) 
+                {
+                    if (!f.direction.EqualOrOposite(Vector3.up) && !f.direction.EqualOrOposite(f.defaultDirection()))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (f.direction.EqualOrOposite(Vector3.up) && !f.direction.EqualOrOposite(f.defaultDirection()))
+                    {
+                        return false;
+                    }
+                }
+            } 
+        }
+        return true;
+    }
+
+    public Colour[,,] simpleRep()
+    {
+        Colour[,,] output = new Colour[6, 3, 3];
+        foreach (Piece p in pieces)
+        {
+            foreach (Face f in p.faces)
+            {
+                Vector3 d = f.direction;
+                int dx = (int)p.position.x;
+                int dy = (int)p.position.y;
+                int dz = (int)p.position.z;
+                if (d == Vector3.up)
+                {
+                    output[0, 1+dz, 1-dx] = f.colour;
+                }
+                else if (d == Vector3.down)
+                {
+                    output[3, 1-dz, 1-dx] = f.colour;
+                }
+                else if (d == Vector3.left) // actualy right due to parity
+                {
+                    output[1, 1-dy, 1-dz] = f.colour;
+                }
+                else if (d == Vector3.right) // actually left due to parity
+                {
+                    output[4, 1-dy, 1+dz] = f.colour;
+                }
+                else if (d == Vector3.forward)
+                {
+                    output[2, 1-dy, 1-dx] = f.colour;
+                }
+                else if (d == Vector3.back)
+                {
+                    output[5, 1-dy, 1+dx] = f.colour;
+                }
+                else
+                {
+                    Debug.LogError("Invalid direction " + d);
+                }
+            }
+        }
+        return output;
+    }
+
+    public void applySimpleRep(SimpleCube c)
+    {
+        Colour[,,] cubestate = c.array;
+        foreach (Piece p in pieces)
+        {
+            foreach (Face f in p.faces)
+            {
+                Vector3 d = f.direction;
+                int dx = (int)p.position.x;
+                int dy = (int)p.position.y;
+                int dz = (int)p.position.z;
+                if (d == Vector3.up)
+                {
+                    f.colour = cubestate[0, 1+dz, 1-dx];
+                }
+                else if (d == Vector3.down)
+                {
+                    f.colour = cubestate[3, 1-dz, 1-dx];
+                }
+                else if (d == Vector3.left) // actualy right due to parity
+                {
+                    f.colour = cubestate[1, 1-dy, 1-dz];
+                }
+                else if (d == Vector3.right) // actually left due to parity
+                {
+                    f.colour = cubestate[4, 1-dy, 1+dz];
+                }
+                else if (d == Vector3.forward)
+                {
+                    f.colour = cubestate[2, 1-dy, 1-dx];
+                }
+                else if (d == Vector3.back)
+                {
+                    f.colour = cubestate[5, 1-dy, 1+dx] ;
+                }
+                else
+                {
+                    Debug.LogError("Invalid direction " + d);
+                }
+            }
+        }
     }
 }
 

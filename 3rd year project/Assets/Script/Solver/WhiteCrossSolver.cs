@@ -12,9 +12,10 @@ class WhiteCrossSolver : CubeSolver
         this.cube = cube.Clone();
         moves = new Queue<Move>();
     }
-    public override void solve()
+    public override IEnumerator solve()
     {
         whiteCross();
+        yield return null;
     }
     private void whiteCross()
     {

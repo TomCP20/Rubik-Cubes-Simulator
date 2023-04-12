@@ -11,7 +11,7 @@ class LayerByLayer : CubeSolver
         this.cube = cube.Clone();
         moves = new Queue<Move>();
     }
-    public override void solve()
+    public override IEnumerator solve()
     {
         moves = new Queue<Move>();
         subCubeSolver(new WhiteCrossSolver(cube));
@@ -21,5 +21,6 @@ class LayerByLayer : CubeSolver
         subCubeSolver(new YellowEdgesSolver(cube));
         subCubeSolver(new PermuteYellowCornersSolver(cube));
         subCubeSolver(new OrientYellowCornersSolver(cube));
+        yield return null;
     }
 }  

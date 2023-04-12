@@ -50,14 +50,22 @@ public class CubeComponent : MonoBehaviour
 
     public void solveCube()
     {
-        CubeSolver solver = new CFOP(c);
+        StartCoroutine(solving());
+    }
+
+    public IEnumerator solving()
+    {
+        CubeSolver solver = new Thistlethwaite(c);
+        yield return solver.solve();
         c = solver.getSlovedCube();
         updater.colourCube();
+        yield return null;
     }
 
     public IEnumerator animate()
     {
         CubeSolver solver = new CFOP(c);
+        yield return solver.solve();
         Queue<Move> moves = solver.getSolution();
         while (moves.Count > 0)
         {

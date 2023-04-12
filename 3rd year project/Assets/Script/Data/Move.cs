@@ -108,4 +108,9 @@ public readonly struct Move
         rotationVector[(int)axis] = 90 * angle;
         return Quaternion.Euler(rotationVector);
     }
+
+    public bool sameFace(Move m)
+    {
+        return (this.slice == m.slice && this.axis == m.axis);
+    }
 }

@@ -12,10 +12,11 @@ class PLL : CubeSolver
         this.cube = cube.Clone();
         moves = new Queue<Move>();
     }
-    public override void solve()
+    public override IEnumerator solve()
     {
         permuteCorners();
         permuteEdges();
+        yield return null;
     }
     public void permuteCorners()
     {

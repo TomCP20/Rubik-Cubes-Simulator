@@ -12,9 +12,10 @@ class PermuteYellowCornersSolver : CubeSolver
         this.cube = cube.Clone();
         moves = new Queue<Move>();
     }
-    public override void solve()
+    public override IEnumerator solve()
     {
         permuteYellowCorners();
+        yield return null;
     }
     private void permuteYellowCorners()
     {

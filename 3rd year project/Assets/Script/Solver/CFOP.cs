@@ -11,7 +11,7 @@ class CFOP : CubeSolver
         this.cube = cube.Clone();
         moves = new Queue<Move>();
     }
-    public override void solve()
+    public override IEnumerator solve()
     {
         moves = new Queue<Move>();
         //UnityEngine.Debug.Log("white cross");
@@ -20,6 +20,7 @@ class CFOP : CubeSolver
         subCubeSolver(new F2L(cube));
         subCubeSolver(new OLL(cube));
         subCubeSolver(new PLL(cube));
+        yield return null;
     }
 }
 

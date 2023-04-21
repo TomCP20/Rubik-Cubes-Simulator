@@ -7,7 +7,13 @@ using ExtensionMethods;
 public abstract class CubeSolver
 {
     public Cube cube;
-    public Queue<Move> moves;
+    public Queue<Move> moves = new Queue<Move>();
+    public Dictionary<int, string> sections = new Dictionary<int, string>();
+
+    protected void addSection(string name)
+    {
+        sections.Add(moves.Count, name);
+    }
     protected void rotate(Axis axis, int slice, int quarterTurns)
     {
         rotate(new Move(axis, slice, quarterTurns));
@@ -23,38 +29,9 @@ public abstract class CubeSolver
     }
     public Queue<Move> getSolution()
     {
-        optimiseMoves();
         return moves;
     }
 
-    public void optimiseMoves()
-    {
-        Queue<Move> newMoves = new Queue<Move>();
-        Move current = moves.Dequeue();
-        while (moves.Count > 0)
-        {
-            Move next = moves.Dequeue();
-            if (current.axis == next.axis && current.slice == next.slice)
-            {
-                int angle = (current.angle + next.angle) % 4;
-                if (angle == 0)
-                {
-                    current = moves.Dequeue();
-                }
-                else
-                {
-                    current = new Move(current.axis, current.slice, angle);
-                }
-            }
-            else
-            {
-                newMoves.Enqueue(current);
-                current = next;
-            }
-        }
-        newMoves.Enqueue(current);
-        moves = newMoves;
-    }
     public Cube getSlovedCube() // for testing
     {
         return cube;
@@ -115,10 +92,10 @@ public abstract class CubeSolver
         else { return 3; }
     }
 
-    protected void subCubeSolver(CubeSolver solver)
+    protected IEnumerator subCubeSolver(CubeSolver solver)
     {
-        solver.solve();
-        cube = solver.cube;
+        yield return solver.solve();
+        cube = solver.getSlovedCube();
         while (solver.moves.Count > 0)
         {
             moves.Enqueue(solver.moves.Dequeue());

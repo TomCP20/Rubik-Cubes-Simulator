@@ -9,17 +9,18 @@ class CFOP : CubeSolver
     public CFOP(Cube cube)
     {
         this.cube = cube.Clone();
-        moves = new Queue<Move>();
     }
     public override IEnumerator solve()
     {
-        moves = new Queue<Move>();
-        //UnityEngine.Debug.Log("white cross");
-        subCubeSolver(new WhiteCrossSolver(cube));
-        //UnityEngine.Debug.Log("F2L");
-        subCubeSolver(new F2L(cube));
-        subCubeSolver(new OLL(cube));
-        subCubeSolver(new PLL(cube));
+        addSection("white cross");
+        yield return subCubeSolver(new WhiteCrossSolver(cube));
+        addSection("F2L");
+        yield return subCubeSolver(new F2L(cube));
+        addSection("OLL");
+        yield return subCubeSolver(new OLL(cube));
+        addSection("PLL");
+        yield return subCubeSolver(new PLL(cube));
+        Debug.Log(moves.Count);
         yield return null;
     }
 }

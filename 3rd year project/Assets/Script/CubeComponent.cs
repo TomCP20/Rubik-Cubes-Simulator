@@ -67,12 +67,18 @@ public class CubeComponent : MonoBehaviour
         CubeSolver solver = new CFOP(c);
         yield return solver.solve();
         Queue<Move> moves = solver.getSolution();
+        int i = 0;
         while (moves.Count > 0)
         {
+            if (solver.sections.ContainsKey(i))
+            {
+                Debug.Log(solver.sections[i]);
+            }
             UnityEngine.Debug.Log(moves.Count);
             Move m = moves.Dequeue();
             c.rotate(m);
             yield return StartCoroutine(updater.animateMove(m));
+            i++;
         }
     }
 

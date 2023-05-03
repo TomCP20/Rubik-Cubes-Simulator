@@ -323,9 +323,14 @@ public class SimpleCube
         setFacelet(a, temp); // b -> a
     }
 
-    private Colour getFacelet(int[] coords)
+    public Colour getFacelet(int[] coords)
     {
         return array[coords[0], coords[1], coords[2]];
+    }
+
+    public Colour getFacelet(string face, int n)
+    {
+        return getFacelet(getCoords(face, n));
     }
 
     private void setFacelet(int[] coords, Colour c)
@@ -387,8 +392,7 @@ public class SimpleCube
 
         foreach (int[] edge in frontEdges)
         {
-            Colour c = getFacelet(edge);
-            if (c == Colour.White || c == Colour.Yellow)
+            if (isOneOfSideColours(edge, "UD"))
             {
                 return false;
             }
@@ -396,8 +400,7 @@ public class SimpleCube
 
         foreach (int[] edge in backEdges)
         {
-            Colour c = getFacelet(edge);
-            if (c == Colour.White || c == Colour.Yellow)
+            if (isOneOfSideColours(edge, "UD"))
             {
                 return false;
             }
@@ -408,8 +411,7 @@ public class SimpleCube
 
         foreach (int[] edge in upEdges)
         {
-            Colour c = getFacelet(edge);
-            if (c == Colour.Green || c == Colour.Blue)
+            if (isOneOfSideColours(edge, "FB"))
             {
                 return false;
             }
@@ -417,11 +419,44 @@ public class SimpleCube
 
         foreach (int[] edge in downEdges)
         {
-            Colour c = getFacelet(edge);
-            if (c == Colour.Green || c == Colour.Blue)
+            if (isOneOfSideColours(edge, "FB"))
             {
                 return false;
             }
+        }
+
+        if (isOneOfSideColours("R", 2, "UD"))
+        {
+            return false;
+        }
+        if (isOneOfSideColours("R", 8, "UD"))
+        {
+            return false;
+        }
+        if (isOneOfSideColours("L", 2, "UD"))
+        {
+            return false;
+        }
+        if (isOneOfSideColours("L", 8, "UD"))
+        {
+            return false;
+        }
+
+        if (isOneOfSideColours("R", 4, "FB"))
+        {
+            return false;
+        }
+        if (isOneOfSideColours("R", 6, "FB"))
+        {
+            return false;
+        }
+        if (isOneOfSideColours("L", 4, "FB"))
+        {
+            return false;
+        }
+        if (isOneOfSideColours("L", 6, "FB"))
+        {
+            return false;
         }
 
         return true;
@@ -429,54 +464,50 @@ public class SimpleCube
 
     public bool isG2()
     {
-        Colour[] upFace = getFace("U");
-        Colour[] downFace = getFace("D");
-        foreach (Colour face in upFace)
+        Colour[] rightFace = getFace("R");
+        Colour[] leftFace = getFace("L");
+        foreach (Colour face in rightFace)
         {
-            if (!(face == Colour.Yellow || face == Colour.White))
+            if (!isOneOfSideColours(face, "RL"))
             {
                 return false;
             }
         }
-        foreach (Colour face in downFace)
+        foreach (Colour face in leftFace)
         {
-            if (!(face == Colour.Yellow || face == Colour.White))
+            if (!isOneOfSideColours(face, "RL"))
             {
                 return false;
             }
         }
         int[][] frontMiddle = getMiddleEdges("F");
         int[][] backMiddle = getMiddleEdges("B");
-        int[][] rightMiddle = getMiddleEdges("L");
-        int[][] leftMiddle = getMiddleEdges("R");
+        int[][] upMiddle = getMiddleEdges("U");
+        int[][] downMiddle = getMiddleEdges("D");
         foreach (int[] edge in frontMiddle)
         {
-            Colour face = getFacelet(edge);
-            if (!(face == Colour.Green || face == Colour.Blue))
+            if (!isOneOfSideColours(edge, "FB"))
             {
                 return false;
             }
         }
         foreach (int[] edge in backMiddle)
         {
-            Colour face = getFacelet(edge);
-            if (!(face == Colour.Green || face == Colour.Blue))
+            if (!isOneOfSideColours(edge, "FB"))
             {
                 return false;
             }
         }
-        foreach (int[] edge in rightMiddle)
+        foreach (int[] edge in upMiddle)
         {
-            Colour face = getFacelet(edge);
-            if (!(face == Colour.Red || face == Colour.Orange))
+            if (!isOneOfSideColours(edge, "UD"))
             {
                 return false;
             }
         }
-        foreach (int[] edge in leftMiddle)
+        foreach (int[] edge in downMiddle)
         {
-            Colour face = getFacelet(edge);
-            if (!(face == Colour.Red || face == Colour.Orange))
+            if (!isOneOfSideColours(edge, "UD"))
             {
                 return false;
             }
@@ -497,8 +528,8 @@ public class SimpleCube
     private int[][] getMiddleEdges(string face)
     {
         int[][] edges = new int[2][];
-        edges[0] = getCoords(face, 4);
-        edges[1] = getCoords(face, 6);
+        edges[0] = getCoords(face, 2);
+        edges[1] = getCoords(face, 8);
         return edges;
     }
 
@@ -543,18 +574,6 @@ public class SimpleCube
     public override int GetHashCode()
     {
         return base.GetHashCode();
-    }
-
-    public bool inPath(Stack<SimpleCube> path)
-    {
-        foreach (SimpleCube node in path)
-        {
-            if (this.Equals(node))
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     public bool sameFace(string m)
@@ -610,5 +629,31 @@ public class SimpleCube
             return true;
         }
         return false;
+    }
+
+    public bool isOneOfSideColours(string face, int n, string sides)
+    {
+        return isOneOfSideColours(getCoords(face, n), sides);
+    }
+    public bool isOneOfSideColours(int[] coords, string sides)
+    {
+        return isOneOfSideColours(getFacelet(coords), sides);
+    }
+
+    public bool isOneOfSideColours(Colour col, string sides)
+    {
+        switch (sides)
+        {
+            case "RL":
+                return col == Colour.Red || col == Colour.Orange;
+            case "UD":
+                return col == Colour.Yellow || col == Colour.White;
+            case "FB":
+                return col == Colour.Green || col == Colour.Blue;
+            
+            default:
+                Debug.LogError("invalid sides");
+                return true;
+        }
     }
 }

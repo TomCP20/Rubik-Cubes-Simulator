@@ -12,7 +12,14 @@ public abstract class CubeSolver
 
     protected void addSection(string name)
     {
-        sections.Add(moves.Count, name);
+        if (sections.ContainsKey(moves.Count))
+        {
+            sections[moves.Count] = name;
+        }
+        else
+        {
+            sections.Add(moves.Count, name);
+        }
     }
     protected void rotate(Axis axis, int slice, int quarterTurns)
     {
@@ -29,6 +36,7 @@ public abstract class CubeSolver
     }
     public Queue<Move> getSolution()
     {
+        Debug.Log(moves.Count);
         return moves;
     }
 

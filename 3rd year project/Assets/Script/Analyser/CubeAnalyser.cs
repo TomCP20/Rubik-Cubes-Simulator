@@ -5,23 +5,16 @@ using UnityEngine;
 
 public class CubeAnalyser
 {
-    Cube c;
-    LayerByLayer s;
-    Queue<Move> moves;
+    private Cube c;
+    private Queue<Move> moves;
+
+    private int type;
+
+    public float[] count;
+
     public CubeAnalyser(int t)
     {
-        Cube c = new Cube();
-        c.randomMoveSequence();
-        CubeSolver s;
-        if (t == 0)
-        {
-            s = new LayerByLayer(c);
-        }
-        else
-        {
-            s = new CFOP(c);
-        }
-        moves = s.getSolution();
+        type = t;      
     }
     public int getHTM()
     {
@@ -117,8 +110,23 @@ public class CubeAnalyser
         }
         return sum;
     }
-    public float[] getCount()
+
+    public IEnumerator solveCuve()
     {
-        return new float[] {getHTM(), getQTM(), getSTM(), getQSTM(), getATM(), (float)get15HTM()};
+        Cube c = new Cube();
+        c.randomMoveSequence();
+        CubeSolver s;
+        if (type == 0)
+        {
+            s = new LayerByLayer(c);
+        }
+        else
+        {
+            s = new CFOP(c);
+        }
+        yield return s.solve();
+        moves = s.getSolution();
+        count = new float[] {getHTM(), getQTM(), getSTM(), getQSTM(), getATM(), (float)get15HTM()};
+        yield return null;
     }
 }

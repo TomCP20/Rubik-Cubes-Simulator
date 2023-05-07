@@ -11,6 +11,8 @@ public class AnalysisDisplay : MonoBehaviour
 
     [SerializeField] private TMP_Dropdown d;
 
+    private float[][] results;
+
     int type;
 
     private void Start()
@@ -24,14 +26,22 @@ public class AnalysisDisplay : MonoBehaviour
     {
         type = dropdown.value;
     }
-    public void Analysis()
+
+
+    public void StartAnalysis()
+    {
+        StartCoroutine(Analysis());
+    }
+    
+    public IEnumerator Analysis()
     {
         cubeNo = 100;
         type = d.value;
-        float[][] results = getResults(type);
+        yield return getResults(type);
         float[] avgs = calcAvg(results);
         float[] standardDeviation = calcSD(avgs, results);
         text.text = getOutput(avgs, standardDeviation);
+        yield return null;
     }
 
     private float[] calcAvg(float[][] results)
@@ -83,15 +93,16 @@ public class AnalysisDisplay : MonoBehaviour
         return output;
     }
 
-    private float[][] getResults(int type)
+    private IEnumerator getResults(int type)
     {
-        float[][] results = new float[cubeNo][];
+        float[][] r = new float[cubeNo][];
 
         for (int i = 0; i < cubeNo; i++)
         {
             CubeAnalyser c = new CubeAnalyser(type);
-            results[i] = c.getCount();
+            yield return c.solveCuve();
+            r[i] = c.count;
         }
-        return results;
+        results = r;
     }
 }

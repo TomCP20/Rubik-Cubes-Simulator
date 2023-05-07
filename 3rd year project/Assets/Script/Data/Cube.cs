@@ -68,10 +68,7 @@ public class Cube
     }
     public void randomMove()
     {
-        string[] movesArray = { "F", "U", "R", "B", "D", "L", "F'", "U'", "R'", "B'", "D'", "L'", "F2", "U2", "R2", "B2", "D2", "L2" }; //G0
-        //string[] movesArray = { "F", "U", "B", "D", "F'", "U'", "B'", "D'", "F2", "U2", "R2", "B2", "D2", "L2" }; //G1
-        //string[] movesArray = { "U", "D", "U'", "D'", "F2", "U2", "R2", "B2", "D2", "L2" }; //G2
-        //string[] movesArray = { "F2", "U2", "R2", "B2", "D2", "L2" }; //G3
+        string[] movesArray = { "F", "U", "R", "B", "D", "L", "F'", "U'", "R'", "B'", "D'", "L'", "F2", "U2", "R2", "B2", "D2", "L2" };
         System.Random rnd = new System.Random();
         rotate(new Move(movesArray[rnd.Next(movesArray.Length)]));
     }

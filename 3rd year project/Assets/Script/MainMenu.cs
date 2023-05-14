@@ -5,17 +5,24 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public string firstLevel;
+    public string interactive;
 
     public string analysis;
 
+    public string input;
+
     public void StartGame()
     {
-        SceneManager.LoadScene(firstLevel);
+        SceneManager.LoadScene(interactive);
     }
 
     public void loadAnalysis()
     {
         SceneManager.LoadScene(analysis);
+    }
+
+    public void loadInput()
+    {
+        SceneManager.LoadScene(input);
     }
 }

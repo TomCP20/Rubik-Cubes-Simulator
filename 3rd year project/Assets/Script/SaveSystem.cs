@@ -6,10 +6,14 @@ public static class SaveSystem
 {
     public static void SaveCube(Cube cube)
     {
-        string path = Application.persistentDataPath + "/cube.txt";
         SimpleCube sc = new SimpleCube(cube.simpleRep());
-        File.WriteAllText(path, sc.ToString());
-        Debug.Log(sc.ToString());
+        SaveCube(sc.ToString());
+    }
+
+    public static void SaveCube(string cube)
+    {
+        string path = Application.persistentDataPath + "/cube.txt";
+        File.WriteAllText(path, cube);
     }
 
     public static Cube LoadCube()

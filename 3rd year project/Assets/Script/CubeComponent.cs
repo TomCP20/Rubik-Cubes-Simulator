@@ -93,4 +93,14 @@ public class CubeComponent : MonoBehaviour
         updater.colourCube();
         //OnCubeChange.Invoke();
     }
+
+    public void saveCube()
+    {
+        SaveSystem.SaveCube(c);
+    }
+
+    public void LoadCube()
+    {
+        setCube(SaveSystem.LoadCube());
+    }
 }

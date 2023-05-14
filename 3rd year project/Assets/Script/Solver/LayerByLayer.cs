@@ -12,7 +12,6 @@ class LayerByLayer : CubeSolver
     }
     public override IEnumerator solve()
     {
-        Debug.Log("Layer By Layer");
         addSection("white cross");
         yield return subCubeSolver(new WhiteCrossSolver(cube));
         addSection("white Corners");

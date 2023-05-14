@@ -56,6 +56,52 @@ public class SimpleCube
         move = m;
     }
 
+    public SimpleCube(Colour[,,] a)
+    {
+        array = a;
+    }
+
+    public SimpleCube(string str)
+    {
+        array = new Colour[6, 3, 3];
+        for (int i = 0; i < 6; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    Colour facelet;
+                    switch (str[i*6+j*3+k].ToString())
+                    {
+                        case "W":
+                            facelet = Colour.White;
+                            break;
+                        case "O":
+                            facelet = Colour.Orange;
+                            break;
+                        case "Y":
+                            facelet = Colour.Yellow;
+                            break;
+                        case "B":
+                            facelet = Colour.Blue;
+                            break;
+                        case "R":
+                            facelet = Colour.Red;
+                            break;
+                        case "G":
+                            facelet = Colour.Green;
+                            break;
+                        default:
+                            Debug.LogError("invalid colour " + str[i*6+j*3+k].ToString());
+                            facelet = Colour.Black;
+                            break;
+                    }
+                    array[i, j, k] = facelet;
+                }
+            }
+        }
+    }
+
     public SimpleCube Clone()
     {
         Colour[,,] a = new Colour[6,3,3];

@@ -20,7 +20,6 @@ class CFOP : CubeSolver
         yield return subCubeSolver(new OLL(cube));
         addSection("PLL");
         yield return subCubeSolver(new PLL(cube));
-        Debug.Log(moves.Count);
         yield return null;
     }
 }

@@ -36,7 +36,6 @@ public abstract class CubeSolver
     }
     public Queue<Move> getSolution()
     {
-        Debug.Log(moves.Count);
         return moves;
     }
 

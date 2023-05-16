@@ -11,6 +11,8 @@ public class MainMenu : MonoBehaviour
 
     public string input;
 
+    public string barchart;
+
     public void StartGame()
     {
         SceneManager.LoadScene(interactive);
@@ -24,5 +26,10 @@ public class MainMenu : MonoBehaviour
     public void loadInput()
     {
         SceneManager.LoadScene(input);
+    }
+
+    public void loadBarchart()
+    {
+        SceneManager.LoadScene(barchart);
     }
 }

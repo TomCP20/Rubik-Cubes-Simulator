@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using TMPro;
 
@@ -30,7 +31,7 @@ public class AnalysisDisplay : MonoBehaviour
 
     public void StartAnalysis()
     {
-        StartCoroutine(Analysis());
+        StartCoroutine(Analysis2());
     }
     
     public IEnumerator Analysis()
@@ -41,6 +42,17 @@ public class AnalysisDisplay : MonoBehaviour
         float[] avgs = calcAvg(results);
         float[] standardDeviation = calcSD(avgs, results);
         text.text = getOutput(avgs, standardDeviation);
+        yield return null;
+    }
+
+    public IEnumerator Analysis2()
+    {
+        CubeAnalyser CA = new CubeAnalyser();
+        yield return CA.SampleMoveCount(0, 0, 1000);
+        float[] sample1 = CA.moveCounts;
+        yield return CA.SampleMoveCount(1, 0, 1000);
+        float[] sample2 = CA.moveCounts;
+        text.text = TTest(sample1, sample2).ToString();
         yield return null;
     }
 
@@ -99,10 +111,36 @@ public class AnalysisDisplay : MonoBehaviour
 
         for (int i = 0; i < cubeNo; i++)
         {
-            CubeAnalyser c = new CubeAnalyser(type);
-            yield return c.solveCuve();
+            CubeAnalyser c = new CubeAnalyser();
+            yield return c.solveCube(type);
             r[i] = c.count;
         }
         results = r;
+    }
+
+    private float TTest(float[] sample1, float[] sample2)
+    {
+        float meanDelta = sample1.Average() - sample2.Average();
+        float standardErrorDelta = Mathf.Sqrt(Mathf.Pow(StandardError(sample1), 2) + Mathf.Pow(StandardError(sample2), 2));
+        Debug.Log(sample1.Average());
+        Debug.Log(sample2.Average());
+        float t = meanDelta/standardErrorDelta;
+        return t;
+    }
+
+    private float StandardDeviation(float[] sample)
+    {
+        float variance = 0;
+        for (int j = 0; j < 6; j++)
+        {
+            variance += Mathf.Pow((sample[j] - sample.Average()), 2);
+        }
+        variance /= sample.Length;
+        return Mathf.Sqrt(variance);
+    }
+
+    private float StandardError(float[] sample)
+    {
+        return StandardDeviation(sample)/Mathf.Sqrt(sample.Length);
     }
 }

@@ -10,9 +10,9 @@ public class BarChart : MonoBehaviour
 
     private List<Bar> bars = new List<Bar>();
 
-    public float[] values = {3f, 20f, 17f, 54f};
+    public int[] values;
 
-    public string[] lables = {"1", "2", "3", "4"};
+    public string[] lables;
 
     public Color[] colors;
     
@@ -21,18 +21,19 @@ public class BarChart : MonoBehaviour
     void Start()
     {
         chartHeight = Screen.height + GetComponent<RectTransform>().sizeDelta.y;
-        DisplayGraph(values);
+        //DisplayGraph(values);
     }
 
-    public void DisplayGraph(float[] vals)
+    public void DisplayGraph(int[] vals)
     {
+        ResetGraph();
         float maxValue = vals.Max();
         for (int i = 0; i < vals.Length; i++)
         {
             Bar newBar = Instantiate(barPrefab) as Bar;
             newBar.transform.SetParent(this.transform);
             RectTransform rt = newBar.bar.GetComponent<RectTransform>();
-            float normalised = (vals[i]/maxValue) * 0.95f;
+            float normalised = ((float)vals[i]/(float)maxValue) * 0.95f;
             rt.sizeDelta = new Vector2(rt.sizeDelta.x, chartHeight * normalised);
 
             newBar.bar.color = colors[i % colors.Length];
@@ -40,6 +41,19 @@ public class BarChart : MonoBehaviour
             if (lables.Length <= i) { newBar.label.text = "UNDEFINED"; }
             else { newBar.label.text = lables[i]; }
             newBar.barValue.text = vals[i].ToString();   
+        }
+    }
+
+    public void DisplayGraph()
+    {
+        DisplayGraph(values);
+    }
+
+    public void ResetGraph()
+    {
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
         }
     }
 }

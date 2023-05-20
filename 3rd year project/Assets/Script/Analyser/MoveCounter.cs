@@ -49,7 +49,11 @@ static class MoveCounter
             if (current.axis == next.axis && current.angle == next.angle)
             {
                 sum+=1;
-                current = newQueue.Dequeue();
+                if (newQueue.Count > 0)
+                {
+                    current = newQueue.Dequeue();
+                }
+                
             }
             else
             {
@@ -71,7 +75,10 @@ static class MoveCounter
             if (current.axis == next.axis && current.angle == next.angle)
             {
                 sum+=Mathf.Abs(current.angle);
-                current = newQueue.Dequeue();
+                if (newQueue.Count > 0)
+                {
+                    current = newQueue.Dequeue();
+                }
             }
             else
             {

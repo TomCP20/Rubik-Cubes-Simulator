@@ -457,6 +457,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bddc74363c242c41bce55ceee8512cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  modifiable: 1
   updater: {fileID: 0}
 --- !u!1 &937852266
 GameObject:
@@ -574,8 +575,7 @@ GameObject:
   m_Component:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
-  - component: {fileID: 963194226}
-  - component: {fileID: 963194232}
+  - component: {fileID: 963194233}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -583,14 +583,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &963194226
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963194225}
-  m_Enabled: 1
 --- !u!20 &963194227
 Camera:
   m_ObjectHideFlags: 0
@@ -649,7 +641,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 45, y: 135, z: 0}
---- !u!114 &963194232
+--- !u!114 &963194233
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -658,54 +650,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6830cbe2b71c1814eb2a34a6be7de93e, type: 3}
+  m_Script: {fileID: 11500000, guid: 5aff76f6102024442ac9804e83d1d6d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onSolveCube:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 779143920}
-        m_TargetAssemblyTypeName: CubeComponent, Assembly-CSharp
-        m_MethodName: solveCube
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onMouseLeft:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 779143917}
-        m_TargetAssemblyTypeName: CubeController, Assembly-CSharp
-        m_MethodName: userMove
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onMouseRight:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 779143917}
-        m_TargetAssemblyTypeName: CubeController, Assembly-CSharp
-        m_MethodName: userMove
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: -1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   target: {fileID: 779143915}
   rotationSpeed: 7
 --- !u!224 &1128452045 stripped

@@ -11,6 +11,18 @@ public class CubeController : MonoBehaviour
         cube = GetComponent<CubeComponent>();
     }
 
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0) && cube.modifiable)
+        {
+            userMove(1);
+        }
+        if (Input.GetMouseButtonDown(1) && cube.modifiable)
+        {
+            userMove(-1);
+        }
+    }
+
     public void userMove(int direction)
     {
         RaycastHit hit;

@@ -8,7 +8,8 @@ public class CubeComponent : MonoBehaviour
 {
     private Cube c;
 
-    //public UnityEvent OnCubeChange;
+    public bool modifiable = true;
+
 
     public CubeUpdater updater;
 
@@ -44,26 +45,17 @@ public class CubeComponent : MonoBehaviour
 
     public void rotateCube(Move m)
     {
-        c.rotate(m);
-        StartCoroutine(updater.animateMove(m));
-    }
-
-    public void solveCube()
-    {
-        StartCoroutine(solving());
-    }
-
-    public IEnumerator solving()
-    {
-        CubeSolver solver = new Thistlethwaite(c);
-        yield return solver.solve();
-        c = solver.getSlovedCube();
-        updater.colourCube();
-        yield return null;
+        if (modifiable)
+        {
+            modifiable = false;
+            c.rotate(m);
+            StartCoroutine(updater.animateMove(m, true));
+        }
     }
 
     public IEnumerator animate()
     {
+        modifiable = false;
         CubeSolver solver = new CFOP(c);
         yield return solver.solve();
         Queue<Move> moves = solver.getSolution();
@@ -77,21 +69,25 @@ public class CubeComponent : MonoBehaviour
             UnityEngine.Debug.Log(moves.Count);
             Move m = moves.Dequeue();
             c.rotate(m);
-            yield return StartCoroutine(updater.animateMove(m));
+            yield return StartCoroutine(updater.animateMove(m, false));
             i++;
         }
+        modifiable = true;
     }
 
     public void startAnimate()
     {
-        StartCoroutine(animate());
+        if (modifiable)
+        {
+            StartCoroutine(animate());
+        }
+        
     }
 
     public void scramble()
     {
         c.randomMoveSequence();
         updater.colourCube();
-        //OnCubeChange.Invoke();
     }
 
     public void saveCube()

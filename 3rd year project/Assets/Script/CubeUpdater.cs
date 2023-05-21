@@ -9,6 +9,8 @@ public class CubeUpdater : MonoBehaviour
 
     public GameObject quad;
 
+    
+
     public Vector3[] directions = {Vector3.back, Vector3.down, Vector3.forward, Vector3.left, Vector3.right, Vector3.up};
 
     void Start()
@@ -54,7 +56,7 @@ public class CubeUpdater : MonoBehaviour
         }
     }
 
-    public IEnumerator animateMove(Move m)
+    public IEnumerator animateMove(Move m, bool isSingle)
     {
         Cube c = cube.getCube();
         Transform[] Pieces = getAllTransforms(c.getLayer(m.axis, m.slice));
@@ -76,7 +78,10 @@ public class CubeUpdater : MonoBehaviour
         }
         Destroy(pivot);
         yield return null;
-        
+        if (isSingle)
+        {
+            cube.modifiable = true;
+        }
     }
 
     public Transform[] getAllTransforms(List<Piece> pieces)

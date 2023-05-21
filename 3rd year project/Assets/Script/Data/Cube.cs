@@ -79,12 +79,12 @@ public class Cube
             randomMove();
         }
     }
-    public List<Piece> filter(Colour C, int MD)
+    public List<Piece> filter(Colour C, int faces)
     {
         List<Piece> output = new List<Piece>();
         foreach(Piece p in pieces)
         {
-            if (p.position.ManhattanDistance() == MD && p.containsColour(C))
+            if (p.position.ManhattanDistance() == faces && p.containsColour(C))
             {
                 output.Add(p);
             }
@@ -122,31 +122,6 @@ public class Cube
             {
                 return false;
             }
-        }
-        return true;
-    }
-
-    public bool isDominoReduced()
-    {
-        foreach (Piece p in pieces)
-        {
-            foreach (Face f in p.faces)
-            {
-                if (p.position.y == 0) 
-                {
-                    if (!f.direction.EqualOrOposite(Vector3.up) && !f.direction.EqualOrOposite(f.defaultDirection()))
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (f.direction.EqualOrOposite(Vector3.up) && !f.direction.EqualOrOposite(f.defaultDirection()))
-                    {
-                        return false;
-                    }
-                }
-            } 
         }
         return true;
     }

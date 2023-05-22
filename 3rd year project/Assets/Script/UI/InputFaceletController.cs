@@ -7,7 +7,7 @@ public class InputFaceletController : MonoBehaviour
     public Material[] cols;
     private int length;
 
-    [SerializeField] private int currentColor = 0;
+    [SerializeField] private int currentColour = 0;
     [SerializeField] private bool modifiable = true;
 
     private Renderer r;
@@ -15,29 +15,29 @@ public class InputFaceletController : MonoBehaviour
     {
         length = cols.Length;
         r = GetComponent<Renderer>();
-        r.material = cols[currentColor];
+        r.material = cols[currentColour];
     }
 
     public void changeColour(int n)
     {
         if (modifiable)
         {
-            currentColor +=n;
-            if (currentColor >= length)
+            currentColour +=n;
+            if (currentColour >= length)
             {
-                currentColor -= length;
+                currentColour -= length;
             }
-            else if (currentColor < 0)
+            else if (currentColour < 0)
             {
-                currentColor += length;
+                currentColour += length;
             }
-            r.material = cols[currentColor];
+            r.material = cols[currentColour];
         }
     }
 
     public string getColourString()
     {
-        switch (currentColor)
+        switch (currentColour)
         {
             case 0:
                 return "W";

@@ -8,8 +8,8 @@ public class Screenshot : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            string date1 = System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-            ScreenCapture.CaptureScreenshot(string.Format("Screenshots/Screenshot-{0}.png", date1));
+            string date = System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+            ScreenCapture.CaptureScreenshot(string.Format("Screenshot-{0}.png", date));
         }
     }
 }

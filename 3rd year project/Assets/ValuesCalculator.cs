@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
+using TMPro;
 using UnityEngine;
 
 public class ValuesCalculator : MonoBehaviour
 {
+
+    public TMP_Dropdown solver;
+
+    public TMP_Dropdown metric;
 
     public const int sampleSize = 1000;
 
@@ -26,7 +30,7 @@ public class ValuesCalculator : MonoBehaviour
     IEnumerator Calculate()
     {
         CubeAnalyser CA = new CubeAnalyser();
-        yield return CA.SampleMoveCount(0, 0, 1000);
+        yield return CA.SampleMoveCount(solver.value, metric.value, 1000);
         float[] moveCounts = CA.moveCounts;
         int bucketCount = getBucketCount(moveCounts);
         int minBucket = (int)Mathf.FloorToInt((float)moveCounts.Min()/(float)BucketSize);

@@ -4,22 +4,22 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public static class SaveSystem
 {
-    public static void SaveCube(Cube cube)
+    public static void SaveCube(Cube cube, int saveID)
     {
         SimpleCube sc = new SimpleCube(cube.simpleRep());
-        SaveCube(sc.ToString());
+        SaveCube(sc.ToString(), saveID);
     }
 
-    public static void SaveCube(string cube)
+    public static void SaveCube(string cube, int saveID)
     {
-        string path = Application.persistentDataPath + "/cube.txt";
+        string path = Application.persistentDataPath + "/cube" + saveID + ".txt";
         File.WriteAllText(path, cube);
     }
 
-    public static Cube LoadCube()
+    public static Cube LoadCube(int saveID)
     {
         Cube c = new Cube();
-        string path = Application.persistentDataPath + "/cube.txt";
+        string path = Application.persistentDataPath + "/cube" + saveID + ".txt";
         if (System.IO.File.Exists(path))
         {
             string saveData = File.ReadAllText(path);

@@ -28,8 +28,7 @@ public class CubeComponent : MonoBehaviour
 
     public void resetCube()
     {
-        c = new Cube();
-        updater.colourCube();
+        setCube(new Cube());
     }
 
     public Cube getCube()
@@ -39,8 +38,11 @@ public class CubeComponent : MonoBehaviour
 
     public void setCube(Cube cube)
     {
-        c = cube;
-        updater.colourCube();
+        if (modifiable)
+        {
+            c = cube;
+            updater.colourCube();
+        }
     }
 
     public void rotateCube(Move m)
@@ -90,13 +92,13 @@ public class CubeComponent : MonoBehaviour
         updater.colourCube();
     }
 
-    public void saveCube()
+    public void saveCube(int saveID)
     {
-        SaveSystem.SaveCube(c);
+        SaveSystem.SaveCube(c, saveID);
     }
 
-    public void LoadCube()
+    public void LoadCube(int saveID)
     {
-        setCube(SaveSystem.LoadCube());
+        setCube(SaveSystem.LoadCube(saveID));
     }
 }

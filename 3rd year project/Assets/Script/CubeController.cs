@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(CubeComponent))]
 public class CubeController : MonoBehaviour
@@ -13,11 +14,11 @@ public class CubeController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && cube.modifiable)
+        if (Input.GetMouseButtonDown(0) && cube.modifiable && ! EventSystem.current.IsPointerOverGameObject())
         {
             userMove(1);
         }
-        if (Input.GetMouseButtonDown(1) && cube.modifiable)
+        if (Input.GetMouseButtonDown(1) && cube.modifiable && ! EventSystem.current.IsPointerOverGameObject())
         {
             userMove(-1);
         }

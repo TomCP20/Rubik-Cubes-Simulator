@@ -1,17 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SelectFacelet : MonoBehaviour
 {
     [SerializeField] private Transform InputCube;
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(0) && ! EventSystem.current.IsPointerOverGameObject())
         {
             modifyFacelet(1);
         }
-        if(Input.GetMouseButtonDown(1))
+        if(Input.GetMouseButtonDown(1) && ! EventSystem.current.IsPointerOverGameObject())
         {
             modifyFacelet(-1);
         }
@@ -53,8 +54,8 @@ public class SelectFacelet : MonoBehaviour
         return output;
     }
 
-    public void SaveCube()
+    public void SaveCube(int saveID)
     {
-        SaveSystem.SaveCube(getStringRep());
+        SaveSystem.SaveCube(getStringRep(), saveID);
     }
 }

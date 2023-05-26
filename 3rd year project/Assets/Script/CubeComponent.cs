@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 
 public class CubeComponent : MonoBehaviour
@@ -10,8 +11,11 @@ public class CubeComponent : MonoBehaviour
 
     public bool modifiable = true;
 
+    public TMP_Dropdown solver;
 
-    public CubeUpdater updater;
+    public TMP_Text status;
+
+    private CubeUpdater updater;
 
     private void Start()
     {
@@ -58,22 +62,27 @@ public class CubeComponent : MonoBehaviour
     public IEnumerator animate()
     {
         modifiable = false;
-        CubeSolver solver = new CFOP(c);
-        yield return solver.solve();
-        Queue<Move> moves = solver.getSolution();
+        CubeSolver s;
+        if (solver.value == 0) { s = new LayerByLayer(c); }
+        else { s = new CFOP(c); }
+        yield return s.solve();
+        Queue<Move> moves = s.getSolution();
         int i = 0;
+        string sectionName = "";
         while (moves.Count > 0)
         {
-            if (solver.sections.ContainsKey(i))
+            if (s.sections.ContainsKey(i))
             {
-                Debug.Log(solver.sections[i]);
+                sectionName = s.sections[i];
             }
-            UnityEngine.Debug.Log(moves.Count);
             Move m = moves.Dequeue();
             c.rotate(m);
+            status.text = "Section: " + sectionName + "\nMoves left: " + moves.Count + "\nCurrent move: " + m.getNotation();
             yield return StartCoroutine(updater.animateMove(m, false));
             i++;
         }
+        yield return new WaitForSeconds(1);
+        status.text = "";
         modifiable = true;
     }
 

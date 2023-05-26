@@ -12,9 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Interactive Cube.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/Scenes/Cube Analysis.unity
-    guid: f78ec36dc5da5f14f95d1dc7e1b33448
-  - enabled: 1
     path: Assets/Scenes/Bar Chart.unity
     guid: b562cba6f854ddf47a3fccfd8c30b27c
+  - enabled: 1
+    path: Assets/Scenes/Input Cube.unity
+    guid: 8c7620f65b297d049aed238cbbffa365
   m_configObjects: {}

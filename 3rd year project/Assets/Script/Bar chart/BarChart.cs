@@ -18,10 +18,17 @@ public class BarChart : MonoBehaviour
     
     private float chartHeight;
 
+    public GameObject loading;
+
     void Start()
     {
         chartHeight = Screen.height + GetComponent<RectTransform>().sizeDelta.y;
         //DisplayGraph(values);
+    }
+
+    private void Update()
+    {
+        chartHeight = Screen.height + GetComponent<RectTransform>().sizeDelta.y;
     }
 
     public void DisplayGraph(int[] vals)
@@ -42,6 +49,7 @@ public class BarChart : MonoBehaviour
             else { newBar.label.text = lables[i]; }
             newBar.barValue.text = vals[i].ToString();   
         }
+        loading.SetActive(false);
     }
 
     public void DisplayGraph()

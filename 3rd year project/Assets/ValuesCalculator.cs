@@ -11,7 +11,7 @@ public class ValuesCalculator : MonoBehaviour
 
     public TMP_Dropdown metric;
 
-    public const int sampleSize = 1000;
+    public int sampleSize = 1000;
 
     public const int BucketSize = 10;
 
@@ -29,16 +29,19 @@ public class ValuesCalculator : MonoBehaviour
     
     IEnumerator Calculate()
     {
+        Debug.Log("Starting barchart calculation");
         CubeAnalyser CA = new CubeAnalyser();
-        yield return CA.SampleMoveCount(solver.value, metric.value, 1000);
+        yield return CA.SampleMoveCount(solver.value, metric.value, sampleSize);
         float[] moveCounts = CA.moveCounts;
         int bucketCount = getBucketCount(moveCounts);
         int minBucket = (int)Mathf.FloorToInt((float)moveCounts.Min()/(float)BucketSize);
-        
+        Debug.Log("finnishing barchart calculation");
+        Debug.Log("Displaying Values");
         chart.values = getVals(minBucket, bucketCount, moveCounts);;
         chart.lables = getLabels(minBucket, bucketCount);;
         chart.DisplayGraph();
         yield return null;
+        
     }
     
 

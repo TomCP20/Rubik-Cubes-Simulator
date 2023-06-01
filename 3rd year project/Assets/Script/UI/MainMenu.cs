@@ -32,4 +32,9 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene(barchart);
     }
+
+    public void quitGame()
+    {
+        Application.Quit();
+    }
 }

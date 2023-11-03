@@ -15,11 +15,11 @@ The project has the following features:
 ## Running the project
 The project was created in Unity editor version 2021.3.18f1 LTS and requires either that version or later to be run or built into an exe.
 ## Screenshots
-![Screenshot of the Cube input system.]()
-![Screenshot of the Interactive cube in its default state.]()
-![Screenshot of the Cube being solved.]()
-![Screenshot of the bar chart showing information about Layer By Layer.]()
-![Screenshot of the bar chart showing information about CFOP.]()
-![Screenshot of the input system save menu.]()
-![Screenshot of the interactive cube save menu.]()
-![Screenshot of the loading menu in the interactive cube scene.]()
+![Screenshot of the Cube input system.](/images/Screenshot-Input.png "Screenshot of the Cube input system.")
+![Screenshot of the Interactive cube in its default state.](/images/Screenshot-3D.png "Screenshot of the Interactive cube in its default state.")
+![Screenshot of the Cube being solved.](/images/Screenshot-3D-Animate.png "Screenshot of the Cube being solved.")
+![Screenshot of the bar chart showing information about Layer By Layer.](/images/Screenshot-Bar1.png "Screenshot of the bar chart showing information about Layer By Layer.")
+![Screenshot of the bar chart showing information about CFOP.](/images/Screenshot-Bar2.png "Screenshot of the bar chart showing information about CFOP.")
+![Screenshot of the input system save menu.](/images/Screenshot-Save1.png "Screenshot of the Cube input system save menu.")
+![Screenshot of the interactive cube save menu.](/images/Screenshot-Save2.png "Screenshot of the interactive cube save menu.")
+![Screenshot of the loading menu in the interactive cube scene.](/images/Screenshot-Load.png "Screenshot of the loading menu in the interactive cube scene.")

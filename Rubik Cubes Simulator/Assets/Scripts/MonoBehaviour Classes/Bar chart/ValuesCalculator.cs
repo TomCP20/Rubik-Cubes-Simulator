@@ -34,11 +34,11 @@ public class ValuesCalculator : MonoBehaviour
         yield return CA.SampleMoveCount(solver.value, metric.value, sampleSize);
         float[] moveCounts = CA.moveCounts;
         int bucketCount = getBucketCount(moveCounts);
-        int minBucket = (int)Mathf.FloorToInt((float)moveCounts.Min()/(float)BucketSize);
+        int minBucket = Mathf.FloorToInt(moveCounts.Min()/(float)BucketSize);
         Debug.Log("finnishing barchart calculation");
         Debug.Log("Displaying Values");
-        chart.values = getVals(minBucket, bucketCount, moveCounts);;
-        chart.lables = getLabels(minBucket, bucketCount);;
+        chart.values = getVals(minBucket, bucketCount, moveCounts);
+        chart.lables = getLabels(minBucket, bucketCount);
         chart.DisplayGraph();
         yield return null;
         
@@ -50,7 +50,7 @@ public class ValuesCalculator : MonoBehaviour
         int[] vals = new int[bucketCount - minBucket + 1];
         for (int i = 0; i < sampleSize; i++)
         {
-            int bucket = Mathf.FloorToInt((float)moveCounts[i]/BucketSize);
+            int bucket = Mathf.FloorToInt(moveCounts[i]/BucketSize);
             vals[bucket - minBucket]++;
         }
         return vals;

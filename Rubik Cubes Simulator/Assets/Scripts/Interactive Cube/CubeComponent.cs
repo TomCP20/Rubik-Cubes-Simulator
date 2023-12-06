@@ -5,110 +5,130 @@ using UnityEngine.Events;
 using TMPro;
 using Menu.Save;
 
+/*
+Script that holds the cube data and handles animation in the interactive cube GUI.
+*/
 
-public class CubeComponent : MonoBehaviour
+namespace InteractiveCube
 {
-    private Cube c;
 
-    public bool modifiable = true;
-
-    public TMP_Dropdown solver;
-
-    public TMP_Text status;
-
-    private CubeUpdater updater;
-
-    private void Start()
+    public class CubeComponent : MonoBehaviour
     {
-        updater = GetComponent<CubeUpdater>();
-        createCube();
-    }
+        private Cube c;
 
-    public void createCube()
-    {
-        c = new Cube();
-        updater.spawnCube();
-        updater.colourCube();
-    }
+        [SerializeField]
+        private bool modifiable = true;
 
-    public void resetCube()
-    {
-        setCube(new Cube());
-    }
+        [SerializeField]
+        private TMP_Dropdown solver;
 
-    public Cube getCube()
-    {
-        return c.Clone();
-    }
+        [SerializeField]
+        private TMP_Text status;
 
-    public void setCube(Cube cube)
-    {
-        if (modifiable)
+        private CubeUpdater updater;
+
+        private void Start()
         {
-            c = cube;
+            updater = GetComponent<CubeUpdater>();
+            createCube();
+        }
+
+        public bool isModifiable()
+        {
+            return modifiable;
+        }
+
+        public void setModifiable(bool m)
+        {
+            modifiable = m;
+        }
+
+        public void createCube()
+        {
+            c = new Cube();
+            updater.spawnCube();
             updater.colourCube();
         }
-    }
 
-    public void rotateCube(Move m)
-    {
-        if (modifiable)
+        public void resetCube()
+        {
+            setCube(new Cube());
+        }
+
+        public Cube getCube()
+        {
+            return c.Clone();
+        }
+
+        public void setCube(Cube cube)
+        {
+            if (modifiable)
+            {
+                c = cube;
+                updater.colourCube();
+            }
+        }
+
+        public void rotateCube(Move m)
+        {
+            if (modifiable)
+            {
+                modifiable = false;
+                c.rotate(m);
+                StartCoroutine(updater.animateMove(m, true));
+            }
+        }
+
+        public IEnumerator animate()
         {
             modifiable = false;
-            c.rotate(m);
-            StartCoroutine(updater.animateMove(m, true));
-        }
-    }
-
-    public IEnumerator animate()
-    {
-        modifiable = false;
-        CubeSolver s;
-        if (solver.value == 0) { s = new LayerByLayer(c); }
-        else { s = new CFOP(c); }
-        yield return s.solve();
-        Queue<Move> moves = s.getSolution();
-        int i = 0;
-        string sectionName = "";
-        while (moves.Count > 0)
-        {
-            if (s.sections.ContainsKey(i))
+            CubeSolver s;
+            if (solver.value == 0) { s = new LayerByLayer(c); }
+            else { s = new CFOP(c); }
+            yield return s.solve();
+            Queue<Move> moves = s.getSolution();
+            int i = 0;
+            string sectionName = "";
+            while (moves.Count > 0)
             {
-                sectionName = s.sections[i];
+                if (s.sections.ContainsKey(i))
+                {
+                    sectionName = s.sections[i];
+                }
+                Move m = moves.Dequeue();
+                c.rotate(m);
+                status.text = "Section: " + sectionName + "\nMoves left: " + moves.Count + "\nCurrent move: " + m.getNotation();
+                yield return StartCoroutine(updater.animateMove(m, false));
+                i++;
             }
-            Move m = moves.Dequeue();
-            c.rotate(m);
-            status.text = "Section: " + sectionName + "\nMoves left: " + moves.Count + "\nCurrent move: " + m.getNotation();
-            yield return StartCoroutine(updater.animateMove(m, false));
-            i++;
+            yield return new WaitForSeconds(1);
+            status.text = "";
+            modifiable = true;
         }
-        yield return new WaitForSeconds(1);
-        status.text = "";
-        modifiable = true;
-    }
 
-    public void startAnimate()
-    {
-        if (modifiable)
+        public void startAnimate()
         {
-            StartCoroutine(animate());
+            if (modifiable)
+            {
+                StartCoroutine(animate());
+            }
+
         }
-        
-    }
 
-    public void scramble()
-    {
-        c.randomMoveSequence();
-        updater.colourCube();
-    }
+        public void scramble()
+        {
+            c.randomMoveSequence();
+            updater.colourCube();
+        }
 
-    public void saveCube(int saveID)
-    {
-        SaveSystem.SaveCube(c, saveID);
-    }
+        public void saveCube(int saveID)
+        {
+            SaveSystem.SaveCube(c, saveID);
+        }
 
-    public void LoadCube(int saveID)
-    {
-        setCube(SaveSystem.LoadCube(saveID));
+        public void LoadCube(int saveID)
+        {
+            setCube(SaveSystem.LoadCube(saveID));
+        }
     }
 }

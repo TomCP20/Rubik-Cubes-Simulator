@@ -2,68 +2,76 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(CubeComponent))]
-public class CubeController : MonoBehaviour
+/*
+Script that handles user interaction with the cube in the interactive cube GUI.
+*/
+
+namespace InteractiveCube
 {
-    public CubeComponent cube;
-
-    void Start()
+    [RequireComponent(typeof(CubeComponent))]
+    public class CubeController : MonoBehaviour
     {
-        cube = GetComponent<CubeComponent>();
-    }
+        [SerializeField]
+        private CubeComponent cube;
 
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(0) && cube.modifiable && ! EventSystem.current.IsPointerOverGameObject())
+        void Start()
         {
-            userMove(1);
+            cube = GetComponent<CubeComponent>();
         }
-        if (Input.GetMouseButtonDown(1) && cube.modifiable && ! EventSystem.current.IsPointerOverGameObject())
-        {
-            userMove(-1);
-        }
-    }
 
-    public void userMove(int direction)
-    {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out hit)) { return; }
-        String move = getFace(hit.transform.position);
-        if (move == "") { return; }
-        if (direction == -1) { move += "'"; }
-        cube.rotateCube(new Move(move));
-    }
+        private void Update()
+        {
+            if (Input.GetMouseButtonDown(0) && cube.isModifiable() && !EventSystem.current.IsPointerOverGameObject())
+            {
+                userMove(1);
+            }
+            if (Input.GetMouseButtonDown(1) && cube.isModifiable() && !EventSystem.current.IsPointerOverGameObject())
+            {
+                userMove(-1);
+            }
+        }
 
-    public string getFace(Vector3 pos) 
-    {
-        if (pos.y >= 1.4)
+        public void userMove(int direction)
         {
-            return "U";
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (!Physics.Raycast(ray, out hit)) { return; }
+            String move = getFace(hit.transform.position);
+            if (move == "") { return; }
+            if (direction == -1) { move += "'"; }
+            cube.rotateCube(new Move(move));
         }
-        else if (pos.y <= -1.4)
+
+        public string getFace(Vector3 pos)
         {
-            return "D";
-        }
-        else if (pos.x >= 1.4)
-        {
-            return "L";
-        }
-        else if (pos.x <= -1.4)
-        {
-            return "R";
-        }
-        else if (pos.z >= 1.4)
-        {
-            return "F";
-        }
-        else if (pos.z <= -1.4)
-        {
-            return "B";
-        }
-        else
-        {
-            return "";
+            if (pos.y >= 1.4)
+            {
+                return "U";
+            }
+            else if (pos.y <= -1.4)
+            {
+                return "D";
+            }
+            else if (pos.x >= 1.4)
+            {
+                return "L";
+            }
+            else if (pos.x <= -1.4)
+            {
+                return "R";
+            }
+            else if (pos.z >= 1.4)
+            {
+                return "F";
+            }
+            else if (pos.z <= -1.4)
+            {
+                return "B";
+            }
+            else
+            {
+                return "";
+            }
         }
     }
 }

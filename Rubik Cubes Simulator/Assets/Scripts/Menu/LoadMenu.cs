@@ -3,12 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LoadMenu : MonoBehaviour
-{
-    public string MainMenu;
+/*
+A simple script that loads the main menu whenever the main menu butto is pressed.
+*/
 
-    public void loadMenu()
+namespace Menu
+{
+    public class LoadMenu : MonoBehaviour
     {
-        SceneManager.LoadScene(MainMenu);
+        [SerializeField]        
+        private string MainMenu;
+
+        public void loadMenu()
+        {
+            SceneManager.LoadScene(MainMenu);
+        }
     }
 }
+

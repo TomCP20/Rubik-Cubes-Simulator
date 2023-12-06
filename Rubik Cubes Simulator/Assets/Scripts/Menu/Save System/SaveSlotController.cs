@@ -3,39 +3,51 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class SaveSlotController : MonoBehaviour
+/*
+Script that controlls the save slots for the save menu.
+updateText checks if relevant the save file is there, if it is there then the save slot displays the full button, otherwise the program shows the empty button instead.
+*/
+
+namespace Menu.Save
 {
-
-    public int saveID;
-
-    public TMP_Text empty;
-    public TMP_Text full;
-
-    private string path;
-
-    void Start()
+    public class SaveSlotController : MonoBehaviour
     {
-        path = Application.persistentDataPath + "/cube" + saveID + ".txt";
-        full.text = "cube " + saveID;
-        updateText();
-    }
+        [SerializeField]
+        private int saveID;
 
-    void Update()
-    {
-        updateText();
-    }
+        [SerializeField]
+        private TMP_Text empty;
 
-    public void updateText()
-    {
-        if (System.IO.File.Exists(path))
+        [SerializeField]
+        private TMP_Text full;
+
+        private string path;
+
+        void Start()
         {
-            empty.gameObject.SetActive(false);
-            full.gameObject.SetActive(true);
+            path = Application.persistentDataPath + "/cube" + saveID + ".txt";
+            full.text = "cube " + saveID;
+            updateText();
         }
-        else
+
+        void Update()
         {
-            empty.gameObject.SetActive(true);
-            full.gameObject.SetActive(false);
+            updateText();
+        }
+
+        public void updateText()
+        {
+            if (System.IO.File.Exists(path))
+            {
+                empty.gameObject.SetActive(false);
+                full.gameObject.SetActive(true);
+            }
+            else
+            {
+                empty.gameObject.SetActive(true);
+                full.gameObject.SetActive(false);
+            }
         }
     }
+
 }

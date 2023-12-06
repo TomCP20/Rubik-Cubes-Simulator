@@ -3,38 +3,47 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenu : MonoBehaviour
+/*
+A simple script that handles the buttons in the main menu.
+StartGame, loadInput, and loadBarchart load their respective scenes.
+quitGame shuts down the program
+*/
+
+namespace Menu
 {
-    public string interactive;
-
-    public string analysis;
-
-    public string input;
-
-    public string barchart;
-
-    public void StartGame()
+    public class MainMenu : MonoBehaviour
     {
-        SceneManager.LoadScene(interactive);
+        [SerializeField]
+        private string interactive;
+
+        [SerializeField]
+        private string analysis;
+
+        [SerializeField]
+        private string input;
+
+        [SerializeField]
+        private string barchart;
+
+        public void StartGame()
+        {
+            SceneManager.LoadScene(interactive);
+        }
+
+        public void loadInput()
+        {
+            SceneManager.LoadScene(input);
+        }
+
+        public void loadBarchart()
+        {
+            SceneManager.LoadScene(barchart);
+        }
+
+        public void quitGame()
+        {
+            Application.Quit();
+        }
     }
 
-    public void loadAnalysis()
-    {
-        SceneManager.LoadScene(analysis);
-    }
-
-    public void loadInput()
-    {
-        SceneManager.LoadScene(input);
-    }
-
-    public void loadBarchart()
-    {
-        SceneManager.LoadScene(barchart);
-    }
-
-    public void quitGame()
-    {
-        Application.Quit();
-    }
 }

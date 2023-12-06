@@ -28,33 +28,3 @@ To run it in the editor hit the play button at the top of the editor.
 To build the project go to File > Build Settings.
 Here you can select that target platform however the program currently only has support for PC platforms.
 Then select either build or build and run, the first builds the project and asks where you want to save it while the second does the same but automatically starts the project afterwards.
-## TODO
-### Improve Animation
-* add the ability to pause, rewind and step through moves
-* Give the user the ability to select individual sections of the solvers such as the white cross.
-..* This requires the program to be able to check if the cube is ready for that stage, e.g. before the white corners of LBL can be executed there needs to be a white cross on the bottom.
-### Improve Move System
-The move system could be improved to give the user the ability to store, input and replay sequences of moves.
-### Improving the Implementation of Solving Algorithms
-The current implementation of solving CFOP and LBL could be improved, for example:
-* it is currently possible to end up with a solution that contains a move that is immediately followed by its inverse
-* The order in which parts of the solution are executed could be improved, e.g. so that edges that are closer to being solved are solved first to prevent accidentally moving pieces that would be easier to solve, thus bringing down the average number of moves.
-* Code implemented earlier in development, e.g. white cross, could be refactored to take advantage of helper functions implemented later in development making them both more efficient and easier to read.
-### Implement Additional Solving Algorithms
-
-Additional solving methods other than CFOP and LBL could be implemented such as:
-* Thistlethwaite (partially implemented)
-* Kociemba
-* Korf’s algorithm
-* Roux
-* Mentha
-* ZZ.
-### Implementation of Additional Puzzles
-The software could also be improved by the implementation of additional puzzles similar to Rubik’s cubes referred to as twisty puzzles, these include:
-* Megaminx
-* Rubik’s revenge
-* Rubik’s Cube void
-* Pocket Cube
-* Pyraminx
-* Skewb
-The easiest to implement would be the pocket cube, Rubik’s cube void, Rubik’s Revenge and other Bigcubes.

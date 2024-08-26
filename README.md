@@ -24,7 +24,8 @@ The project has the following features:
 ## Running the project
 To run the project first install Unity Editor version 2021.3.18f1 LTS then open the project.
 Next, you can run the program in the editor or build it into an exe.
-To run it in the editor hit the play button at the top of the editor.
+To run it in the editor hit the play button at the top of the window.
 To build the project go to File > Build Settings.
-Here you can select that target platform however the program currently only has support for PC platforms.
+Here you can select that target platform however the program currently only supports Windows, Mac Linux, and WebGL.
 Then select either build or build and run, the first builds the project and asks where you want to save it while the second does the same but automatically starts the project afterwards.
+Alternatively, you can view the WebGL build of the project online [here](https://tomcp20.github.io/Rubik-Cube-Page/).

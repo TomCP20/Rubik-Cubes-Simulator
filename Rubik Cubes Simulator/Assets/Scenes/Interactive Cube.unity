@@ -849,13 +849,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cube: {fileID: 0}
   quad: {fileID: 4196441821895019390, guid: 6463bf8df9002574e9d6a7e7151da94d, type: 3}
-  directions:
-  - {x: 0, y: 0, z: -1}
-  - {x: 0, y: -1, z: 0}
-  - {x: 0, y: 0, z: 1}
-  - {x: -1, y: 0, z: 0}
-  - {x: 1, y: 0, z: 0}
-  - {x: 0, y: 1, z: 0}
   materials:
   - {fileID: 2100000, guid: 0d1e00a6db9bb2a499d96f6b585b753d, type: 2}
   - {fileID: 2100000, guid: 9310e71ee9ba90e46b1a2906b82e6812, type: 2}
@@ -1106,10 +1099,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3

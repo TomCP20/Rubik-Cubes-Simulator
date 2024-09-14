@@ -5,8 +5,8 @@ The project has the following features:
 * Simulating a Rubik’s cube.
 * A 3D interactive GUI to allow the user to interact with a Simulated cube.
 * The ability to execute more than one solving algorithm, those being:
-..* The Layer by Layer method.
-..* The CFOP method.
+  * The Layer by Layer method.
+  * The CFOP method.
 * The ability to measure the efficiency of the algorithms using various metrics.
 * The ability to show the effectiveness of the methods via a histogram.
 * To show an animation of a cube being solved using the implemented methods with some information about the method being displayed alongside it.
